@@ -1,7 +1,6 @@
 package bounce;
 
 import jig.Vector;
-import bounce.FreeBody;
 
 public class Physics {
 	
@@ -26,7 +25,7 @@ public class Physics {
 		Vector X = new Vector(Pa.getX() - Pb.getX(), Pa.getY() - Pb.getY()).unit();
 		Vector Y = X.getPerpendicular();
 		
-		System.out.println("Collision Basis: " + X + "," + Y);
+		//System.out.println("Collision Basis: " + X + "," + Y);
 		
 		Vector[] result = {X, Y};
 		
