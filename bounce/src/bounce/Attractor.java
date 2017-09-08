@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 import jig.Vector;
 
-public class Attractor {
+public abstract class Attractor {
 	
 	private Vector position;
 	private float gravity;
-	ArrayList<FreeBody> children;
+	protected ArrayList<FreeBody> children;
 	
 	public Attractor(final Vector pos, final float g) {
 		gravity = g;
 		position = pos;
-		children = new ArrayList();
+		children = new ArrayList<FreeBody>();
 	}
 	
 	public Vector getPosition() {
@@ -32,16 +32,24 @@ public class Attractor {
 		children.remove(c);
 	}
 	
-	public Vector acceleration(Vector P, float M, float dt) {
-		return P.subtract(getPosition()).unit().scale(dt * getGravity() / M);
+	public abstract Vector acceleration(Vector P, float M, float dt);
+	
+	public void ballCollision(FreeBody ball) {
+		for (FreeBody child : children) child.collision(ball);
 	}
 	
 	public void update(float dt) {
 		if (!children.isEmpty())
 			for (FreeBody child : children) {
 				// calculate acceleration on child
-				Vector A = acceleration(child.getPosition(), child.getMass(), dt);
+				Vector A = this.acceleration(child.getPosition(), child.getMass(), dt);
 				child.setVelocity( child.getVelocity().add(A) );
+				
+				for (FreeBody other : children) {
+					if (child != other) child.collision(other);
+				}
+				
+				child.update(dt);
 			}
 	}
 }

@@ -40,6 +40,7 @@ class PlayingState extends BasicGameState {
 		BounceGame bg = (BounceGame)game;
 		
 		bg.sun.render(g);
+		bg.belt.render(g);
 		//bg.ball.render(g);
 		//bg.ballTest.render(g);
 		g.drawString("Bounces: " + bounces, 10, 30);
@@ -104,7 +105,9 @@ class PlayingState extends BasicGameState {
 		}
 		//bg.ballTest.update(dt);
 		
+		bg.belt.ballCollision(bg.ball);
 		bg.sun.update(dt);
+		bg.belt.update(dt);
 
 		// check if there are any finished explosions, if so remove them
 		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
