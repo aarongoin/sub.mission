@@ -1,6 +1,6 @@
 package bounce;
 
-import jig.Entity;
+import bounce.FreeBody;
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -10,25 +10,15 @@ import jig.Vector;
  * cracks for a nice visual effect.
  * 
  */
- class Ball extends Entity {
+ class Ball extends FreeBody {
 
-	private Vector velocity;
 	private int countdown;
 
-	public Ball(final float x, final float y, final float vx, final float vy) {
-		super(x, y);
+	public Ball(final float x, final float y, final float vx, final float vy, final float m) {
+		super(new Vector(x, y), new Vector(vx, vy), m, 20.0f);
 		addImageWithBoundingBox(ResourceManager
 				.getImage(BounceGame.BALL_BALLIMG_RSC));
-		velocity = new Vector(vx, vy);
 		countdown = 0;
-	}
-
-	public void setVelocity(final Vector v) {
-		velocity = v;
-	}
-
-	public Vector getVelocity() {
-		return velocity;
 	}
 
 	/**
@@ -44,7 +34,7 @@ import jig.Vector;
 		addImageWithBoundingBox(ResourceManager
 				.getImage(BounceGame.BALL_BROKENIMG_RSC));
 		countdown = 500;
-		velocity = velocity.bounce(surfaceTangent);
+		setVelocity(getVelocity().bounce(surfaceTangent));
 	}
 
 	/**
@@ -53,8 +43,8 @@ import jig.Vector;
 	 * @param delta
 	 *            the number of milliseconds since the last update
 	 */
-	public void update(final int delta) {
-		translate(velocity.scale(delta));
+	public void update(final float delta) {
+		super.update(delta);
 		if (countdown > 0) {
 			countdown -= delta;
 			if (countdown <= 0) {
@@ -64,5 +54,8 @@ import jig.Vector;
 						.getImage(BounceGame.BALL_BROKENIMG_RSC));
 			}
 		}
+	}
+	
+	public void onCollide(FreeBody other) {
 	}
 }
