@@ -32,10 +32,14 @@ public class Attractor {
 		children.remove(c);
 	}
 	
+	public Vector acceleration(Vector P, float M, float dt) {
+		return P.subtract(getPosition()).unit().scale(dt * getGravity() / M);
+	}
+	
 	public void update(float dt) {
 		for (FreeBody child : children) {
 			// calculate acceleration on child
-			Vector A = child.getPosition().subtract(getPosition()).unit().scale(dt * getGravity() / child.getMass());
+			Vector A = acceleration(child.getPosition(), child.getMass(), dt);
 			child.setVelocity( child.getVelocity().add(A) );
 		}
 	}
