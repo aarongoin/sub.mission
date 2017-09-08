@@ -39,8 +39,9 @@ class StartUpState extends BasicGameState {
 			Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
 		
-		bg.ball.render(g);
-		bg.ballTest.render(g);
+		bg.sun.render(g);
+		//bg.ball.render(g);
+		//bg.ballTest.render(g);
 		g.drawString("Bounces: ?", 10, 30);
 		for (Bang b : bg.explosions)
 			b.render(g);
@@ -56,8 +57,6 @@ class StartUpState extends BasicGameState {
 		
 		Input input = container.getInput();
 		BounceGame bg = (BounceGame)game;
-		
-		bg.black_hole.update(dt);
 
 		if (input.isKeyDown(Input.KEY_SPACE))
 			bg.enterState(BounceGame.PLAYINGSTATE);	
@@ -76,7 +75,7 @@ class StartUpState extends BasicGameState {
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 		}
-		bg.ball.update(dt);
+		//bg.ball.update(dt);
 		
 		// bounce the test ball...
 		bounced = false;
@@ -92,7 +91,9 @@ class StartUpState extends BasicGameState {
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
 		}
-		bg.ballTest.update(dt);
+		//bg.ballTest.update(dt);
+		
+		bg.sun.update(dt);
 
 		// check if there are any finished explosions, if so remove them
 		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
