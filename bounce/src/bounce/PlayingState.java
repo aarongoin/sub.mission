@@ -41,29 +41,35 @@ class PlayingState extends BasicGameState {
 		BounceGame bg = (BounceGame)game;
 		
 		bg.ball.render(g);
+		bg.ballTest.render(g);
 		g.drawString("Bounces: " + bounces, 10, 30);
 		for (Bang b : bg.explosions)
 			b.render(g);
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		
+		float dt = delta / 16.666666666666667f;
+		
+		//System.out.print("Delta: " + delta + " dt: " + dt + "\n\n");
 
 		Input input = container.getInput();
-		BounceGame bg = (BounceGame)game;
+		BounceGame bg = (BounceGame) game;
+		
+		bg.ball.collision(bg.ballTest);
 		
 		if (input.isKeyDown(Input.KEY_W)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, -.001f)));
+			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, -.1f)));
 		}
 		if (input.isKeyDown(Input.KEY_S)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, +.001f)));
+			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, +.1f)));
 		}
 		if (input.isKeyDown(Input.KEY_A)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(-.001f, 0)));
+			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(-.1f, 0)));
 		}
 		if (input.isKeyDown(Input.KEY_D)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(+.001f, 0f)));
+			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(+.1f, 0f)));
 		}
 		// bounce the ball...
 		boolean bounced = false;
@@ -80,7 +86,23 @@ class PlayingState extends BasicGameState {
 			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 			bounces++;
 		}
-		bg.ball.update(delta);
+		bg.ball.update(dt);
+		
+		// bounce the test ball...
+		bounced = false;
+		if (bg.ballTest.getCoarseGrainedMaxX() > bg.ScreenWidth
+				|| bg.ballTest.getCoarseGrainedMinX() < 0) {
+			bg.ballTest.bounce(90);
+			bounced = true;
+		} else if (bg.ballTest.getCoarseGrainedMaxY() > bg.ScreenHeight
+				|| bg.ballTest.getCoarseGrainedMinY() < 0) {
+			bg.ballTest.bounce(0);
+			bounced = true;
+		}
+		if (bounced) {
+			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
+		}
+		bg.ballTest.update(dt);
 
 		// check if there are any finished explosions, if so remove them
 		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
@@ -88,11 +110,12 @@ class PlayingState extends BasicGameState {
 				i.remove();
 			}
 		}
-
+		/*
 		if (bounces >= 10) {
 			((GameOverState)game.getState(BounceGame.GAMEOVERSTATE)).setUserScore(bounces);
 			game.enterState(BounceGame.GAMEOVERSTATE);
 		}
+		*/
 	}
 
 	@Override

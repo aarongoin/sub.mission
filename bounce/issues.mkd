@@ -1,7 +1,5 @@
 ## Open Issues ##
 
-** #10 ** --- Add FreeBody class (has velocity that is modified when colliding with other FreeBody(s))
-
 ** #11 ** --- Add Attractor class (has array of child FreeBody(s) that force is applied to)
 
 ** #12 ** --- Add Ball class extending FreeBody class that destroys other FreeBody(s) on collision
@@ -41,3 +39,5 @@
 ** #08 ** --- Use fully specified resource path, preload resources if possible
 
 ** #09 ** --- Modify collisions to use circles
+
+** #10 ** --- Add FreeBody class (has velocity that is modified when colliding with other FreeBody(s))

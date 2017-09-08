@@ -57,6 +57,7 @@ public class BounceGame extends StateBasedGame {
 	public final int ScreenHeight;
 
 	Ball ball;
+	Ball ballTest;
 	ArrayList<Bang> explosions;
 
 	/**
@@ -76,9 +77,7 @@ public class BounceGame extends StateBasedGame {
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
 		explosions = new ArrayList<Bang>(10);
-				
 	}
-
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
@@ -100,7 +99,9 @@ public class BounceGame extends StateBasedGame {
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
 		
-		ball = new Ball(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
+		ball = new Ball(ScreenWidth / 4, ScreenHeight / 4, 1f, 1f, 1f);
+		ballTest = new Ball(ScreenWidth / 2, ScreenHeight / 2, 1f, -1f, 1f);
+		
 
 	}
 	

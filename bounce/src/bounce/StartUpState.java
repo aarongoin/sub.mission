@@ -40,6 +40,7 @@ class StartUpState extends BasicGameState {
 		BounceGame bg = (BounceGame)game;
 		
 		bg.ball.render(g);
+		bg.ballTest.render(g);
 		g.drawString("Bounces: ?", 10, 30);
 		for (Bang b : bg.explosions)
 			b.render(g);
@@ -51,6 +52,8 @@ class StartUpState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) throws SlickException {
 
+		float dt = delta / 16.666666666666667f;
+		
 		Input input = container.getInput();
 		BounceGame bg = (BounceGame)game;
 
@@ -71,7 +74,23 @@ class StartUpState extends BasicGameState {
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 		}
-		bg.ball.update(delta);
+		bg.ball.update(dt);
+		
+		// bounce the test ball...
+		bounced = false;
+		if (bg.ballTest.getCoarseGrainedMaxX() > bg.ScreenWidth
+				|| bg.ballTest.getCoarseGrainedMinX() < 0) {
+			bg.ballTest.bounce(90);
+			bounced = true;
+		} else if (bg.ballTest.getCoarseGrainedMaxY() > bg.ScreenHeight
+				|| bg.ballTest.getCoarseGrainedMinY() < 0) {
+			bg.ballTest.bounce(0);
+			bounced = true;
+		}
+		if (bounced) {
+			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
+		}
+		bg.ballTest.update(dt);
 
 		// check if there are any finished explosions, if so remove them
 		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
