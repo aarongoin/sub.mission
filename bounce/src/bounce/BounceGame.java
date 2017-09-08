@@ -47,6 +47,7 @@ public class BounceGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
+	public static final String SUN_RSC = "bounce/resource/sun.png";
 	public static final String BALL_BALLIMG_RSC = "bounce/resource/ball.png";
 	public static final String BALL_BROKENIMG_RSC = "bounce/resource/brokenball.png";
 	public static final String GAMEOVER_BANNER_RSC = "bounce/resource/gameover.png";
@@ -61,7 +62,7 @@ public class BounceGame extends StateBasedGame {
 	Ball ballTest;
 	ArrayList<Bang> explosions;
 	
-	Attractor black_hole;
+	Sun sun;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -101,13 +102,14 @@ public class BounceGame extends StateBasedGame {
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
+		ResourceManager.loadImage(SUN_RSC);
 		
-		ball = new Ball(ScreenWidth / 4, ScreenHeight / 4, 1f, 1f, 1f);
-		ballTest = new Ball(ScreenWidth / 2, ScreenHeight / 2, 1f, -1f, 1f);
+		ball = new Ball(ScreenWidth / 4, ScreenHeight / 4, 1f, 1f, 4f);
+		ballTest = new Ball(ScreenWidth / 3, ScreenHeight / 3, 1f, -2f, 2f);
 		
-		black_hole = new Attractor(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
-		black_hole.addChild(ball);
-		black_hole.addChild(ballTest);
+		sun = new Sun(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
+		sun.addChild(ball);
+		sun.addChild(ballTest);
 	}
 	
 	public static void main(String[] args) {

@@ -36,12 +36,12 @@ class PlayingState extends BasicGameState {
 		container.setSoundOn(true);
 	}
 	@Override
-	public void render(GameContainer container, StateBasedGame game,
-			Graphics g) throws SlickException {
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
 		
-		bg.ball.render(g);
-		bg.ballTest.render(g);
+		bg.sun.render(g);
+		//bg.ball.render(g);
+		//bg.ballTest.render(g);
 		g.drawString("Bounces: " + bounces, 10, 30);
 		for (Bang b : bg.explosions)
 			b.render(g);
@@ -56,8 +56,6 @@ class PlayingState extends BasicGameState {
 
 		Input input = container.getInput();
 		BounceGame bg = (BounceGame) game;
-		
-		bg.black_hole.update(dt);
 		
 		bg.ball.collision(bg.ballTest);
 		
@@ -88,7 +86,7 @@ class PlayingState extends BasicGameState {
 			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 			bounces++;
 		}
-		bg.ball.update(dt);
+		//bg.ball.update(dt);
 		
 		// bounce the test ball...
 		bounced = false;
@@ -104,7 +102,9 @@ class PlayingState extends BasicGameState {
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
 		}
-		bg.ballTest.update(dt);
+		//bg.ballTest.update(dt);
+		
+		bg.sun.update(dt);
 
 		// check if there are any finished explosions, if so remove them
 		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {

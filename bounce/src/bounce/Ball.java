@@ -15,7 +15,7 @@ import jig.Vector;
 	private int countdown;
 
 	public Ball(final float x, final float y, final float vx, final float vy, final float m) {
-		super(new Vector(x, y), new Vector(vx, vy), m, 20.0f);
+		super(new Vector(x, y), new Vector(vx, vy), m, 5.0f);
 		addImageWithBoundingBox(ResourceManager
 				.getImage(BounceGame.BALL_BALLIMG_RSC));
 		countdown = 0;
