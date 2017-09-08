@@ -37,10 +37,11 @@ public class Attractor {
 	}
 	
 	public void update(float dt) {
-		for (FreeBody child : children) {
-			// calculate acceleration on child
-			Vector A = acceleration(child.getPosition(), child.getMass(), dt);
-			child.setVelocity( child.getVelocity().add(A) );
-		}
+		if (!children.isEmpty())
+			for (FreeBody child : children) {
+				// calculate acceleration on child
+				Vector A = acceleration(child.getPosition(), child.getMass(), dt);
+				child.setVelocity( child.getVelocity().add(A) );
+			}
 	}
 }
