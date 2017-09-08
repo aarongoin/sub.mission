@@ -52,6 +52,11 @@ public class Physics {
 		
 		return dt;
 	}
+	
+	public static boolean didCollide(Vector aP, Vector bP, float aR, float bR) {
+		if (aP.distance(bP) <=  aR + bR) return true;
+		else return false;
+	}
 
 	public static void advanceToPresent(float dt, FreeBody a, FreeBody b) {
 		a.setPosition( a.getPosition().add( a.getVelocity().scale(dt) ) );
