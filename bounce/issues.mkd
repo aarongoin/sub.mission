@@ -4,8 +4,6 @@
 
 ** #13 ** --- Add Paddle class that rotates around center based on Mouse Position, and collides with Ball only
 
-** #15 ** --- Add Belt class extending Attractor class that rotates child FreeBody(s) around it's ring.
-
 ** #16 ** --- Add Debris class extending FreeBody class
 
 ** #17 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball
@@ -41,3 +39,5 @@
 ** #11 ** --- Add Attractor class (has array of child FreeBody(s) that force is applied to)
 
 ** #14 ** --- Add Sun class extending Attractor class and destroys any FreeBody(s) that collide with it.
+
+** #15 ** --- Add Belt class extending Attractor class that rotates child FreeBody(s) around it's ring.

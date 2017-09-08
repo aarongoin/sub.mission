@@ -19,6 +19,7 @@ public class Sun extends Attractor {
 		body.addImageWithBoundingBox( ResourceManager.getImage(BounceGame.SUN_RSC) );
 	}
 	
+	@Override
 	public void update(float dt) {
 		super.update(dt);
 		body.rotate(0.5);
@@ -29,12 +30,16 @@ public class Sun extends Attractor {
 			for (FreeBody child : children) {
 				if ( Physics.didCollide( body.getPosition(), child.getPosition(), 20f, child.getRadius() ) ) {
 					destroy.add(child);
-				} else child.update(dt);
+				}
 			}
 		if (!destroy.isEmpty())
 			for (FreeBody child : destroy) {
 				removeChild(child);
 			}
+	}
+	
+	public Vector acceleration(Vector P, float M, float dt) {
+		return P.subtract(getPosition()).unit().scale(dt * getGravity() / M);
 	}
 	
 	public void render(final Graphics g) {
