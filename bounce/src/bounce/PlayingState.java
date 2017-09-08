@@ -57,6 +57,8 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		BounceGame bg = (BounceGame) game;
 		
+		bg.black_hole.update(dt);
+		
 		bg.ball.collision(bg.ballTest);
 		
 		if (input.isKeyDown(Input.KEY_W)) {

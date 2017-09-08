@@ -3,6 +3,7 @@ package bounce;
 import java.util.ArrayList;
 
 import jig.Entity;
+import jig.Vector;
 import jig.ResourceManager;
 
 import org.newdawn.slick.AppGameContainer;
@@ -59,6 +60,8 @@ public class BounceGame extends StateBasedGame {
 	Ball ball;
 	Ball ballTest;
 	ArrayList<Bang> explosions;
+	
+	Attractor black_hole;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -102,7 +105,9 @@ public class BounceGame extends StateBasedGame {
 		ball = new Ball(ScreenWidth / 4, ScreenHeight / 4, 1f, 1f, 1f);
 		ballTest = new Ball(ScreenWidth / 2, ScreenHeight / 2, 1f, -1f, 1f);
 		
-
+		black_hole = new Attractor(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
+		black_hole.addChild(ball);
+		black_hole.addChild(ballTest);
 	}
 	
 	public static void main(String[] args) {
