@@ -43,6 +43,7 @@ import jig.Vector;
 	 */
 	public void update(final float delta) {
 		super.update(delta);
+		setVelocity(getVelocity().clampLength(0, 10f));
 		if (countdown > 0) {
 			countdown -= delta;
 			if (countdown <= 0) {
