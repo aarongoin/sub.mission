@@ -1,14 +1,12 @@
 ## Open Issues ##
 
-** #12 ** --- Add Ball class extending FreeBody class that destroys other FreeBody(s) on collision
+** #12 ** --- Add Debris class extending FreeBody class
 
-** #13 ** --- Add Paddle class that rotates around center based on Mouse Position, and collides with Ball only
+** #16 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball
 
-** #16 ** --- Add Debris class extending FreeBody class
+** #17 ** --- Modify Ball class so that it destroys Asteroids on collision
 
-** #17 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball
-
-** #18 ** --- Add Aggregate class extending FreeBody class that contains several child Asteroids
+** #18 ** --- Refine paddle collision handling
 
 ** #19 ** --- 10 levels with progressively more Asteroids/Belts
 
@@ -37,6 +35,8 @@
 ** #10 ** --- Add FreeBody class (has velocity that is modified when colliding with other FreeBody(s))
 
 ** #11 ** --- Add Attractor class (has array of child FreeBody(s) that force is applied to)
+
+** #13 ** --- Add Paddle class that rotates around center based on Mouse Position, and collides with Ball only
 
 ** #14 ** --- Add Sun class extending Attractor class and destroys any FreeBody(s) that collide with it.
 

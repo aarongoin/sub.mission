@@ -3,6 +3,7 @@ package bounce;
 import java.util.Iterator;
 
 import jig.ResourceManager;
+import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -39,6 +40,7 @@ class StartUpState extends BasicGameState {
 			Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
 		
+		bg.paddle.render(g);
 		bg.sun.render(g);
 		bg.belt.render(g);
 		//bg.ball.render(g);
@@ -51,50 +53,24 @@ class StartUpState extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 
+		BounceGame bg = (BounceGame)game;
 		float dt = delta / 16.666666666666667f;
 		
 		Input input = container.getInput();
-		BounceGame bg = (BounceGame)game;
+		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 
 		if (input.isKeyDown(Input.KEY_SPACE))
 			bg.enterState(BounceGame.PLAYINGSTATE);	
 		
 		// bounce the ball...
 		boolean bounced = false;
-		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ball.getCoarseGrainedMinX() < 0) {
-			bg.ball.bounce(90);
-			bounced = true;
-		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ball.getCoarseGrainedMinY() < 0) {
-			bg.ball.bounce(0);
-			bounced = true;
-		}
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 		}
-		//bg.ball.update(dt);
 		
-		// bounce the test ball...
-		bounced = false;
-		if (bg.ballTest.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ballTest.getCoarseGrainedMinX() < 0) {
-			bg.ballTest.bounce(90);
-			bounced = true;
-		} else if (bg.ballTest.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ballTest.getCoarseGrainedMinY() < 0) {
-			bg.ballTest.bounce(0);
-			bounced = true;
-		}
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
-		}
-		//bg.ballTest.update(dt);
-		
-		bg.sun.update(dt);
+		//bg.sun.update(dt);
 		bg.belt.update(dt);
 
 		// check if there are any finished explosions, if so remove them

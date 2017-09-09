@@ -54,14 +54,15 @@ public class BounceGame extends StateBasedGame {
 	public static final String STARTUP_BANNER_RSC = "bounce/resource/PressSpace.png";
 	public static final String BANG_EXPLOSIONIMG_RSC = "bounce/resource/explosion.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "bounce/resource/explosion.wav";
+	public static final String PADDLE_RSC = "bounce/resource/paddle.png";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 
-	Ball ball;
-	Ball ballTest;
 	ArrayList<Bang> explosions;
 	
+	Paddle paddle;
+	Ball ball;
 	Sun sun;
 	
 	Belt belt;
@@ -100,22 +101,23 @@ public class BounceGame extends StateBasedGame {
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(BALL_BALLIMG_RSC);
-		ResourceManager.loadImage(BALL_BROKENIMG_RSC);
+		ResourceManager.loadImage(BALL_BALLIMG_RSC);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
 		ResourceManager.loadImage(SUN_RSC);
+		ResourceManager.loadImage(PADDLE_RSC);
 		
-		ball = new Ball(ScreenWidth / 4, ScreenHeight / 4, 4f, 5f, 3f);
-		ballTest = new Ball(ScreenWidth / 3, ScreenHeight / 3, 2f, -2f, 2f);
+		ball = new Ball(ScreenWidth / 2, ScreenHeight / 5, 0f, 0f, 1f);
 		
 		sun = new Sun(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
 		sun.addChild(ball);
-		sun.addChild(ballTest);
 		
 		belt = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300);
 		belt.addChild( new Ball(150, 90, 0f, 0f, 4f) );
 		belt.addChild( new Ball(140, 100, 0f, 0f, 4f) );
+		
+		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.01f);
 	}
 	
 	public static void main(String[] args) {
