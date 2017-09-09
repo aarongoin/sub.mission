@@ -43,6 +43,17 @@ public class Belt extends Attractor {
 		//System.out.println("Adjusted position: " + c.getPosition());
 	}
 	
+	public void generateAsteroids(String type, int num) {
+		while (num-- > 0) addChild(
+			new Asteroid(
+				type,
+				(new Vector(random.nextInt((int) radius * 2), random.nextInt((int) radius * 2))).add(getPosition().add(new Vector(-radius, -radius))),
+				new Vector(0f, 0f),
+				10f
+			)
+		);
+	}
+	
 	public void addChild(Asteroid c) {
 		clampChildToBelt(c);
 		c.setParent(this);
@@ -54,7 +65,7 @@ public class Belt extends Attractor {
 		// create debris
 		int n = (int) c.getMass();
 		//System.out.println("Creating " + n + " Debris.");
-		for (int i = n; i > 0; i--) sun.addChild( new Debris(c.getPosition().add(new Vector(random.nextFloat(), random.nextFloat())), c.getVelocity().scale(-1), c.getMass() / (n * n), 2f) );
+		for (int i = n; i > 0; i--) sun.addChild( new Debris(c.getType(), c.getPosition().add(new Vector(random.nextFloat(), random.nextFloat())), c.getVelocity().scale(-1), c.getMass() / (n * n), 2f) );
 	}
 	
 	public void render(final Graphics g) {

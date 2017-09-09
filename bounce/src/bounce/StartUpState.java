@@ -41,7 +41,9 @@ class StartUpState extends BasicGameState {
 		
 		bg.paddle.render(g);
 		bg.sun.render(g);
-		bg.belt.render(g);
+		bg.belt1.render(g);
+		bg.belt2.render(g);
+		bg.belt3.render(g);
 
 		g.drawString("Bounces: ?", 10, 30);
 		g.drawImage(ResourceManager.getImage(BounceGame.STARTUP_BANNER_RSC), 225, 270);	
@@ -60,7 +62,9 @@ class StartUpState extends BasicGameState {
 			bg.enterState(BounceGame.PLAYINGSTATE);	
 
 		//bg.sun.update(dt);
-		bg.belt.update(dt);
+		bg.belt1.update(dt);
+		bg.belt2.update(dt);
+		bg.belt3.update(dt);
 
 	}
 

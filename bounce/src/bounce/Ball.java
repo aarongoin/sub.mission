@@ -30,7 +30,7 @@ import jig.Vector;
 	 */
 	public void bounce(float surfaceTangent) {
 		removeImage(ResourceManager.getImage(BounceGame.BALL_BALLIMG_RSC));
-		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_BROKENIMG_RSC));
+		//addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_BROKENIMG_RSC));
 		countdown = 500;
 		setVelocity(getVelocity().bounce(surfaceTangent));
 	}
@@ -47,7 +47,7 @@ import jig.Vector;
 			countdown -= delta;
 			if (countdown <= 0) {
 				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_BALLIMG_RSC));
-				removeImage(ResourceManager.getImage(BounceGame.BALL_BROKENIMG_RSC));
+				//removeImage(ResourceManager.getImage(BounceGame.BALL_BROKENIMG_RSC));
 			}
 		}
 	}

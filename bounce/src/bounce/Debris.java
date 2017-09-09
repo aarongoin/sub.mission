@@ -5,10 +5,23 @@ import jig.Vector;
 
 public class Debris extends FreeBody {
 
-	public Debris(Vector pos, Vector vel, float m, float r) {
+	String type;
+	
+	public Debris(String t, Vector pos, Vector vel, float m, float r) {
 		super(pos, vel, m, r);
-		//System.out.println("Pos: " + pos + " Vel: " + vel);
-		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.DEBRIS_RSC));
+
+		type = t;
+		switch (type) {
+			case "S":
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.DEBRIS_S_RSC));
+				break;
+			case "M":
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.DEBRIS_M_RSC));
+				break;
+			case "C":
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.DEBRIS_C_RSC));
+				break;
+		}
 	}
 
 	@Override
