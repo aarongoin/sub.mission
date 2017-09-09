@@ -64,31 +64,6 @@ class StartUpState extends BasicGameState {
 		
 		// bounce the ball...
 		boolean bounced = false;
-		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ball.getCoarseGrainedMinX() < 0) {
-			bg.ball.bounce(90);
-			bounced = true;
-		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ball.getCoarseGrainedMinY() < 0) {
-			bg.ball.bounce(0);
-			bounced = true;
-		}
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-		}
-		//bg.ball.update(dt);
-		
-		// bounce the test ball...
-		bounced = false;
-		if (bg.ballTest.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ballTest.getCoarseGrainedMinX() < 0) {
-			bg.ballTest.bounce(90);
-			bounced = true;
-		} else if (bg.ballTest.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ballTest.getCoarseGrainedMinY() < 0) {
-			bg.ballTest.bounce(0);
-			bounced = true;
-		}
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
 		}

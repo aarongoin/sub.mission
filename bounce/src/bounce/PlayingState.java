@@ -41,6 +41,7 @@ class PlayingState extends BasicGameState {
 		
 		bg.sun.render(g);
 		bg.belt.render(g);
+		bg.paddle.render(g);
 		//bg.ball.render(g);
 		//bg.ballTest.render(g);
 		g.drawString("Bounces: " + bounces, 10, 30);
@@ -50,56 +51,20 @@ class PlayingState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		
+		BounceGame bg = (BounceGame) game;
 		float dt = delta / 16.666666666666667f;
 		
 		//System.out.print("Delta: " + delta + " dt: " + dt + "\n\n");
 
 		Input input = container.getInput();
-		BounceGame bg = (BounceGame) game;
+		
+		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 		
 		bg.ball.collision(bg.ballTest);
 		
-		if (input.isKeyDown(Input.KEY_W)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, -.1f)));
-		}
-		if (input.isKeyDown(Input.KEY_S)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(0f, +.1f)));
-		}
-		if (input.isKeyDown(Input.KEY_A)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(-.1f, 0)));
-		}
-		if (input.isKeyDown(Input.KEY_D)) {
-			bg.ball.setVelocity(bg.ball.getVelocity().add(new Vector(+.1f, 0f)));
-		}
 		// bounce the ball...
 		boolean bounced = false;
-		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ball.getCoarseGrainedMinX() < 0) {
-			bg.ball.bounce(90);
-			bounced = true;
-		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ball.getCoarseGrainedMinY() < 0) {
-			bg.ball.bounce(0);
-			bounced = true;
-		}
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-			bounces++;
-		}
-		//bg.ball.update(dt);
-		
-		// bounce the test ball...
-		bounced = false;
-		if (bg.ballTest.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ballTest.getCoarseGrainedMinX() < 0) {
-			bg.ballTest.bounce(90);
-			bounced = true;
-		} else if (bg.ballTest.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ballTest.getCoarseGrainedMinY() < 0) {
-			bg.ballTest.bounce(0);
-			bounced = true;
-		}
+
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
 		}
