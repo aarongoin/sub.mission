@@ -2,8 +2,10 @@ package bounce;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
+import jig.ConvexPolygon;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
@@ -24,18 +26,13 @@ public class Sun extends Attractor {
 		super.update(dt);
 		body.rotate(0.5);
 		
-		ArrayList<FreeBody> destroy = new ArrayList<FreeBody>();
-		
-		if (!children.isEmpty())
+		if (!children.isEmpty()) {
 			for (FreeBody child : children) {
 				if ( Physics.didCollide( body.getPosition(), child.getPosition(), 20f, child.getRadius() ) ) {
-					destroy.add(child);
+					removeChild(child);
 				}
 			}
-		if (!destroy.isEmpty())
-			for (FreeBody child : destroy) {
-				removeChild(child);
-			}
+		}
 	}
 	
 	public Vector acceleration(Vector P, float M, float dt) {
@@ -44,7 +41,8 @@ public class Sun extends Attractor {
 	
 	public void render(final Graphics g) {
 		body.render(g);
-		if (!children.isEmpty())
+		if (!children.isEmpty()) {
 			for (FreeBody child : children) child.render(g);
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package bounce;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import jig.Entity;
 import jig.Vector;
@@ -56,11 +57,14 @@ public class BounceGame extends StateBasedGame {
 	public static final String BANG_EXPLOSIONIMG_RSC = "bounce/resource/explosion.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "bounce/resource/explosion.wav";
 	public static final String PADDLE_RSC = "bounce/resource/paddle.png";
+	public static final String ASTEROID_RSC = "bounce/resource/asteroid.png";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 
 	ArrayList<Bang> explosions;
+	
+	private static Random random;
 	
 	Paddle paddle;
 	Ball ball;
@@ -85,6 +89,8 @@ public class BounceGame extends StateBasedGame {
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
 		explosions = new ArrayList<Bang>(10);
+		
+		random = new Random( System.currentTimeMillis() );
 	}
 
 	@Override
@@ -108,26 +114,27 @@ public class BounceGame extends StateBasedGame {
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
 		ResourceManager.loadImage(SUN_RSC);
 		ResourceManager.loadImage(PADDLE_RSC);
+		ResourceManager.loadImage(DEBRIS_RSC);
+		ResourceManager.loadImage(ASTEROID_RSC);
+		
 		
 		ball = new Ball(ScreenWidth / 2, ScreenHeight / 5, 0f, 0f, 4f);
-		
+		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.1f);
 		sun = new Sun(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
 		sun.addChild(ball);
 		
-		for (int i = 0; i < 10; i++) sun.addChild(new Debris(Vector.getRandom(300), Vector.getRandom(0.5f), 1f, 2f));
+		//for (int i = 0; i < 10; i++) sun.addChild(new Debris(Vector.getRandom(300), Vector.getRandom(0.5f), 1f, 2f));
 		
-		belt = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300);
-		belt.addChild( new Ball(150, 90, 0f, 0f, 4f) );
-		belt.addChild( new Ball(140, 100, 0f, 0f, 4f) );
-		
-		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.03f);
+		belt = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 200, sun);
+		for (int i = 0; i < 50; i++) belt.addChild( new Asteroid( new Vector(random.nextInt(ScreenWidth), random.nextInt(ScreenHeight)), new Vector(0f, 0f), 4f, 10f, 1 ) );
+
 	}
 	
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new BounceGame("Bounce!", 800, 600));
-			app.setDisplayMode(800, 600, false);
+			app = new AppGameContainer(new BounceGame("Bounce!", 1200, 800));
+			app.setDisplayMode(1200, 800, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {

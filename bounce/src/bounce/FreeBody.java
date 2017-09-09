@@ -15,11 +15,12 @@ public abstract class FreeBody extends Entity {
 	private float radius;
 	
 	public FreeBody(final Vector pos, final Vector vel, final float m, final float r) {
-		super(pos.getX(), pos.getY());
+		super(pos);
 
 		velocity = vel;
 		mass = m;
 		radius = r;
+		
 	}
 
 	public void setVelocity(final Vector v) {
@@ -78,5 +79,5 @@ public abstract class FreeBody extends Entity {
 		}
 	}
 	
-	abstract void onCollide(FreeBody other);
+	abstract public void onCollide(FreeBody other);
 }

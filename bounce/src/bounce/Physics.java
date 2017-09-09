@@ -62,7 +62,7 @@ public class Physics {
 		a.setPosition( a.getPosition().add( a.getVelocity().scale(dt) ) );
 		b.setPosition( b.getPosition().add( b.getVelocity().scale(dt) ) );
 	}
-	
+		
 	// handles perfectly elastic collisions between 2 round objects "a" and "b" using position (P), velocity (V), and mass (M)
 	public static Vector[] elasticCollision(Vector Pa, Vector Pb, Vector Va, Vector Vb, double Ma, double Mb) {
 		
