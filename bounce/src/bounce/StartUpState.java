@@ -65,7 +65,7 @@ class StartUpState extends BasicGameState {
 		// bounce the ball...
 		boolean bounced = false;
 		if (bounced) {
-			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
+			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 		}
 		//bg.ballTest.update(dt);
 		

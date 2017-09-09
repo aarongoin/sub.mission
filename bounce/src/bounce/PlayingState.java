@@ -59,14 +59,14 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		
 		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
-		
-		bg.ball.collision(bg.ballTest);
+				
+		if (bg.ball.collides(bg.paddle) != null) bg.paddle.reflectBall(bg.ball);
 		
 		// bounce the ball...
 		boolean bounced = false;
 
 		if (bounced) {
-			bg.explosions.add(new Bang(bg.ballTest.getX(), bg.ballTest.getY()));
+			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 		}
 		//bg.ballTest.update(dt);
 		

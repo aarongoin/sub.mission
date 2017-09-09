@@ -59,15 +59,13 @@ public class BounceGame extends StateBasedGame {
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 
-	Ball ball;
-	Ball ballTest;
 	ArrayList<Bang> explosions;
 	
+	Paddle paddle;
+	Ball ball;
 	Sun sun;
 	
 	Belt belt;
-	
-	Paddle paddle;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -110,18 +108,16 @@ public class BounceGame extends StateBasedGame {
 		ResourceManager.loadImage(SUN_RSC);
 		ResourceManager.loadImage(PADDLE_RSC);
 		
-		ball = new Ball(ScreenWidth / 4, ScreenHeight / 4, 4f, 5f, 3f);
-		ballTest = new Ball(ScreenWidth / 3, ScreenHeight / 3, 2f, -2f, 2f);
+		ball = new Ball(ScreenWidth / 2, ScreenHeight / 4, 0f, -2f, 3f);
 		
 		sun = new Sun(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
 		sun.addChild(ball);
-		sun.addChild(ballTest);
 		
 		belt = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300);
 		belt.addChild( new Ball(150, 90, 0f, 0f, 4f) );
 		belt.addChild( new Ball(140, 100, 0f, 0f, 4f) );
 		
-		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 30f);
+		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.01f);
 	}
 	
 	public static void main(String[] args) {
