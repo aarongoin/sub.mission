@@ -1,13 +1,18 @@
 ## Open Issues ##
 
-** #16 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball
+** #17 ** --- Add type to Asteroid class (S, C, and M) and to Debris
 
-** #17 ** --- Modify Ball class so that it destroys Asteroids on collision
+** #18 ** --- Create 9 levels with progressively more Asteroids/Belts, accessable by num-keys 1-9
 
-** #18 ** --- Refine paddle collision handling
+** #19 ** --- Add instructions to Title screen and buttons to change levels, accessable by num-key 0.
 
-** #19 ** --- 10 levels with progressively more Asteroids/Belts
+** #20 ** --- Add sounds for: background, ball-asteroid collision, ball-paddle collision, ball-sun collision
 
+** #21 ** --- Add 3 lives for Ball, and Win/Lose screen that will time out and return to title screen.
+
+** #22 ** --- Show remaining lives for Ball, and remaining Asteroids of each type.
+
+** #23 ** --- Bake shadow on sprites, and rotate to keep oriented towards Sun.
 
 
 ## Resolved Issues ##
@@ -41,3 +46,5 @@
 ** #14 ** --- Add Sun class extending Attractor class and destroys any FreeBody(s) that collide with it.
 
 ** #15 ** --- Add Belt class extending Attractor class that rotates child FreeBody(s) around it's ring.
+
+** #16 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball

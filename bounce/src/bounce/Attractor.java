@@ -9,11 +9,13 @@ public abstract class Attractor {
 	private Vector position;
 	private float gravity;
 	protected ArrayList<FreeBody> children;
+	protected ArrayList<FreeBody> toRemove;
 	
 	public Attractor(final Vector pos, final float g) {
 		gravity = g;
 		position = pos;
 		children = new ArrayList<FreeBody>();
+		toRemove = new ArrayList<FreeBody>();
 	}
 	
 	public Vector getPosition() {
@@ -24,12 +26,12 @@ public abstract class Attractor {
 		return gravity;
 	}
 	
-	protected void addChild(FreeBody c) {
+	public void addChild(FreeBody c) {
 		children.add(c);
 	}
 	
-	protected void removeChild(FreeBody c) {
-		children.remove(c);
+	public void removeChild(FreeBody c) {
+		toRemove.add(c);
 	}
 	
 	public abstract Vector acceleration(Vector P, float M, float dt);
@@ -39,7 +41,7 @@ public abstract class Attractor {
 	}
 	
 	public void update(float dt) {
-		if (!children.isEmpty())
+		if (!children.isEmpty()) {
 			for (FreeBody child : children) {
 				// calculate acceleration on child
 				Vector A = this.acceleration(child.getPosition(), child.getMass(), dt);
@@ -51,5 +53,10 @@ public abstract class Attractor {
 				
 				child.update(dt);
 			}
+			if (!toRemove.isEmpty()) {
+				for (FreeBody child : toRemove) children.remove(child);
+				toRemove = new ArrayList<FreeBody>();
+			}
+		}
 	}
 }

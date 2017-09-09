@@ -16,8 +16,7 @@ import jig.Vector;
 
 	public Ball(final float x, final float y, final float vx, final float vy, final float m) {
 		super(new Vector(x, y), new Vector(vx, vy), m, 5.0f);
-		addImageWithBoundingBox(ResourceManager
-				.getImage(BounceGame.BALL_BALLIMG_RSC));
+		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_BALLIMG_RSC));
 		countdown = 0;
 	}
 
@@ -31,8 +30,7 @@ import jig.Vector;
 	 */
 	public void bounce(float surfaceTangent) {
 		removeImage(ResourceManager.getImage(BounceGame.BALL_BALLIMG_RSC));
-		addImageWithBoundingBox(ResourceManager
-				.getImage(BounceGame.BALL_BROKENIMG_RSC));
+		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_BROKENIMG_RSC));
 		countdown = 500;
 		setVelocity(getVelocity().bounce(surfaceTangent));
 	}
@@ -48,10 +46,8 @@ import jig.Vector;
 		if (countdown > 0) {
 			countdown -= delta;
 			if (countdown <= 0) {
-				addImageWithBoundingBox(ResourceManager
-						.getImage(BounceGame.BALL_BALLIMG_RSC));
-				removeImage(ResourceManager
-						.getImage(BounceGame.BALL_BROKENIMG_RSC));
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_BALLIMG_RSC));
+				removeImage(ResourceManager.getImage(BounceGame.BALL_BROKENIMG_RSC));
 			}
 		}
 	}

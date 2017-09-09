@@ -42,11 +42,8 @@ class PlayingState extends BasicGameState {
 		bg.sun.render(g);
 		bg.belt.render(g);
 		bg.paddle.render(g);
-		//bg.ball.render(g);
-		//bg.ballTest.render(g);
+		
 		g.drawString("Bounces: " + bounces, 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
 	}
 
 	@Override
@@ -61,30 +58,9 @@ class PlayingState extends BasicGameState {
 				
 		if (bg.ball.collides(bg.paddle) != null) bg.paddle.reflectBall(bg.ball);
 		
-		// bounce the ball...
-		boolean bounced = false;
-
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-		}
-		//bg.ballTest.update(dt);
-		
 		bg.belt.ballCollision(bg.ball);
 		bg.sun.update(dt);
 		bg.belt.update(dt);
-
-		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
-			}
-		}
-		/*
-		if (bounces >= 10) {
-			((GameOverState)game.getState(BounceGame.GAMEOVERSTATE)).setUserScore(bounces);
-			game.enterState(BounceGame.GAMEOVERSTATE);
-		}
-		*/
 	}
 
 	@Override
