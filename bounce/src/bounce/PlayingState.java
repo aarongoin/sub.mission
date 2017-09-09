@@ -32,9 +32,63 @@ class PlayingState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		BounceGame bg = (BounceGame) game;
 		bounces = 0;
+		prepareLevel(bg);
 		container.setSoundOn(true);
 	}
+	
+	private void prepareLevel(BounceGame bg) {
+		
+		switch(bg.getLevel()) {
+		case 1:
+			bg.belt3.generateAsteroids("C", 10);
+			bg.belt2.generateAsteroids("M", 0);
+			bg.belt1.generateAsteroids("S", 0);
+			break;
+		case 2:
+			bg.belt3.generateAsteroids("C", 20);
+			bg.belt2.generateAsteroids("M", 0);
+			bg.belt1.generateAsteroids("S", 0);
+			break;
+		case 3:
+			bg.belt3.generateAsteroids("C", 0);
+			bg.belt2.generateAsteroids("M", 10);
+			bg.belt1.generateAsteroids("S", 20);
+			break;
+		case 4:
+			bg.belt3.generateAsteroids("C", 30);
+			bg.belt2.generateAsteroids("M", 10);
+			bg.belt1.generateAsteroids("S", 0);
+			break;
+		case 5:
+			bg.belt3.generateAsteroids("C", 0);
+			bg.belt2.generateAsteroids("M", 20);
+			bg.belt1.generateAsteroids("S", 30);
+			break;
+		case 6:
+			bg.belt3.generateAsteroids("C", 45);
+			bg.belt2.generateAsteroids("M", 15);
+			bg.belt1.generateAsteroids("S", 0);
+			break;
+		case 7:
+			bg.belt3.generateAsteroids("C", 45);
+			bg.belt2.generateAsteroids("M", 10);
+			bg.belt1.generateAsteroids("S", 15);
+			break;
+		case 8:
+			bg.belt3.generateAsteroids("C", 45);
+			bg.belt2.generateAsteroids("M", 10);
+			bg.belt1.generateAsteroids("S", 25);
+			break;
+		case 9:
+			bg.belt3.generateAsteroids("C", 50);
+			bg.belt2.generateAsteroids("M", 15);
+			bg.belt1.generateAsteroids("S", 25);
+			break;
+		}
+	}
+	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;

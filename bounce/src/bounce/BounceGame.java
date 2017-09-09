@@ -76,6 +76,8 @@ public class BounceGame extends StateBasedGame {
 	Belt belt1;
 	Belt belt2;
 	Belt belt3;
+	
+	int level;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -96,6 +98,14 @@ public class BounceGame extends StateBasedGame {
 		explosions = new ArrayList<Bang>(10);
 		
 		random = new Random( System.currentTimeMillis() );
+	}
+	
+	public void setLevel(int l) {
+		level = l;
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 
 	@Override
@@ -142,6 +152,7 @@ public class BounceGame extends StateBasedGame {
 		belt3 = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300, sun);
 		belt3.generateAsteroids("C", 40);
 
+		level = 1;
 	}
 	
 	public static void main(String[] args) {
