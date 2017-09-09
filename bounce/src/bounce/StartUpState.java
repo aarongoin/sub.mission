@@ -3,6 +3,7 @@ package bounce;
 import java.util.Iterator;
 
 import jig.ResourceManager;
+import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -39,6 +40,7 @@ class StartUpState extends BasicGameState {
 			Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
 		
+		bg.paddle.render(g);
 		bg.sun.render(g);
 		bg.belt.render(g);
 		//bg.ball.render(g);
@@ -51,13 +53,13 @@ class StartUpState extends BasicGameState {
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 
+		BounceGame bg = (BounceGame)game;
 		float dt = delta / 16.666666666666667f;
 		
 		Input input = container.getInput();
-		BounceGame bg = (BounceGame)game;
+		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 
 		if (input.isKeyDown(Input.KEY_SPACE))
 			bg.enterState(BounceGame.PLAYINGSTATE);	
@@ -67,9 +69,8 @@ class StartUpState extends BasicGameState {
 		if (bounced) {
 			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
 		}
-		//bg.ballTest.update(dt);
 		
-		bg.sun.update(dt);
+		//bg.sun.update(dt);
 		bg.belt.update(dt);
 
 		// check if there are any finished explosions, if so remove them

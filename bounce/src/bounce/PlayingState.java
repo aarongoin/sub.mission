@@ -57,7 +57,6 @@ class PlayingState extends BasicGameState {
 		//System.out.print("Delta: " + delta + " dt: " + dt + "\n\n");
 
 		Input input = container.getInput();
-		
 		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 				
 		if (bg.ball.collides(bg.paddle) != null) bg.paddle.reflectBall(bg.ball);
