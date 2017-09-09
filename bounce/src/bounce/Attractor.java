@@ -18,6 +18,10 @@ public abstract class Attractor {
 		toRemove = new ArrayList<FreeBody>();
 	}
 	
+	public int getCount() {
+		return children.size();
+	}
+	
 	public Vector getPosition() {
 		return position;
 	}

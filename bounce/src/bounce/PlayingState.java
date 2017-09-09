@@ -39,6 +39,8 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void prepareLevel(BounceGame bg) {
+		bg.ball.setPosition(bg.paddle.getPosition().add(bg.paddle.getNormal().scale(300)));
+		bg.ball.setVelocity(new Vector(0, 0));
 		
 		switch(bg.getLevel()) {
 		case 1:
@@ -117,6 +119,12 @@ class PlayingState extends BasicGameState {
 		bg.belt1.ballCollision(bg.ball);
 		bg.belt2.ballCollision(bg.ball);
 		bg.belt3.ballCollision(bg.ball);
+		
+		if ((bg.belt1.getCount() + bg.belt2.getCount() + bg.belt3.getCount()) == 0) {
+			bg.setLevel(bg.getLevel() + 1);
+			prepareLevel(bg);
+		}
+		
 		bg.sun.update(dt);
 		bg.belt1.update(dt);
 		bg.belt2.update(dt);
