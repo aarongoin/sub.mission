@@ -52,14 +52,32 @@ class StartUpState extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 
-		BounceGame bg = (BounceGame)game;
+		BounceGame bg = (BounceGame) game;
 		float dt = delta / 16.666666666666667f;
 		
 		Input input = container.getInput();
 		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 
 		if (input.isKeyDown(Input.KEY_SPACE))
-			bg.enterState(BounceGame.PLAYINGSTATE);	
+			bg.enterState(BounceGame.PLAYINGSTATE);
+		else if (input.isKeyDown(Input.KEY_1))
+			bg.setLevel(1);
+		else if (input.isKeyDown(Input.KEY_2))
+			bg.setLevel(2);
+		else if (input.isKeyDown(Input.KEY_3))
+			bg.setLevel(3);
+		else if (input.isKeyDown(Input.KEY_4))
+			bg.setLevel(4);
+		else if (input.isKeyDown(Input.KEY_5))
+			bg.setLevel(5);
+		else if (input.isKeyDown(Input.KEY_6))
+			bg.setLevel(6);
+		else if (input.isKeyDown(Input.KEY_7))
+			bg.setLevel(7);
+		else if (input.isKeyDown(Input.KEY_8))
+			bg.setLevel(8);
+		else if (input.isKeyDown(Input.KEY_9))
+			bg.setLevel(9);
 
 		//bg.sun.update(dt);
 		bg.belt1.update(dt);

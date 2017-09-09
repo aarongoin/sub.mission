@@ -23,6 +23,10 @@ public class Paddle extends Entity {
 		elasticity = e;
 	}
 	
+	public Vector getNormal() {
+		return zero.rotate(getRotation());
+	}
+	
 	public void update(Vector mouse) {
 		// calculate vector from position to mouse location
 		Vector d = mouse.subtract(getPosition()).unit().scale(offset);
@@ -30,7 +34,7 @@ public class Paddle extends Entity {
 	}
 	
 	public void reflectBall(FreeBody ball) {
-		Vector normal = zero.rotate(getRotation());
+		Vector normal = getNormal();
 		
 		double theta = normal.angleTo(ball.getVelocity()) + 90;
 		

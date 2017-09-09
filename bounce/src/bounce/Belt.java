@@ -44,6 +44,7 @@ public class Belt extends Attractor {
 	}
 	
 	public void generateAsteroids(String type, int num) {
+		children.clear();
 		while (num-- > 0) addChild(
 			new Asteroid(
 				type,
