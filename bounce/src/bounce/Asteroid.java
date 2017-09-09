@@ -9,16 +9,35 @@ import jig.Vector;
 
 public class Asteroid extends FreeBody {
 	
-	int strength;
-	Belt parent;
+	private int strength;
+	private Belt parent;
+	private String type;
 
-	public Asteroid(Vector pos, Vector vel, float m, float r, int s) {
-		super(pos, vel, m, r);
+	public Asteroid(String t, Vector pos, Vector vel, float r) {
+		super(pos, vel, 1, r);
 				
-		//addShape(new ConvexPolygon(r), c, c);
-		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.ASTEROID_RSC));
-		
-		strength = s;
+		type = t;
+		switch (type) {
+			case "S":
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.ASTEROID_S_RSC));
+				mass = 3;
+				strength = 2;
+				break;
+			case "M":
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.ASTEROID_M_RSC));
+				mass = 6;
+				strength = 3;
+				break;
+			case "C":
+				addImageWithBoundingBox(ResourceManager.getImage(BounceGame.ASTEROID_C_RSC));
+				mass = 4;
+				strength = 1;
+				break;
+		}
+	}
+	
+	public String getType() {
+		return type;
 	}
 	
 	public void setParent(Belt p) {

@@ -40,7 +40,9 @@ class PlayingState extends BasicGameState {
 		BounceGame bg = (BounceGame)game;
 		
 		bg.sun.render(g);
-		bg.belt.render(g);
+		bg.belt1.render(g);
+		bg.belt2.render(g);
+		bg.belt3.render(g);
 		bg.paddle.render(g);
 		
 		g.drawString("Bounces: " + bounces, 10, 30);
@@ -58,9 +60,13 @@ class PlayingState extends BasicGameState {
 				
 		if (bg.ball.collides(bg.paddle) != null) bg.paddle.reflectBall(bg.ball);
 		
-		bg.belt.ballCollision(bg.ball);
+		bg.belt1.ballCollision(bg.ball);
+		bg.belt2.ballCollision(bg.ball);
+		bg.belt3.ballCollision(bg.ball);
 		bg.sun.update(dt);
-		bg.belt.update(dt);
+		bg.belt1.update(dt);
+		bg.belt2.update(dt);
+		bg.belt3.update(dt);
 	}
 
 	@Override

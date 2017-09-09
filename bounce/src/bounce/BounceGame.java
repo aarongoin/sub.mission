@@ -48,16 +48,19 @@ public class BounceGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
-	public static final String DEBRIS_RSC = "bounce/resource/debris.png";
 	public static final String SUN_RSC = "bounce/resource/sun.png";
 	public static final String BALL_BALLIMG_RSC = "bounce/resource/ball.png";
-	public static final String BALL_BROKENIMG_RSC = "bounce/resource/brokenball.png";
 	public static final String GAMEOVER_BANNER_RSC = "bounce/resource/gameover.png";
 	public static final String STARTUP_BANNER_RSC = "bounce/resource/PressSpace.png";
 	public static final String BANG_EXPLOSIONIMG_RSC = "bounce/resource/explosion.png";
 	public static final String BANG_EXPLOSIONSND_RSC = "bounce/resource/explosion.wav";
 	public static final String PADDLE_RSC = "bounce/resource/paddle.png";
-	public static final String ASTEROID_RSC = "bounce/resource/asteroid.png";
+	public static final String ASTEROID_S_RSC = "bounce/resource/asteroid_s.png";
+	public static final String ASTEROID_M_RSC = "bounce/resource/asteroid_m.png";
+	public static final String ASTEROID_C_RSC = "bounce/resource/asteroid_c.png";
+	public static final String DEBRIS_S_RSC = "bounce/resource/debris_s.png";
+	public static final String DEBRIS_M_RSC = "bounce/resource/debris_m.png";
+	public static final String DEBRIS_C_RSC = "bounce/resource/debris_c.png";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -70,7 +73,9 @@ public class BounceGame extends StateBasedGame {
 	Ball ball;
 	Sun sun;
 	
-	Belt belt;
+	Belt belt1;
+	Belt belt2;
+	Belt belt3;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -108,14 +113,17 @@ public class BounceGame extends StateBasedGame {
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(BALL_BALLIMG_RSC);
-		ResourceManager.loadImage(BALL_BALLIMG_RSC);
 		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		ResourceManager.loadImage(BANG_EXPLOSIONIMG_RSC);
 		ResourceManager.loadImage(SUN_RSC);
 		ResourceManager.loadImage(PADDLE_RSC);
-		ResourceManager.loadImage(DEBRIS_RSC);
-		ResourceManager.loadImage(ASTEROID_RSC);
+		ResourceManager.loadImage(ASTEROID_S_RSC);
+		ResourceManager.loadImage(ASTEROID_M_RSC);
+		ResourceManager.loadImage(ASTEROID_C_RSC);
+		ResourceManager.loadImage(DEBRIS_S_RSC);
+		ResourceManager.loadImage(DEBRIS_M_RSC);
+		ResourceManager.loadImage(DEBRIS_C_RSC);
 		
 		
 		ball = new Ball(ScreenWidth / 2, ScreenHeight / 5, 0f, 0f, 4f);
@@ -125,8 +133,14 @@ public class BounceGame extends StateBasedGame {
 		
 		//for (int i = 0; i < 10; i++) sun.addChild(new Debris(Vector.getRandom(300), Vector.getRandom(0.5f), 1f, 2f));
 		
-		belt = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 200, sun);
-		for (int i = 0; i < 50; i++) belt.addChild( new Asteroid( new Vector(random.nextInt(ScreenWidth), random.nextInt(ScreenHeight)), new Vector(0f, 0f), 4f, 10f, 1 ) );
+		belt1 = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 200, sun);
+		belt1.generateAsteroids("S", 20);
+		
+		belt2 = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 250, sun);
+		belt2.generateAsteroids("M", 10);
+		
+		belt3 = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300, sun);
+		belt3.generateAsteroids("C", 40);
 
 	}
 	

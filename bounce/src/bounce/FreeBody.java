@@ -11,7 +11,7 @@ public abstract class FreeBody extends Entity {
 	private static float HALF_SQRT_2 = SQRT_2 / 2;
 
 	private Vector velocity;
-	private float mass;
+	public float mass;
 	private float radius;
 	
 	public FreeBody(final Vector pos, final Vector vel, final float m, final float r) {

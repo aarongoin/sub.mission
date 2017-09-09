@@ -1,7 +1,5 @@
 ## Open Issues ##
 
-** #17 ** --- Add type to Asteroid class (S, C, and M) and to Debris
-
 ** #18 ** --- Create 9 levels with progressively more Asteroids/Belts, accessable by num-keys 1-9
 
 ** #19 ** --- Add instructions to Title screen and buttons to change levels, accessable by num-key 0.
@@ -48,3 +46,6 @@
 ** #15 ** --- Add Belt class extending Attractor class that rotates child FreeBody(s) around it's ring.
 
 ** #16 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball
+
+** #17 ** --- Add type to Asteroid class (S, C, and M) and to Debris
+
