@@ -1,7 +1,5 @@
 ## Open Issues ##
 
-** #12 ** --- Add Debris class extending FreeBody class
-
 ** #16 ** --- Add Asteroid class extending FreeBody class that breaks into Debris when destroyed by Ball
 
 ** #17 ** --- Modify Ball class so that it destroys Asteroids on collision
@@ -35,6 +33,8 @@
 ** #10 ** --- Add FreeBody class (has velocity that is modified when colliding with other FreeBody(s))
 
 ** #11 ** --- Add Attractor class (has array of child FreeBody(s) that force is applied to)
+
+** #12 ** --- Add Debris class extending FreeBody class
 
 ** #13 ** --- Add Paddle class that rotates around center based on Mouse Position, and collides with Ball only
 

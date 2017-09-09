@@ -34,7 +34,7 @@ public class Paddle extends Entity {
 		
 		double theta = normal.angleTo(ball.getVelocity()) + 90;
 		
-		ball.setVelocity( ball.getVelocity().rotate(theta).scale(elasticity) );
+		ball.setVelocity( normal.scale(ball.getVelocity().length() * elasticity) );
 	}
 
 }

@@ -47,6 +47,7 @@ public class BounceGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
+	public static final String DEBRIS_RSC = "bounce/resource/debris.png";
 	public static final String SUN_RSC = "bounce/resource/sun.png";
 	public static final String BALL_BALLIMG_RSC = "bounce/resource/ball.png";
 	public static final String BALL_BROKENIMG_RSC = "bounce/resource/brokenball.png";
@@ -108,16 +109,18 @@ public class BounceGame extends StateBasedGame {
 		ResourceManager.loadImage(SUN_RSC);
 		ResourceManager.loadImage(PADDLE_RSC);
 		
-		ball = new Ball(ScreenWidth / 2, ScreenHeight / 5, 0f, 0f, 1f);
+		ball = new Ball(ScreenWidth / 2, ScreenHeight / 5, 0f, 0f, 4f);
 		
 		sun = new Sun(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
 		sun.addChild(ball);
+		
+		for (int i = 0; i < 10; i++) sun.addChild(new Debris(Vector.getRandom(300), Vector.getRandom(0.5f), 1f, 2f));
 		
 		belt = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300);
 		belt.addChild( new Ball(150, 90, 0f, 0f, 4f) );
 		belt.addChild( new Ball(140, 100, 0f, 0f, 4f) );
 		
-		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.01f);
+		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.03f);
 	}
 	
 	public static void main(String[] args) {
