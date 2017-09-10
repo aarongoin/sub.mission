@@ -3,11 +3,15 @@ package bounce;
 import java.util.Iterator;
 
 import jig.ResourceManager;
+import jig.Vector;
+
+import java.awt.Font;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -22,64 +26,88 @@ import org.newdawn.slick.state.StateBasedGame;
  * Transitions To PlayingState
  */
 class StartUpState extends BasicGameState {
-
+	
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
+	public void init(GameContainer container, StateBasedGame game) throws SlickException { 
 	}
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		container.setSoundOn(false);
-	}
-
-
-	@Override
-	public void render(GameContainer container, StateBasedGame game,
-			Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
 		
-		bg.ball.render(g);
-		g.drawString("Bounces: ?", 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
-		g.drawImage(ResourceManager.getImage(BounceGame.STARTUP_BANNER_RSC),
-				225, 270);		
+		container.setSoundOn(false);
+		
+		bg.belt1.generateAsteroids("S", 25);
+		bg.belt2.generateAsteroids("M", 15);
+		bg.belt3.generateAsteroids("C", 50);
+	}
+
+
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		BounceGame bg = (BounceGame)game;
+		
+		//bg.paddle.render(g);
+		bg.sun.render(g);
+		bg.belt1.render(g);
+		bg.belt2.render(g);
+		bg.belt3.render(g);
+
+		g.setFont(bg.title);
+		g.drawString("BREAKOUT", 60, 15);
+		
+		g.setFont(bg.text);
+		g.drawString("By: Aaron Goin", 63, 85);
+		
+		g.drawString("Aim the paddle with your mouse to direct the ball.", 63, 675);
+		g.drawString("Hit asteroids with the ball to destroy them.", 63, 700);
+		g.drawString("Destroy all the asteroids to complete each level.", 63, 725);
+		g.drawString("Beat every level to win!", 63, 750);
+		
+		g.drawString("Use NUM KEYS 1-9 to select a level.", bg.ScreenWidth - 365, 25);
+		g.drawString("Use NUM KEY 0 to return to this screen.", bg.ScreenWidth - 395, 750);
+		
+		g.drawString("press space to play", bg.ScreenWidth / 2 - 75, bg.ScreenHeight / 2 + 30);
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 
+		BounceGame bg = (BounceGame) game;
+		float dt = delta / 16.666666666666667f;
+		
 		Input input = container.getInput();
-		BounceGame bg = (BounceGame)game;
+		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 
 		if (input.isKeyDown(Input.KEY_SPACE))
-			bg.enterState(BounceGame.PLAYINGSTATE);	
+			bg.enterState(BounceGame.PLAYINGSTATE);
+		else if (input.isKeyDown(Input.KEY_1))
+			bg.setLevel(1);
+		else if (input.isKeyDown(Input.KEY_2))
+			bg.setLevel(2);
+		else if (input.isKeyDown(Input.KEY_3))
+			bg.setLevel(3);
+		else if (input.isKeyDown(Input.KEY_4))
+			bg.setLevel(4);
+		else if (input.isKeyDown(Input.KEY_5))
+			bg.setLevel(5);
+		else if (input.isKeyDown(Input.KEY_6))
+			bg.setLevel(6);
+		else if (input.isKeyDown(Input.KEY_7))
+			bg.setLevel(7);
+		else if (input.isKeyDown(Input.KEY_8))
+			bg.setLevel(8);
+		else if (input.isKeyDown(Input.KEY_9))
+			bg.setLevel(9);
+
+		//bg.sun.update(dt);
+		bg.belt1.update(dt);
+		bg.belt2.update(dt);
+		bg.belt3.update(dt);
 		
-		// bounce the ball...
-		boolean bounced = false;
-		if (bg.ball.getCoarseGrainedMaxX() > bg.ScreenWidth
-				|| bg.ball.getCoarseGrainedMinX() < 0) {
-			bg.ball.bounce(90);
-			bounced = true;
-		} else if (bg.ball.getCoarseGrainedMaxY() > bg.ScreenHeight
-				|| bg.ball.getCoarseGrainedMinY() < 0) {
-			bg.ball.bounce(0);
-			bounced = true;
-		}
-		if (bounced) {
-			bg.explosions.add(new Bang(bg.ball.getX(), bg.ball.getY()));
-		}
-		bg.ball.update(delta);
-
-		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = bg.explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
-			}
-		}
-
+		bg.belt1.beltCollisions(bg.belt2);
+		bg.belt1.beltCollisions(bg.belt3);
+		bg.belt2.beltCollisions(bg.belt3);
 	}
 
 	@Override

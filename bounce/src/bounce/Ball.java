@@ -1,6 +1,6 @@
 package bounce;
 
-import jig.Entity;
+import bounce.FreeBody;
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -10,41 +10,24 @@ import jig.Vector;
  * cracks for a nice visual effect.
  * 
  */
- class Ball extends Entity {
+ class Ball extends FreeBody {
+	 
+	Vector zero = new Vector(0f, -1f);
 
-	private Vector velocity;
-	private int countdown;
+	private int lives;
 
-	public Ball(final float x, final float y, final float vx, final float vy) {
-		super(x, y);
-		addImageWithBoundingBox(ResourceManager
-				.getImage(BounceGame.BALL_BALLIMG_RSC));
-		velocity = new Vector(vx, vy);
-		countdown = 0;
+	public Ball(final float x, final float y, final float vx, final float vy, final float m) {
+		super(new Vector(x, y), new Vector(vx, vy), m, 5.0f);
+		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_RSC));
+		lives = 3;
 	}
-
-	public void setVelocity(final Vector v) {
-		velocity = v;
+	
+	public void setLives(int l) {
+		lives = l;
 	}
-
-	public Vector getVelocity() {
-		return velocity;
-	}
-
-	/**
-	 * Bounce the ball off a surface. This simple implementation, combined
-	 * with the test used when calling this method can cause "issues" in
-	 * some situations. Can you see where/when? If so, it should be easy to
-	 * fix!
-	 * 
-	 * @param surfaceTangent
-	 */
-	public void bounce(float surfaceTangent) {
-		removeImage(ResourceManager.getImage(BounceGame.BALL_BALLIMG_RSC));
-		addImageWithBoundingBox(ResourceManager
-				.getImage(BounceGame.BALL_BROKENIMG_RSC));
-		countdown = 500;
-		velocity = velocity.bounce(surfaceTangent);
+	
+	public int getLives() {
+		return lives;
 	}
 
 	/**
@@ -53,16 +36,14 @@ import jig.Vector;
 	 * @param delta
 	 *            the number of milliseconds since the last update
 	 */
-	public void update(final int delta) {
-		translate(velocity.scale(delta));
-		if (countdown > 0) {
-			countdown -= delta;
-			if (countdown <= 0) {
-				addImageWithBoundingBox(ResourceManager
-						.getImage(BounceGame.BALL_BALLIMG_RSC));
-				removeImage(ResourceManager
-						.getImage(BounceGame.BALL_BROKENIMG_RSC));
-			}
-		}
+	public void update(final float delta) {
+		super.update(delta);
+		setVelocity(getVelocity().clampLength(0, 10f));
+		// rotate to stay facing the center
+		Vector toSun = (new Vector(650, 400)).subtract(getPosition());
+		setRotation(toSun.angleTo(zero) - 90);
+	}
+	
+	public void onCollide(FreeBody other) {
 	}
 }

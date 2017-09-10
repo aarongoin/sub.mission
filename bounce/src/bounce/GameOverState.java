@@ -7,6 +7,7 @@ import jig.ResourceManager;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
@@ -24,9 +25,8 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
  */
 class GameOverState extends BasicGameState {
 	
-
-	private int timer;
-	private int lastKnownBounces; // the user's score, to be displayed, but not updated.
+	Sound endSound;
+	private float timer;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -35,42 +35,58 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		timer = 4000;
-	}
-
-	public void setUserScore(int bounces) {
-		lastKnownBounces = bounces;
+		timer = 300f;
+		
+		if ( ((BounceGame)game).didWin )
+			endSound =  ResourceManager.getSound(BounceGame.CLAP_SND);
+		else
+			endSound = ResourceManager.getSound(BounceGame.KAZOO_SND);
+		
+		endSound.play();
 	}
 	
 	@Override
-	public void render(GameContainer container, StateBasedGame game,
-			Graphics g) throws SlickException {
-
+	public void leave(GameContainer container, StateBasedGame game) {
+		endSound.stop();
+	}
+		
+	public void setUserScore(int bounces) {
+	}
+	
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
-		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
-		g.drawImage(ResourceManager.getImage(BounceGame.GAMEOVER_BANNER_RSC), 225,
-				270);
+		
+		bg.belt1.render(g);
+		bg.belt2.render(g);
+		bg.belt3.render(g);
 
+		g.setFont(bg.title);
+		if (bg.didWin)
+			g.drawString("YOU WIN!", bg.ScreenWidth / 2 - 145, bg.ScreenHeight / 2 - 40);
+		else
+			g.drawString("YOU LOSE!", bg.ScreenWidth / 2 - 155, bg.ScreenHeight / 2 - 40);
+		
+		g.setFont(bg.text);
+		g.drawString("Score: " + bg.score, 1150, 25);
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		BounceGame bg = (BounceGame)game;
+		float dt = delta / 16.666666666666667f;
 		
-		
-		timer -= delta;
+		timer -= dt;
 		if (timer <= 0)
-			game.enterState(BounceGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition() );
+			game.enterState(BounceGame.STARTUPSTATE);
 
-		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = ((BounceGame)game).explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
-			}
-		}
-
+		bg.belt1.update(dt);
+		bg.belt2.update(dt);
+		bg.belt3.update(dt);
+		
+		bg.belt1.beltCollisions(bg.belt2);
+		bg.belt1.beltCollisions(bg.belt3);
+		bg.belt2.beltCollisions(bg.belt3);
 	}
 
 	@Override
