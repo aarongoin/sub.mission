@@ -11,6 +11,8 @@ import jig.Vector;
  * 
  */
  class Ball extends FreeBody {
+	 
+	Vector zero = new Vector(0f, -1f);
 
 	private int lives;
 
@@ -37,6 +39,9 @@ import jig.Vector;
 	public void update(final float delta) {
 		super.update(delta);
 		setVelocity(getVelocity().clampLength(0, 10f));
+		// rotate to stay facing the center
+		Vector toSun = (new Vector(650, 400)).subtract(getPosition());
+		setRotation(toSun.angleTo(zero) - 90);
 	}
 	
 	public void onCollide(FreeBody other) {
