@@ -60,7 +60,11 @@ public class BounceGame extends StateBasedGame {
 	public static final String DEBRIS_S_RSC = "bounce/resource/debris_s.png";
 	public static final String DEBRIS_M_RSC = "bounce/resource/debris_m.png";
 	public static final String DEBRIS_C_RSC = "bounce/resource/debris_c.png";
-	public static final String BANG_EXPLOSIONSND_RSC = "bounce/resource/explosion.wav";
+	public static final String BANG_SND = "bounce/resource/sound/explosion.wav";
+	public static final String BLOP_SND = "bounce/resource/sound/blop.wav";
+	public static final String CORK_SND = "bounce/resource/sound/cork.wav";
+	public static final String GONG_SND = "bounce/resource/sound/blop.wav";
+	public static final String PLING_SND = "bounce/resource/sound/blop.wav";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -126,7 +130,11 @@ public class BounceGame extends StateBasedGame {
 		// and (2) because loading it will load the audio libraries and
 		// unless that is done now, we can't *disable* sound as we
 		// attempt to do in the startUp() method.
-		ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);	
+		ResourceManager.loadSound(BANG_SND);	
+		ResourceManager.loadSound(BLOP_SND);
+		ResourceManager.loadSound(CORK_SND);	
+		ResourceManager.loadSound(GONG_SND);
+		ResourceManager.loadSound(PLING_SND);
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(BALL_RSC);
