@@ -4,33 +4,7 @@ import jig.Vector;
 
 public class Physics {
 	
-	public static Vector changeBasis(Vector orig, Vector[] basis) {
-		return new Vector(
-			orig.getX()*basis[0].getX() + orig.getY()*basis[1].getX(),
-			orig.getX()*basis[0].getY() + orig.getY()*basis[1].getY()
-		);
-	}
 	
-	public static Vector revertBasis(Vector orig, Vector[] basis) {
-		
-		// invert basis to convert back to standard basis
-		float detB = 1 / ( basis[0].getX() * basis[1].getY() - basis[0].getY() * basis[1].getX() );
-		Vector inverse[] = { new Vector( detB * basis[1].getY() , detB * basis[0].getY() * -1 ), new Vector( detB * basis[1].getX() * -1 , detB * basis[0].getX() ) };
-		
-		return changeBasis(orig, inverse);
-	}
-	
-	public static Vector[] collisionBasis(Vector Pa, Vector Pb) {
-		
-		Vector X = new Vector(Pa.getX() - Pb.getX(), Pa.getY() - Pb.getY()).unit();
-		Vector Y = X.getPerpendicular();
-		
-		//System.out.println("Collision Basis: " + X + "," + Y);
-		
-		Vector[] result = {X, Y};
-		
-		return result;
-	}
 	
 	public static float rewindToCollision(FreeBody a, FreeBody b) {
 		
@@ -66,10 +40,10 @@ public class Physics {
 	// handles perfectly elastic collisions between 2 round objects "a" and "b" using position (P), velocity (V), and mass (M)
 	public static Vector[] elasticCollision(Vector Pa, Vector Pb, Vector Va, Vector Vb, double Ma, double Mb) {
 		
-		Vector[] basis = collisionBasis(Pa, Pb);
+		Vector[] basis = VectorUtil.getBasis(Pa, Pb);
 		
-		Vector A = changeBasis(Va, basis);
-		Vector B = changeBasis(Vb, basis);
+		Vector A = VectorUtil.changeBasis(Va, basis);
+		Vector B = VectorUtil.changeBasis(Vb, basis);
 		
 		//System.out.println("Positions: A= " + Pa + " B=" + Pb);
 		//System.out.println("Velocities:  A=" + Va + " B=" + Vb + " (in original basis)");
@@ -81,9 +55,11 @@ public class Physics {
 		A = A.setX((float) Va_new);
 		B = B.setX((float) Vb_new);
 		
+		basis = VectorUtil.invertBasis(basis);
+		
 		Vector[] result = {
-			revertBasis(A, basis),
-			revertBasis(B, basis)
+			VectorUtil.changeBasis(A, basis),
+			VectorUtil.changeBasis(B, basis)
 		};
 		
 		//System.out.println("Post collision Velocities: A=" + A + " B=" + B + " (in collision basis)");

@@ -43,8 +43,8 @@ public class Sun extends Attractor {
 
 		if (ball != null) {
 			body.rotate(0.5);
-			Vector A = acceleration(ball.getPosition(), ball.getMass(), dt);
-			ball.setVelocity( ball.getVelocity().add(A) );
+			
+			accelerateBall(dt);	
 			ball.update(dt);
 	
 			if ( Physics.didCollide( body.getPosition(), ball.getPosition(), 20f, ball.getRadius() ) ) {
@@ -64,9 +64,21 @@ public class Sun extends Attractor {
 			}
 		}
 	}
-	
-	public Vector acceleration(Vector P, float M, float dt) {
+
+	public Vector acceleration(Vector P, float M, float dt) { 		
 		return P.subtract(getPosition()).unit().scale(dt * getGravity() / M);
+	}
+	
+	public void accelerateBall(float dt) {
+		Vector[] basis = VectorUtil.getBasis(ball.getPosition(), getPosition());
+		
+		Vector V = VectorUtil.changeBasis(ball.getVelocity(), basis);
+		// apply gravity
+		V = V.setX( V.getX() + (dt * getGravity() / ball.getMass()) );
+		// dampen tangential motion
+		V = V.setY( V.getY() * 0.995f);
+		
+		ball.setVelocity( VectorUtil.changeBasis( V, VectorUtil.invertBasis(basis) ) );
 	}
 	
 	public void render(final Graphics g) {

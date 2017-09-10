@@ -2,7 +2,7 @@
 
 ** #20 ** --- Add sounds for: background, ball-asteroid collision, ball-paddle collision, ball-sun collision
 
-** #23 ** --- Fix Sun-Ball interaction to prevent Ball from perpetually orbiting.
+** #24 ** --- Add Scores to game and Score Board at end
 
 
 ## Resolved Issues ##
@@ -48,3 +48,5 @@
 ** #21 ** --- Add 3 lives for Ball, and Win/Lose screen that will time out and return to title screen.
 
 ** #22 ** --- Bake shadow on sprites, and rotate to keep oriented towards Sun.
+
+** #23 ** --- Fix Sun-Ball interaction to prevent Ball from perpetually orbiting.
