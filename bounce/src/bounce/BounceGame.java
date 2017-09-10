@@ -148,7 +148,6 @@ public class BounceGame extends StateBasedGame {
 		ball = new Ball(ScreenWidth / 2, ScreenHeight / 5, 0f, 0f, 4f);
 		paddle = new Paddle(new Vector(ScreenWidth / 2, ScreenHeight / 2), 40f, 1.1f);
 		sun = new Sun(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.5f);
-		sun.addChild(ball);
 				
 		belt1 = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 200, sun);
 		

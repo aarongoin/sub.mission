@@ -12,6 +12,7 @@ public class Asteroid extends FreeBody {
 	private int strength;
 	private Belt parent;
 	private String type;
+	Vector zero = new Vector(0f, -1f);
 
 	public Asteroid(String t, Vector pos, Vector vel, float r) {
 		super(pos, vel, 1, r);
@@ -34,6 +35,14 @@ public class Asteroid extends FreeBody {
 				strength = 1;
 				break;
 		}
+	}
+	
+	@Override
+	public void update(float dt) {
+		super.update(dt);
+		// rotate to stay facing the center
+		Vector toSun = (new Vector(650, 400)).subtract(getPosition());
+		setRotation(toSun.angleTo(zero) - 90);
 	}
 	
 	public String getType() {
