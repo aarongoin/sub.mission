@@ -1,9 +1,5 @@
 ## Open Issues ##
 
-** #20 ** --- Add sounds for: background, ball-asteroid collision, ball-paddle collision, ball-sun collision
-
-** #24 ** --- Add Scores to game and Score Board at end
-
 
 ## Resolved Issues ##
 
@@ -44,6 +40,8 @@
 ** #18 ** --- Create 9 levels with progressively more Asteroids/Belts, accessable by num-keys 1-9
 
 ** #19 ** --- Add instructions to Title screen and buttons to change levels, accessable by num-key 0.
+
+** #20 ** --- Add sounds for: background, ball-asteroid collision, ball-paddle collision, ball-sun collision.
 
 ** #21 ** --- Add 3 lives for Ball, and Win/Lose screen that will time out and return to title screen.
 

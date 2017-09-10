@@ -48,6 +48,7 @@ public class Sun extends Attractor {
 			ball.update(dt);
 	
 			if ( Physics.didCollide( body.getPosition(), ball.getPosition(), 20f, ball.getRadius() ) ) {
+				ResourceManager.getSound(BounceGame.RICOCHET_SND).play();
 				ball.setLives(ball.getLives() - 1);
 				if (ball.getLives() > 0) {
 					resetBall = true;

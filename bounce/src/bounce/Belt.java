@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.newdawn.slick.Graphics;
 
+import jig.ResourceManager;
 import jig.Vector;
 
 public class Belt extends Attractor {
@@ -77,6 +78,7 @@ public class Belt extends Attractor {
 		int n = (int) c.getMass();
 		//System.out.println("Creating " + n + " Debris.");
 		for (int i = n; i > 0; i--) sun.addChild( new Debris(c.getType(), c.getPosition().add(new Vector(random.nextFloat(), random.nextFloat())), c.getVelocity().scale(-1), c.getMass() / (n * n), 2f) );
+		ResourceManager.getSound(BounceGame.FU_SND).play();
 	}
 	
 	public void render(final Graphics g) {
