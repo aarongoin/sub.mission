@@ -76,10 +76,13 @@ public class BounceGame extends StateBasedGame {
 	Belt belt3;
 	
 	int level;
+	int lives;
 	
 	public TrueTypeFont title;
 	public TrueTypeFont subtitle;
 	public TrueTypeFont text;
+	
+	public boolean didWin;
 
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -154,6 +157,7 @@ public class BounceGame extends StateBasedGame {
 		belt3 = new Belt(new Vector(ScreenWidth / 2, ScreenHeight / 2), -0.05f, 300, sun);
 
 		level = 1;
+		lives = 3;
 	}
 	
 	public static void main(String[] args) {

@@ -38,6 +38,10 @@ public abstract class Attractor {
 		toRemove.add(c);
 	}
 	
+	public ArrayList<FreeBody> getChildren() {
+		return children;
+	}
+	
 	public abstract Vector acceleration(Vector P, float M, float dt);
 	
 	public void ballCollision(FreeBody ball) {

@@ -2,11 +2,9 @@
 
 ** #20 ** --- Add sounds for: background, ball-asteroid collision, ball-paddle collision, ball-sun collision
 
-** #21 ** --- Add 3 lives for Ball, and Win/Lose screen that will time out and return to title screen.
+** #22 ** --- Bake shadow on sprites, and rotate to keep oriented towards Sun.
 
-** #22 ** --- Show remaining lives for Ball, and remaining Asteroids of each type.
-
-** #23 ** --- Bake shadow on sprites, and rotate to keep oriented towards Sun.
+** #23 ** --- Fix Sun-Ball interaction to prevent Ball from perpetually orbiting.
 
 
 ## Resolved Issues ##
@@ -48,3 +46,5 @@
 ** #18 ** --- Create 9 levels with progressively more Asteroids/Belts, accessable by num-keys 1-9
 
 ** #19 ** --- Add instructions to Title screen and buttons to change levels, accessable by num-key 0.
+
+** #21 ** --- Add 3 lives for Ball, and Win/Lose screen that will time out and return to title screen.

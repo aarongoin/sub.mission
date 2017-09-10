@@ -104,7 +104,10 @@ class StartUpState extends BasicGameState {
 		bg.belt1.update(dt);
 		bg.belt2.update(dt);
 		bg.belt3.update(dt);
-
+		
+		bg.belt1.beltCollisions(bg.belt2);
+		bg.belt1.beltCollisions(bg.belt3);
+		bg.belt2.beltCollisions(bg.belt3);
 	}
 
 	@Override

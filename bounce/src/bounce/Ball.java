@@ -12,12 +12,20 @@ import jig.Vector;
  */
  class Ball extends FreeBody {
 
-	private int countdown;
+	private int lives;
 
 	public Ball(final float x, final float y, final float vx, final float vy, final float m) {
 		super(new Vector(x, y), new Vector(vx, vy), m, 5.0f);
 		addImageWithBoundingBox(ResourceManager.getImage(BounceGame.BALL_RSC));
-		countdown = 0;
+		lives = 3;
+	}
+	
+	public void setLives(int l) {
+		lives = l;
+	}
+	
+	public int getLives() {
+		return lives;
 	}
 
 	/**
