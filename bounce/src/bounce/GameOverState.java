@@ -25,7 +25,7 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 class GameOverState extends BasicGameState {
 	
 
-	private int timer;
+	private float timer;
 	private int lastKnownBounces; // the user's score, to be displayed, but not updated.
 	
 	@Override
@@ -35,7 +35,7 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		timer = 4000;
+		timer = 300f;
 	}
 
 	public void setUserScore(int bounces) {
@@ -43,25 +43,36 @@ class GameOverState extends BasicGameState {
 	}
 	
 	@Override
-	public void render(GameContainer container, StateBasedGame game,
-			Graphics g) throws SlickException {
-
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
-		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
-		g.drawImage(ResourceManager.getImage(BounceGame.GAMEOVER_BANNER_RSC), 225,
-				270);
+		
+		bg.belt1.render(g);
+		bg.belt2.render(g);
+		bg.belt3.render(g);
 
+		g.setFont(bg.title);
+		if (bg.didWin)
+			g.drawString("YOU WIN!", bg.ScreenWidth / 2 - 145, bg.ScreenHeight / 2 - 40);
+		else
+			g.drawString("YOU LOSE!", bg.ScreenWidth / 2 - 155, bg.ScreenHeight / 2 - 40);
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int delta) throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		BounceGame bg = (BounceGame)game;
+		float dt = delta / 16.666666666666667f;
 		
-		
-		timer -= delta;
+		timer -= dt;
 		if (timer <= 0)
-			game.enterState(BounceGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition() );
+			game.enterState(BounceGame.STARTUPSTATE);
 
+		bg.belt1.update(dt);
+		bg.belt2.update(dt);
+		bg.belt3.update(dt);
+		
+		bg.belt1.beltCollisions(bg.belt2);
+		bg.belt1.beltCollisions(bg.belt3);
+		bg.belt2.beltCollisions(bg.belt3);
 	}
 
 	@Override

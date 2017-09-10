@@ -76,6 +76,7 @@ public abstract class FreeBody extends Entity {
 			
 			// hook for custom collide events
 			onCollide(other);
+			other.onCollide(this);
 		}
 	}
 	

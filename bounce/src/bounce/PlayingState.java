@@ -35,11 +35,18 @@ class PlayingState extends BasicGameState {
 		bounces = 0;
 		prepareLevel(bg);
 		container.setSoundOn(true);
+		bg.didWin = false;
+	}
+	
+	private void resetBall(BounceGame bg) {
+		bg.ball.setPosition( bg.paddle.getPosition().add( bg.paddle.getNormal().scale(100) ) );
+		bg.ball.setVelocity(bg.paddle.getNormal().scale(-8f));
+		bg.sun.addChild(bg.ball);
 	}
 	
 	private void prepareLevel(BounceGame bg) {
-		bg.ball.setPosition(bg.paddle.getPosition().add(bg.paddle.getNormal().scale(300)));
-		bg.ball.setVelocity(new Vector(0, 0));
+		bg.ball.setLives(3);
+		resetBall(bg);
 		
 		switch(bg.getLevel()) {
 		case 1:
@@ -112,6 +119,7 @@ class PlayingState extends BasicGameState {
 		
 		if (input.isKeyDown(Input.KEY_0))
 			bg.enterState(bg.STARTUPSTATE);
+
 		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 				
 		if (bg.ball.collides(bg.paddle) != null) bg.paddle.reflectBall(bg.ball);
@@ -121,6 +129,10 @@ class PlayingState extends BasicGameState {
 		bg.belt3.ballCollision(bg.ball);
 		
 		if ((bg.belt1.getCount() + bg.belt2.getCount() + bg.belt3.getCount()) == 0) {
+			if (bg.getLevel() == 9) {
+				bg.didWin = true;
+				bg.enterState(bg.GAMEOVERSTATE);
+			}
 			bg.setLevel(bg.getLevel() + 1);
 			prepareLevel(bg);
 		}
@@ -129,6 +141,16 @@ class PlayingState extends BasicGameState {
 		bg.belt1.update(dt);
 		bg.belt2.update(dt);
 		bg.belt3.update(dt);
+		
+		bg.belt1.beltCollisions(bg.belt2);
+		bg.belt1.beltCollisions(bg.belt3);
+		bg.belt2.beltCollisions(bg.belt3);
+		
+		if (bg.ball.getLives() == 0) 
+			bg.enterState(bg.GAMEOVERSTATE);
+		else if (bg.sun.resetBall)
+			resetBall(bg);
+			
 	}
 
 	@Override

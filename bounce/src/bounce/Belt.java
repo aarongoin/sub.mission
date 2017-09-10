@@ -1,5 +1,6 @@
 package bounce;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
@@ -53,6 +54,15 @@ public class Belt extends Attractor {
 				10f
 			)
 		);
+	}
+	
+	public void beltCollisions(Belt b) {
+		ArrayList<FreeBody> otherChildren = b.getChildren();
+
+		if (!children.isEmpty() && !otherChildren.isEmpty())
+			for (FreeBody child : children) {
+				for (FreeBody other : otherChildren) child.collision(other);
+			}
 	}
 	
 	public void addChild(Asteroid c) {
