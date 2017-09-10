@@ -5,10 +5,13 @@ import java.util.Iterator;
 import jig.ResourceManager;
 import jig.Vector;
 
+import java.awt.Font;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -23,15 +26,20 @@ import org.newdawn.slick.state.StateBasedGame;
  * Transitions To PlayingState
  */
 class StartUpState extends BasicGameState {
-
+	
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
+	public void init(GameContainer container, StateBasedGame game) throws SlickException { 
 	}
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		BounceGame bg = (BounceGame)game;
+		
 		container.setSoundOn(false);
+		
+		bg.belt1.generateAsteroids("S", 25);
+		bg.belt2.generateAsteroids("M", 15);
+		bg.belt3.generateAsteroids("C", 50);
 	}
 
 
@@ -39,14 +47,27 @@ class StartUpState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		BounceGame bg = (BounceGame)game;
 		
-		bg.paddle.render(g);
+		//bg.paddle.render(g);
 		bg.sun.render(g);
 		bg.belt1.render(g);
 		bg.belt2.render(g);
 		bg.belt3.render(g);
 
-		g.drawString("Bounces: ?", 10, 30);
-		g.drawImage(ResourceManager.getImage(BounceGame.STARTUP_BANNER_RSC), 225, 270);	
+		g.setFont(bg.title);
+		g.drawString("BREAKOUT", 60, 15);
+		
+		g.setFont(bg.text);
+		g.drawString("By: Aaron Goin", 63, 85);
+		
+		g.drawString("Aim the paddle with your mouse to direct the ball.", 63, 675);
+		g.drawString("Hit asteroids with the ball to destroy them.", 63, 700);
+		g.drawString("Destroy all the asteroids to complete each level.", 63, 725);
+		g.drawString("Beat every level to win!", 63, 750);
+		
+		g.drawString("Use NUM KEYS 1-9 to select a level.", bg.ScreenWidth - 365, 25);
+		g.drawString("Use NUM KEY 0 to return to this screen.", bg.ScreenWidth - 395, 750);
+		
+		g.drawString("press space to play", bg.ScreenWidth / 2 - 75, bg.ScreenHeight / 2 + 30);
 	}
 
 	@Override

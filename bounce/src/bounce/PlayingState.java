@@ -26,8 +26,7 @@ class PlayingState extends BasicGameState {
 	int bounces;
 	
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 	}
 
 	@Override
@@ -44,7 +43,7 @@ class PlayingState extends BasicGameState {
 		
 		switch(bg.getLevel()) {
 		case 1:
-			bg.belt3.generateAsteroids("C", 10);
+			bg.belt3.generateAsteroids("C", 100);
 			bg.belt2.generateAsteroids("M", 0);
 			bg.belt1.generateAsteroids("S", 0);
 			break;
@@ -100,8 +99,6 @@ class PlayingState extends BasicGameState {
 		bg.belt2.render(g);
 		bg.belt3.render(g);
 		bg.paddle.render(g);
-		
-		g.drawString("Bounces: " + bounces, 10, 30);
 	}
 
 	@Override
@@ -112,6 +109,9 @@ class PlayingState extends BasicGameState {
 		//System.out.print("Delta: " + delta + " dt: " + dt + "\n\n");
 
 		Input input = container.getInput();
+		
+		if (input.isKeyDown(Input.KEY_0))
+			bg.enterState(bg.STARTUPSTATE);
 		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 				
 		if (bg.ball.collides(bg.paddle) != null) bg.paddle.reflectBall(bg.ball);

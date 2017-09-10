@@ -1,7 +1,5 @@
 ## Open Issues ##
 
-** #19 ** --- Add instructions to Title screen and buttons to change levels, accessable by num-key 0.
-
 ** #20 ** --- Add sounds for: background, ball-asteroid collision, ball-paddle collision, ball-sun collision
 
 ** #21 ** --- Add 3 lives for Ball, and Win/Lose screen that will time out and return to title screen.
@@ -48,3 +46,5 @@
 ** #17 ** --- Add type to Asteroid class (S, C, and M) and to Debris
 
 ** #18 ** --- Create 9 levels with progressively more Asteroids/Belts, accessable by num-keys 1-9
+
+** #19 ** --- Add instructions to Title screen and buttons to change levels, accessable by num-key 0.

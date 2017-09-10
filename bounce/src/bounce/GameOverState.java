@@ -48,8 +48,6 @@ class GameOverState extends BasicGameState {
 
 		BounceGame bg = (BounceGame)game;
 		g.drawString("Bounces: " + lastKnownBounces, 10, 30);
-		for (Bang b : bg.explosions)
-			b.render(g);
 		g.drawImage(ResourceManager.getImage(BounceGame.GAMEOVER_BANNER_RSC), 225,
 				270);
 
@@ -63,13 +61,6 @@ class GameOverState extends BasicGameState {
 		timer -= delta;
 		if (timer <= 0)
 			game.enterState(BounceGame.STARTUPSTATE, new EmptyTransition(), new HorizontalSplitTransition() );
-
-		// check if there are any finished explosions, if so remove them
-		for (Iterator<Bang> i = ((BounceGame)game).explosions.iterator(); i.hasNext();) {
-			if (!i.next().isActive()) {
-				i.remove();
-			}
-		}
 
 	}
 
