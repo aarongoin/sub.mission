@@ -1,5 +1,7 @@
 ## Open Issues ##
 
+** #24 ** --- Modify Asteroids to make types more visually unique and keep bodies within range of the belt
+
 
 ## Resolved Issues ##
 
