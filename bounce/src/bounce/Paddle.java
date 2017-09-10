@@ -39,6 +39,8 @@ public class Paddle extends Entity {
 		double theta = normal.angleTo(ball.getVelocity()) + 90;
 		
 		ball.setVelocity( normal.scale(ball.getVelocity().length() * elasticity) );
+		
+		ResourceManager.getSound(BounceGame.CORK_SND).play();
 	}
 
 }

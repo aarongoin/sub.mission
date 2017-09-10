@@ -2,12 +2,14 @@ package bounce;
 
 import java.util.Iterator;
 
+import jig.ResourceManager;
 import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -26,17 +28,26 @@ class PlayingState extends BasicGameState {
 	int bounces;
 	int asteroids;
 	
+	Sound background;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		background = ResourceManager.getSound(BounceGame.RECORD_SND);
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		BounceGame bg = (BounceGame) game;
+		container.setSoundOn(true);
 		bounces = 0;
 		prepareLevel(bg);
-		container.setSoundOn(true);
 		bg.didWin = false;
+		background.loop();
+	}
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) {
+		background.stop();
 	}
 	
 	private void resetBall(BounceGame bg) {
@@ -48,6 +59,7 @@ class PlayingState extends BasicGameState {
 	private void prepareLevel(BounceGame bg) {
 		bg.ball.setLives(3);
 		resetBall(bg);
+		bg.sun.removeDebris();
 		
 		switch(bg.getLevel()) {
 		case 1:
@@ -100,11 +112,12 @@ class PlayingState extends BasicGameState {
 			break;
 		case 9:
 			asteroids = 90;
-			bg.belt3.generateAsteroids("C", 50);
-			bg.belt2.generateAsteroids("M", 15);
-			bg.belt1.generateAsteroids("S", 25);
+			bg.belt3.generateAsteroids("C", 1);
+			bg.belt2.generateAsteroids("M", 0);
+			bg.belt1.generateAsteroids("S", 0);
 			break;
 		}
+		ResourceManager.getSound(BounceGame.GONG_SND).play();
 	}
 	
 	@Override
@@ -149,9 +162,10 @@ class PlayingState extends BasicGameState {
 			if (bg.getLevel() == 9) {
 				bg.didWin = true;
 				bg.enterState(bg.GAMEOVERSTATE);
+			} else {
+				bg.setLevel(bg.getLevel() + 1);
+				prepareLevel(bg);
 			}
-			bg.setLevel(bg.getLevel() + 1);
-			prepareLevel(bg);
 		}
 		
 		bg.sun.update(dt);

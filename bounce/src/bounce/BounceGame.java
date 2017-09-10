@@ -50,6 +50,14 @@ public class BounceGame extends StateBasedGame {
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	
+	public static final String FU_SND = "bounce/resource/sound/fu.wav";
+	public static final String CORK_SND = "bounce/resource/sound/cork.wav";
+	public static final String GONG_SND = "bounce/resource/sound/gong.wav";
+	public static final String RECORD_SND = "bounce/resource/sound/record.wav";
+	public static final String RICOCHET_SND = "bounce/resource/sound/ricochet.wav";
+	public static final String KAZOO_SND = "bounce/resource/sound/kazoo.wav";
+	public static final String CLAP_SND = "bounce/resource/sound/clap.wav";
+	
 	public static final String SUN_RSC = "bounce/resource/sun.png";
 	public static final String BALL_RSC = "bounce/resource/ball.png";
 	public static final String GAMEOVER_BANNER_RSC = "bounce/resource/gameover.png";
@@ -60,11 +68,6 @@ public class BounceGame extends StateBasedGame {
 	public static final String DEBRIS_S_RSC = "bounce/resource/debris_s.png";
 	public static final String DEBRIS_M_RSC = "bounce/resource/debris_m.png";
 	public static final String DEBRIS_C_RSC = "bounce/resource/debris_c.png";
-	public static final String BANG_SND = "bounce/resource/sound/explosion.wav";
-	public static final String BLOP_SND = "bounce/resource/sound/blop.wav";
-	public static final String CORK_SND = "bounce/resource/sound/cork.wav";
-	public static final String GONG_SND = "bounce/resource/sound/blop.wav";
-	public static final String PLING_SND = "bounce/resource/sound/blop.wav";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -130,11 +133,13 @@ public class BounceGame extends StateBasedGame {
 		// and (2) because loading it will load the audio libraries and
 		// unless that is done now, we can't *disable* sound as we
 		// attempt to do in the startUp() method.
-		ResourceManager.loadSound(BANG_SND);	
-		ResourceManager.loadSound(BLOP_SND);
+		ResourceManager.loadSound(FU_SND);
 		ResourceManager.loadSound(CORK_SND);	
 		ResourceManager.loadSound(GONG_SND);
-		ResourceManager.loadSound(PLING_SND);
+		ResourceManager.loadSound(RECORD_SND);
+		ResourceManager.loadSound(RICOCHET_SND);
+		ResourceManager.loadSound(KAZOO_SND);
+		ResourceManager.loadSound(CLAP_SND);
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(BALL_RSC);

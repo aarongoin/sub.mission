@@ -7,6 +7,7 @@ import jig.ResourceManager;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
@@ -24,9 +25,8 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
  */
 class GameOverState extends BasicGameState {
 	
-
+	Sound endSound;
 	private float timer;
-	private int lastKnownBounces; // the user's score, to be displayed, but not updated.
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -36,10 +36,21 @@ class GameOverState extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		timer = 300f;
+		
+		if ( ((BounceGame)game).didWin )
+			endSound =  ResourceManager.getSound(BounceGame.CLAP_SND);
+		else
+			endSound = ResourceManager.getSound(BounceGame.KAZOO_SND);
+		
+		endSound.play();
 	}
-
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) {
+		endSound.stop();
+	}
+		
 	public void setUserScore(int bounces) {
-		lastKnownBounces = bounces;
 	}
 	
 	@Override
