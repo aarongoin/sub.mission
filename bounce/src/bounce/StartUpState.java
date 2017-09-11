@@ -37,8 +37,8 @@ class StartUpState extends BasicGameState {
 		
 		container.setSoundOn(false);
 		
-		bg.belt1.generateAsteroids("S", 25);
-		bg.belt2.generateAsteroids("M", 15);
+		bg.belt2.generateAsteroids("S", 25);
+		bg.belt1.generateAsteroids("M", 15);
 		bg.belt3.generateAsteroids("C", 50);
 	}
 

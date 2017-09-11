@@ -71,38 +71,38 @@ class PlayingState extends BasicGameState {
 		case 1:
 			asteroids = 10;
 			bg.belt3.generateAsteroids("C", 10);
-			bg.belt2.generateAsteroids("M", 0);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 0);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 2:
 			asteroids = 20;
 			bg.belt3.generateAsteroids("C", 20);
-			bg.belt2.generateAsteroids("M", 0);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 0);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 3:
 			asteroids = 30;
 			bg.belt3.generateAsteroids("C", 0);
-			bg.belt2.generateAsteroids("M", 10);
-			bg.belt1.generateAsteroids("S", 20);
+			bg.belt1.generateAsteroids("M", 10);
+			bg.belt2.generateAsteroids("S", 20);
 			break;
 		case 4:
 			asteroids = 40;
 			bg.belt3.generateAsteroids("C", 30);
-			bg.belt2.generateAsteroids("M", 10);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 10);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 5:
 			asteroids = 50;
 			bg.belt3.generateAsteroids("C", 0);
-			bg.belt2.generateAsteroids("M", 20);
-			bg.belt1.generateAsteroids("S", 30);
+			bg.belt1.generateAsteroids("M", 20);
+			bg.belt2.generateAsteroids("S", 30);
 			break;
 		case 6:
 			asteroids = 60;
 			bg.belt3.generateAsteroids("C", 45);
-			bg.belt2.generateAsteroids("M", 15);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 15);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 7:
 			asteroids = 70;
@@ -113,14 +113,14 @@ class PlayingState extends BasicGameState {
 		case 8:
 			asteroids = 80;
 			bg.belt3.generateAsteroids("C", 45);
-			bg.belt2.generateAsteroids("M", 10);
-			bg.belt1.generateAsteroids("S", 25);
+			bg.belt1.generateAsteroids("M", 10);
+			bg.belt2.generateAsteroids("S", 25);
 			break;
 		case 9:
 			asteroids = 90;
 			bg.belt3.generateAsteroids("C", 50);
-			bg.belt2.generateAsteroids("M", 15);
-			bg.belt1.generateAsteroids("S", 30);
+			bg.belt1.generateAsteroids("M", 15);
+			bg.belt2.generateAsteroids("S", 30);
 			break;
 		}
 		ResourceManager.getSound(BounceGame.GONG_SND).play();
