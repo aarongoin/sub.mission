@@ -67,6 +67,7 @@ class StartUpState extends BasicGameState {
 		g.drawString("Use NUM KEYS 1-9 to select a level.", bg.ScreenWidth - 365, 25);
 		g.drawString("Use NUM KEY 0 to return to this screen.", bg.ScreenWidth - 395, 750);
 		
+		g.drawString("Level " + bg.level, bg.ScreenWidth / 2 - 28, bg.ScreenHeight / 2 - 60);
 		g.drawString("press space to play", bg.ScreenWidth / 2 - 75, bg.ScreenHeight / 2 + 30);
 	}
 
