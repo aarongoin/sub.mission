@@ -13,12 +13,15 @@ public class Belt extends Attractor {
 	private static Random random;
 	float radius;
 	Sun sun;
+	
+	public int destroyed;
 
 	public Belt(Vector pos, float g, float r, Sun s) {
 		super(pos, g);
 		radius = r;
 		random = new Random( System.currentTimeMillis() );
 		sun = s;
+		destroyed = 0;
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class Belt extends Attractor {
 				type,
 				(new Vector(random.nextInt((int) radius * 2), random.nextInt((int) radius * 2))).add(getPosition().add(new Vector(-radius, -radius))),
 				new Vector(0f, 0f),
-				10f
+				(type == "M" ? 7.5f : 10f)
 			)
 		);
 	}
@@ -79,6 +82,7 @@ public class Belt extends Attractor {
 		//System.out.println("Creating " + n + " Debris.");
 		for (int i = n; i > 0; i--) sun.addChild( new Debris(c.getType(), c.getPosition().add(new Vector(random.nextFloat(), random.nextFloat())), c.getVelocity().scale(-1), c.getMass() / (n * n), 2f) );
 		ResourceManager.getSound(BounceGame.FU_SND).play();
+		destroyed += 1;
 	}
 	
 	public void render(final Graphics g) {

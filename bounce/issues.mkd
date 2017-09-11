@@ -1,7 +1,5 @@
 ## Open Issues ##
 
-** #24 ** --- Modify Asteroids to make types more visually unique and keep bodies within range of the belt
-
 
 ## Resolved Issues ##
 
@@ -50,3 +48,7 @@
 ** #22 ** --- Bake shadow on sprites, and rotate to keep oriented towards Sun.
 
 ** #23 ** --- Fix Sun-Ball interaction to prevent Ball from perpetually orbiting.
+
+** #24 ** --- Make Asteroid types look more distinct.
+
+** #25 ** --- Show level chosen on title screen, modify score calculation, limit whole game to 3 lives w/ bonus points for lives remaining at end.

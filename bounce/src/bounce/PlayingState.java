@@ -26,7 +26,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 class PlayingState extends BasicGameState {
 	int bounces;
-	int asteroids;
+	int asteroids[] = {0, 0, 0};
 	
 	Sound background;
 		
@@ -44,6 +44,7 @@ class PlayingState extends BasicGameState {
 		bg.didWin = false;
 		background.loop();
 		bg.score = 0;
+		bg.ball.setLives(3);
 	}
 	
 	@Override
@@ -58,69 +59,64 @@ class PlayingState extends BasicGameState {
 	}
 	
 	public void updateScore(BounceGame bg) {
-		int levelScore = ( bg.getLevel() * 10 ) / ( 3 - bg.ball.getLives() + 1 );
-		bg.score += levelScore;
+		bg.score += bg.belt1.destroyed * 3;
+		bg.score += bg.belt2.destroyed * 2;
+		bg.score += bg.belt3.destroyed * 1;
+		
+		bg.belt1.destroyed = 0;
+		bg.belt2.destroyed = 0;
+		bg.belt3.destroyed = 0;
 	}
 	
 	private void prepareLevel(BounceGame bg) {
-		bg.ball.setLives(3);
 		resetBall(bg);
 		bg.sun.removeDebris();
 		
 		switch(bg.getLevel()) {
 		case 1:
-			asteroids = 10;
 			bg.belt3.generateAsteroids("C", 10);
-			bg.belt2.generateAsteroids("M", 0);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 0);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 2:
-			asteroids = 20;
 			bg.belt3.generateAsteroids("C", 20);
-			bg.belt2.generateAsteroids("M", 0);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 0);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 3:
-			asteroids = 30;
 			bg.belt3.generateAsteroids("C", 0);
-			bg.belt2.generateAsteroids("M", 10);
-			bg.belt1.generateAsteroids("S", 20);
+			bg.belt1.generateAsteroids("M", 10);
+			bg.belt2.generateAsteroids("S", 20);
 			break;
 		case 4:
-			asteroids = 40;
 			bg.belt3.generateAsteroids("C", 30);
-			bg.belt2.generateAsteroids("M", 10);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 10);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 5:
-			asteroids = 50;
 			bg.belt3.generateAsteroids("C", 0);
-			bg.belt2.generateAsteroids("M", 20);
-			bg.belt1.generateAsteroids("S", 30);
+			bg.belt1.generateAsteroids("M", 20);
+			bg.belt2.generateAsteroids("S", 30);
 			break;
 		case 6:
-			asteroids = 60;
 			bg.belt3.generateAsteroids("C", 45);
-			bg.belt2.generateAsteroids("M", 15);
-			bg.belt1.generateAsteroids("S", 0);
+			bg.belt1.generateAsteroids("M", 15);
+			bg.belt2.generateAsteroids("S", 0);
 			break;
 		case 7:
-			asteroids = 70;
 			bg.belt3.generateAsteroids("C", 45);
 			bg.belt2.generateAsteroids("M", 10);
 			bg.belt1.generateAsteroids("S", 15);
 			break;
 		case 8:
-			asteroids = 80;
 			bg.belt3.generateAsteroids("C", 45);
-			bg.belt2.generateAsteroids("M", 10);
-			bg.belt1.generateAsteroids("S", 25);
+			bg.belt1.generateAsteroids("M", 10);
+			bg.belt2.generateAsteroids("S", 25);
 			break;
 		case 9:
-			asteroids = 90;
 			bg.belt3.generateAsteroids("C", 50);
-			bg.belt2.generateAsteroids("M", 15);
-			bg.belt1.generateAsteroids("S", 30);
+			bg.belt1.generateAsteroids("M", 15);
+			bg.belt2.generateAsteroids("S", 30);
 			break;
 		}
 		ResourceManager.getSound(BounceGame.GONG_SND).play();
@@ -162,9 +158,8 @@ class PlayingState extends BasicGameState {
 		bg.belt2.ballCollision(bg.ball);
 		bg.belt3.ballCollision(bg.ball);
 		
-		asteroids = bg.belt1.getCount() + bg.belt2.getCount() + bg.belt3.getCount();
-		if (asteroids == 0) {
-			updateScore(bg);
+		updateScore(bg);
+		if (bg.belt1.getCount() + bg.belt2.getCount() + bg.belt3.getCount() == 0) {
 			if (bg.getLevel() == 9) {
 				bg.didWin = true;
 				bg.enterState(bg.GAMEOVERSTATE);
