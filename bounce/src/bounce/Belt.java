@@ -52,7 +52,7 @@ public class Belt extends Attractor {
 				type,
 				(new Vector(random.nextInt((int) radius * 2), random.nextInt((int) radius * 2))).add(getPosition().add(new Vector(-radius, -radius))),
 				new Vector(0f, 0f),
-				10f
+				(type == "M" ? 7.5f : 10f)
 			)
 		);
 	}
