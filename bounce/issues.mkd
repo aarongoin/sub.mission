@@ -1,6 +1,5 @@
 ## Open Issues ##
 
-** #25 ** --- Show level chosen on title screen, modify score calculation, limit whole game to 3 lives w/ bonus points for lives remaining at end.
 
 ## Resolved Issues ##
 
@@ -51,3 +50,5 @@
 ** #23 ** --- Fix Sun-Ball interaction to prevent Ball from perpetually orbiting.
 
 ** #24 ** --- Make Asteroid types look more distinct.
+
+** #25 ** --- Show level chosen on title screen, modify score calculation, limit whole game to 3 lives w/ bonus points for lives remaining at end.
