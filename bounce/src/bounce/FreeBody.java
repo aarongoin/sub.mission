@@ -7,9 +7,6 @@ import jig.Vector;
 
 public abstract class FreeBody extends Entity {
 
-	private static float SQRT_2 = (float) Math.sqrt(2);
-	private static float HALF_SQRT_2 = SQRT_2 / 2;
-
 	private Vector velocity;
 	public float mass;
 	private float radius;

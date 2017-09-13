@@ -1,9 +1,5 @@
 package bounce;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-
-import jig.ConvexPolygon;
 import jig.ResourceManager;
 import jig.Vector;
 

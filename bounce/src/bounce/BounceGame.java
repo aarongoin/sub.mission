@@ -1,8 +1,6 @@
 package bounce;
 
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.Random;
 
 import jig.Entity;
 import jig.Vector;
@@ -60,7 +58,6 @@ public class BounceGame extends StateBasedGame {
 	
 	public static final String SUN_RSC = "bounce/resource/sun.png";
 	public static final String BALL_RSC = "bounce/resource/ball.png";
-	public static final String GAMEOVER_BANNER_RSC = "bounce/resource/gameover.png";
 	public static final String PADDLE_RSC = "bounce/resource/paddle.png";
 	public static final String ASTEROID_S_RSC = "bounce/resource/asteroid_s.png";
 	public static final String ASTEROID_M_RSC = "bounce/resource/asteroid_m.png";
@@ -71,9 +68,7 @@ public class BounceGame extends StateBasedGame {
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
-	
-	private static Random random;
-	
+		
 	Paddle paddle;
 	Ball ball;
 	Sun sun;
@@ -108,8 +103,6 @@ public class BounceGame extends StateBasedGame {
 		ScreenWidth = width;
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
-		
-		random = new Random( System.currentTimeMillis() );
 	}
 	
 	public void setLevel(int l) {
@@ -144,7 +137,6 @@ public class BounceGame extends StateBasedGame {
 
 		// preload all the resources to avoid warnings & minimize latency...
 		ResourceManager.loadImage(BALL_RSC);
-		ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		ResourceManager.loadImage(SUN_RSC);
 		ResourceManager.loadImage(PADDLE_RSC);
 		ResourceManager.loadImage(ASTEROID_S_RSC);
@@ -176,7 +168,7 @@ public class BounceGame extends StateBasedGame {
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new BounceGame("Bounce!", 1300, 800));
+			app = new AppGameContainer(new BounceGame("Breakout", 1300, 800));
 			app.setDisplayMode(1300, 800, false);
 			app.setVSync(true);
 			app.start();

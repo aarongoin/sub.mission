@@ -1,11 +1,7 @@
 package bounce;
 
-import java.util.ArrayList;
-
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-import jig.ConvexPolygon;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;

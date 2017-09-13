@@ -1,7 +1,5 @@
 package bounce;
 
-import java.util.Iterator;
-
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -148,7 +146,7 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		
 		if (input.isKeyDown(Input.KEY_0))
-			bg.enterState(bg.STARTUPSTATE);
+			bg.enterState(BounceGame.STARTUPSTATE);
 
 		bg.paddle.update(new Vector(input.getMouseX(), input.getMouseY()));
 				
@@ -162,7 +160,7 @@ class PlayingState extends BasicGameState {
 		if (bg.belt1.getCount() + bg.belt2.getCount() + bg.belt3.getCount() == 0) {
 			if (bg.getLevel() == 9) {
 				bg.didWin = true;
-				bg.enterState(bg.GAMEOVERSTATE);
+				bg.enterState(BounceGame.GAMEOVERSTATE);
 			} else {
 				bg.setLevel(bg.getLevel() + 1);
 				prepareLevel(bg);
@@ -179,7 +177,7 @@ class PlayingState extends BasicGameState {
 		bg.belt2.beltCollisions(bg.belt3);
 		
 		if (bg.ball.getLives() == 0) 
-			bg.enterState(bg.GAMEOVERSTATE);
+			bg.enterState(BounceGame.GAMEOVERSTATE);
 		else if (bg.sun.resetBall)
 			resetBall(bg);
 			
