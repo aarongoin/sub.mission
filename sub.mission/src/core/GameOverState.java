@@ -1,4 +1,4 @@
-package bounce;
+package core;
 
 import jig.ResourceManager;
 
@@ -32,12 +32,7 @@ class GameOverState extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		timer = 300f;
-		
-		if ( ((BounceGame)game).didWin )
-			endSound =  ResourceManager.getSound(BounceGame.CLAP_SND);
-		else
-			endSound = ResourceManager.getSound(BounceGame.KAZOO_SND);
-		
+
 		endSound.play();
 	}
 	
@@ -51,43 +46,24 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		BounceGame bg = (BounceGame)game;
+		SubMission G = (SubMission)game;
 		
-		bg.belt1.render(g);
-		bg.belt2.render(g);
-		bg.belt3.render(g);
-
-		g.setFont(bg.title);
-		if (bg.didWin)
-			g.drawString("YOU WIN!", bg.ScreenWidth / 2 - 145, bg.ScreenHeight / 2 - 40);
-		else
-			g.drawString("YOU LOSE!", bg.ScreenWidth / 2 - 155, bg.ScreenHeight / 2 - 40);
-		
-		g.setFont(bg.text);
-		g.drawString("Score: " + bg.score, 1150, 25);
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		BounceGame bg = (BounceGame)game;
+		SubMission bg = (SubMission)game;
 		float dt = delta / 16.666666666666667f;
 		
 		timer -= dt;
 		if (timer <= 0)
-			game.enterState(BounceGame.STARTUPSTATE);
+			game.enterState(SubMission.MENUSTATE);
 
-		bg.belt1.update(dt);
-		bg.belt2.update(dt);
-		bg.belt3.update(dt);
-		
-		bg.belt1.beltCollisions(bg.belt2);
-		bg.belt1.beltCollisions(bg.belt3);
-		bg.belt2.beltCollisions(bg.belt3);
 	}
 
 	@Override
 	public int getID() {
-		return BounceGame.GAMEOVERSTATE;
+		return SubMission.GAMEOVERSTATE;
 	}
 	
 }
