@@ -21,7 +21,6 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 class GameOverState extends BasicGameState {
 	
-	Sound endSound;
 	private float timer;
 	
 	@Override
@@ -31,14 +30,14 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		timer = 300f;
+		SubMission G = (SubMission) game;
+		timer = 1000f;
 
-		endSound.play();
+		G.depth = SubMission.getImage("land");
 	}
 	
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) {
-		endSound.stop();
 	}
 		
 	public void setUserScore(int bounces) {
@@ -46,8 +45,30 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		SubMission G = (SubMission)game;
+		SubMission G = (SubMission) game;
 		
+		g.drawImage(G.map, 0, 0);
+		g.drawImage(G.depth, 0, 0);
+		
+		g.setFont(G.subtitle);
+		if (G.missionFailed > 0)
+			g.drawString("Mission Failed!", SubMission.ScreenWidth / 2 - 90, SubMission.ScreenHeight / 2 - 30);
+		
+		g.setFont(G.text);
+		switch (G.missionFailed) {
+		case 0:
+			g.drawString("Great Job, Captain!", SubMission.ScreenWidth / 2 - 82, SubMission.ScreenHeight / 2 + 30);
+			break;
+		case 1:
+			g.drawString("You ran aground!", SubMission.ScreenWidth / 2 - 72, SubMission.ScreenHeight / 2 + 30);
+			break;
+		case 2:
+			g.drawString("You were sunk!", SubMission.ScreenWidth / 2 - 64, SubMission.ScreenHeight / 2 + 30);
+			break;
+		case 3:
+			g.drawString("You ran aground!", SubMission.ScreenWidth / 2 - 72, SubMission.ScreenHeight / 2 + 30);
+			break;
+		}
 	}
 
 	@Override

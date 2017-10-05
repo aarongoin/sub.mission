@@ -16,6 +16,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import jig.ResourceManager;
 import jig.Vector;
+import jig.Entity;
 
 
 public class SubMission extends StateBasedGame {
@@ -31,6 +32,8 @@ public class SubMission extends StateBasedGame {
 
 	public static int ScreenWidth;
 	public static int ScreenHeight;
+	
+	public int missionFailed;
 		
 	HashMap<String, Integer> layers;
 	public List<List<Entity>> entities;
@@ -57,9 +60,11 @@ public class SubMission extends StateBasedGame {
 	public SubMission(String title) {
 		super(title);
 				
-		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
+		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
 		//camera = new Camera(new Vector(ScreenWidth / 2, ScreenHeight / 2), ScreenWidth, ScreenHeight);
 		
+		
+		missionFailed = 0;
 		layers = new HashMap<String, Integer>();
 		entities = new ArrayList<List<Entity>>();
 		
@@ -89,6 +94,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("depth", "resource/img/ui/depth.png");
 		IMG.put("speed_target", "resource/img/ui/speed_target.png");
 		IMG.put("depth_target", "resource/img/ui/depth_target.png");
+		IMG.put("bearing_target", "resource/img/ui/bearing_target.png");
 		IMG.put("marker", "resource/img/ui/marker.png");
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
@@ -152,7 +158,7 @@ public class SubMission extends StateBasedGame {
 	}
 	
 	public int getLayerIndex(String layer) {
-		return Math.abs(layers.get(layer));
+		return Math.abs(layers.get(layer)) - 1;
 	}
 	
 	public List<Entity> getLayer(String layer) {
@@ -161,6 +167,7 @@ public class SubMission extends StateBasedGame {
 	
 	public boolean addEntity(String layer, Entity e) {
 		if (layers.containsKey(layer)) {
+			//System.out.println(entities.get(getLayerIndex(layer)));
 			entities.get(getLayerIndex(layer)).add(e);
 			return true;
 		}
