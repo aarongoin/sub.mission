@@ -96,6 +96,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("depth_target", "resource/img/ui/depth_target.png");
 		IMG.put("bearing_target", "resource/img/ui/bearing_target.png");
 		IMG.put("marker", "resource/img/ui/marker.png");
+		IMG.put("mission_target", "resource/img/ui/mission_target.png");
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 	}
