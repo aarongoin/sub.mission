@@ -44,9 +44,6 @@ class MenuState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		SubMission G = (SubMission) game;
 		// start background sound looping
-		G.bg = SubMission.getSound("bg");
-		G.map = SubMission.getImage("map");
-		G.depth = SubMission.getImage("land");
 		G.bg.loop();
 		t = 0;
 		d = 0;

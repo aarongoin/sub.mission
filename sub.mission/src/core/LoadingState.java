@@ -56,6 +56,7 @@ class LoadingState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		SubMission G = (SubMission) game;
 		switch(state) {
 		case 1:
 			assets.addAll(SubMission.IMG.values());
@@ -73,7 +74,10 @@ class LoadingState extends BasicGameState {
 			break;
 			
 		case 3:
-			game.enterState(SubMission.MENUSTATE);
+			G.bg = SubMission.getSound("bg");
+			G.map = SubMission.getImage("map");
+			G.depth = SubMission.getImage("land");
+			G.enterState(SubMission.MENUSTATE);
 			break;
 		}
 	}
