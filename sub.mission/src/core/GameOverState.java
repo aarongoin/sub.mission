@@ -52,20 +52,25 @@ class GameOverState extends BasicGameState {
 		
 		g.setFont(G.subtitle);
 		if (G.missionFailed > 0)
-			g.drawString("Mission Failed!", SubMission.ScreenWidth / 2 - 90, SubMission.ScreenHeight / 2 - 30);
+			g.drawString("Mission Failed.", SubMission.ScreenWidth / 2 - 90, SubMission.ScreenHeight / 2 - 30);
+		else
+			g.drawString("Mission Complete!", SubMission.ScreenWidth / 2 - 110, SubMission.ScreenHeight / 2 - 30);
 		
 		g.setFont(G.text);
 		switch (G.missionFailed) {
 		case 0:
-			g.drawString("Great Job, Captain!", SubMission.ScreenWidth / 2 - 82, SubMission.ScreenHeight / 2 + 30);
+			g.drawString("Great Job, Captain.", SubMission.ScreenWidth / 2 - 82, SubMission.ScreenHeight / 2 + 30);
 			break;
 		case 1:
-			g.drawString("You ran aground!", SubMission.ScreenWidth / 2 - 72, SubMission.ScreenHeight / 2 + 30);
-			break;
-		case 2:
-			g.drawString("You were sunk!", SubMission.ScreenWidth / 2 - 64, SubMission.ScreenHeight / 2 + 30);
+			g.drawString("You need to deploy your team before the window closes!", SubMission.ScreenWidth / 2 - 230, SubMission.ScreenHeight / 2 + 30);
 			break;
 		case 3:
+			g.drawString("Your team has been captured!", SubMission.ScreenWidth / 2 - 125, SubMission.ScreenHeight / 2 + 30);
+			break;
+		case 4:
+			g.drawString("You failed to escape enemy waters in time!", SubMission.ScreenWidth / 2 - 175, SubMission.ScreenHeight / 2 + 30);
+			break;
+		case 10:
 			g.drawString("You ran aground!", SubMission.ScreenWidth / 2 - 72, SubMission.ScreenHeight / 2 + 30);
 			break;
 		}

@@ -28,7 +28,7 @@ public class Submarine extends MilitaryVessel {
 	Vector bearingOffset;
 
 	public Submarine(float depth, float dive) {
-		super("sub0", new Vector(SubMission.ScreenWidth - 100, 600), 1.5f, 4, 180, 10, 10, 2);
+		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 4, 180, 10, 10, 2);
 		
 		hoverBearing = targetBearing;
 		currentDepth = depth;
