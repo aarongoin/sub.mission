@@ -201,7 +201,9 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		SubMission G = (SubMission) game;
+		float dt = delta / 1000f;
 		
+		mission.update(dt);
 		if (WinOrLose(G)) 
 			G.enterState(SubMission.GAMEOVERSTATE);
 		
@@ -210,8 +212,7 @@ class PlayingState extends BasicGameState {
 			state += 1;
 			stage(G);
 		}
-			
-		float dt = delta / 1000f;
+		
 		float ambientNoise = G.getLayer("traffic").size() * 50 + G.getLayer("military").size() * 20;
 		//System.out.println(ambientNoise);
 		
