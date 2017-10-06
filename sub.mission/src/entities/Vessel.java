@@ -25,8 +25,8 @@ public class Vessel extends Entity {
 	protected float currentBearing;
 	protected float targetBearing;
 	
-	float acceleration;
-	float turnRadius;
+	protected float acceleration;
+	protected float turnRadius;
 	
 	float baseNoise;
 	
@@ -83,7 +83,7 @@ public class Vessel extends Entity {
 	}
 	
 	protected void setNose() {
-		nose = getPosition().add(new Vector(0, -1).rotate(currentBearing).scale(sprite.getHeight() / 2));
+		nose = getPosition().add(new Vector(1, 0).rotate(currentBearing).scale(sprite.getHeight() / 2));
 	}
 	
 	public Vector getNose() {
@@ -120,17 +120,48 @@ public class Vessel extends Entity {
 				currentSpeed = targetSpeed;
 		}
 		//System.out.println("targetBearing: " + targetBearing + " currentBearing: " + currentBearing);
-		if (Math.abs(currentBearing - targetBearing) < 0.5)
+		float d = Math.abs(currentBearing - targetBearing);
+		if (d < 0.5 || d > 359.5) {
+			System.out.println("done turning.");
 			currentBearing = targetBearing;
-		else {
-			if (targetBearing > currentBearing || (currentBearing - targetBearing > 180))
+		} else {
+			if ((targetBearing > 0 && currentBearing > 0) || (targetBearing <= 0 && currentBearing <= 0)) {
+				if (currentBearing > targetBearing) {
+					System.out.println("turning left...");
+					currentBearing -= turnRadius*dt;
+				} else {
+					System.out.println("turning right...");
+					currentBearing += turnRadius*dt;
+				}
+			} else {
+				d = targetBearing - currentBearing;
+				if (d > 180 || d > -180) {
+					System.out.println("turning left...");
+					currentBearing -= turnRadius*dt;
+				} else {
+					System.out.println("turning right...");
+					currentBearing += turnRadius*dt;
+				}
+			}
+			
+			/*
+			if (currentBearing < 0 && targetBearing < 0) {
+				
+			} else
+			if (theta > 0 && theta < 180)
 				currentBearing += turnRadius*dt;
 			else
 				currentBearing -= turnRadius*dt;
+			*/
+			if (currentBearing > 180)
+				currentBearing -= 360;
+			else if (currentBearing <= -180)
+				currentBearing += 360;
+			
 		}
 		
-		setPosition(getPosition().add(new Vector(0, -1).rotate(currentBearing).scale(currentSpeed * 0.5144f * dt)));
-		setRotation(currentBearing);
+		setPosition(getPosition().add(new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f * dt)));
+		sprite.setRotation(currentBearing + 90);
 		setNose();
 	}
 }
