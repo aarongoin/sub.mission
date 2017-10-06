@@ -239,17 +239,18 @@ class PlayingState extends BasicGameState {
 
 		// submarine sonar affects how ships are drawn
 		sonarCountdown -= dt;
-		if (sonarCountdown <= 0) {
-			for (Entity e : G.getLayer("traffic")) {
-				((CommercialVessel) e).update(dt);
+		for (Entity e : G.getLayer("traffic")) {
+			((CommercialVessel) e).update(dt);
+			if (sonarCountdown <= 0)
 				DetectWithSonar((Vessel) e);
-			}
-			for (Entity e : G.getLayer("military")) {
-				((MilitaryVessel) e).update(dt);
-				DetectWithSonar((Vessel) e);
-			}
-			sonarCountdown = 1;
 		}
+		for (Entity e : G.getLayer("military")) {
+			((MilitaryVessel) e).update(dt);
+			if (sonarCountdown <= 0)
+				DetectWithSonar((Vessel) e);
+		}
+		if (sonarCountdown <= 0)
+			sonarCountdown = 1;
 	}
 
 	@Override

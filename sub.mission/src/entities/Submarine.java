@@ -34,6 +34,7 @@ public class Submarine extends MilitaryVessel {
 		currentDepth = depth;
 		targetDepth = depth;
 		diveSpeed = dive;
+		maxSpeed = 45;
 		
 		bearing = SubMission.getImage("bearing_target");
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);
@@ -120,7 +121,7 @@ public class Submarine extends MilitaryVessel {
 		if (mouse.lengthSquared() < 2000) {
 			//System.out.println("mouse: " + mouse + " length: " + mouse.length() + " bearing: " + mouse.getRotation());
 			hoverBearing = (float) mouse.getRotation();
-			System.out.println("mouse: " + hoverBearing);
+			//System.out.println("mouse: " + hoverBearing);
 			if (hoverBearing > 180)
 				hoverBearing -= 360;
 			else if (hoverBearing <= -180)
@@ -132,8 +133,8 @@ public class Submarine extends MilitaryVessel {
 		} else {
 			hoverBearing = targetBearing;
 		}
-		System.out.println("current: " + currentBearing);
-		System.out.println("hoverBearing: " + hoverBearing);
+		//System.out.println("current: " + currentBearing);
+		//System.out.println("hoverBearing: " + hoverBearing);
 		bearing.setRotation(hoverBearing - 90);
 		bearingOffset = bearingOffset.setRotation(hoverBearing);
 		
@@ -175,5 +176,4 @@ public class Submarine extends MilitaryVessel {
 			return false;
 		}
 	}
-
 }
