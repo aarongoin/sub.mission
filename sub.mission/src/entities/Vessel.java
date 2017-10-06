@@ -31,13 +31,22 @@ public class Vessel extends Entity {
 	
 	float baseNoise;
 	
+	int radius;
+	
 	public boolean debug;
+	
+	protected Vector destination;
+	protected Vector waypoint;
+	
+	public float lookahead;
 
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
 		
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
+		
+		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 2;
 		
 		currentBearing = bearing;
 		targetBearing = bearing;
@@ -51,10 +60,21 @@ public class Vessel extends Entity {
 		setNose();
 		
 		drawAlpha = 1f;
+		
+		destination = null;
+		waypoint = null;
 	}
 	
 	public void debug(boolean value) {
 		debug = value;
+	}
+	
+	public int getRadius() {
+		return radius;
+	}
+	
+	public Vector getDestination() {
+		return destination;
 	}
 	
 	public void setImage(String i) {
@@ -105,12 +125,12 @@ public class Vessel extends Entity {
 			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
 			
 			g.setColor(Color.white);
+			g.drawOval(getFuturePosition(lookahead).getX() - radius, getFuturePosition(lookahead).getY() - radius, radius*2, radius*2);
 		}
 		super.render(g);
 	}
 	
 	public void update(float dt) {
-	
 		if (currentSpeed < targetSpeed) {
 			currentSpeed += acceleration*dt;
 			if (currentSpeed > targetSpeed)
@@ -120,7 +140,16 @@ public class Vessel extends Entity {
 			if (currentSpeed < targetSpeed)
 				currentSpeed = targetSpeed;
 		}
-		//System.out.println("targetBearing: " + targetBearing + " currentBearing: " + currentBearing);
+		
+		if (waypoint != null) {
+			//System.out.println(waypoint);
+			targetBearing = (float) waypoint.subtract(getPosition()).getRotation();
+		} else if (destination != null) {
+			targetBearing = (float) destination.subtract(getPosition()).getRotation();
+			//System.out.println(currentBearing);
+		}
+				
+		System.out.println("targetBearing: " + targetBearing + " currentBearing: " + currentBearing);
 		float d = Math.abs(currentBearing - targetBearing);
 		if (d < 0.5 || d > 359.5) {
 			//System.out.println("done turning.");
@@ -153,8 +182,35 @@ public class Vessel extends Entity {
 			
 		}
 		
-		setPosition(getPosition().add(new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f * dt)));
+		System.out.println("currentBearing: " + currentBearing);
+		setPosition( getFuturePosition(dt) );
 		sprite.setRotation(currentBearing + 90);
+		//System.out.println(getPosition());
+		//System.out.println();
 		setNose();
+	}
+	
+	public void setDestination(Vector d) {
+		destination = d;
+		waypoint = d;
+	}
+	
+	public void setWaypoint() {
+		waypoint = null;
+	}
+	
+	public void setWaypoint(Vector w) {
+		waypoint = w;
+	}
+	
+	public void moveFor(Vector pos, Vector other, float r) {
+		Vector w = other.add(new Vector(1, 0).rotate(currentBearing).getPerpendicular().scale(r));
+		setWaypoint(w);
+	}
+	
+	public Vector getFuturePosition(float dt) {
+		Vector t = getPosition().add( new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f * dt) );
+		//System.out.println(t + " " + dt + " " + currentBearing);
+		return t;
 	}
 }

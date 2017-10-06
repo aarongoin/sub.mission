@@ -35,8 +35,8 @@ public class SubMission extends StateBasedGame {
 	
 	public int missionFailed;
 		
-	HashMap<String, Integer> layers;
-	public List<List<Entity>> entities;
+	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
+	static public List<List<Entity>> entities = new ArrayList<List<Entity>>();
 	
 	static public TrueTypeFont title;
 	static public TrueTypeFont subtitle;
@@ -46,6 +46,13 @@ public class SubMission extends StateBasedGame {
 	
 	public Image map;
 	public Image depth;
+	static public int[][] landMasses = {
+			/* x, y, r */
+			{37, 287, 27},
+			{0, 75, 118},
+			{80, 660, 250},
+			{945, 76, 69}
+	};
 	
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -65,8 +72,6 @@ public class SubMission extends StateBasedGame {
 		
 		
 		missionFailed = 0;
-		layers = new HashMap<String, Integer>();
-		entities = new ArrayList<List<Entity>>();
 		
 		IMG.put("land", "resource/img/map1/land.png");
 		IMG.put("map", "resource/img/map1/map.png");
@@ -158,11 +163,11 @@ public class SubMission extends StateBasedGame {
 		return result;
 	}
 	
-	public int getLayerIndex(String layer) {
+	static public int getLayerIndex(String layer) {
 		return Math.abs(layers.get(layer)) - 1;
 	}
 	
-	public List<Entity> getLayer(String layer) {
+	static public List<Entity> getLayer(String layer) {
 		return entities.get(getLayerIndex(layer));
 	}
 	

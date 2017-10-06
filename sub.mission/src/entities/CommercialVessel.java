@@ -5,9 +5,11 @@ import org.newdawn.slick.Graphics;
 import jig.Vector;
 
 public class CommercialVessel extends Vessel {
-
+	
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
-		super(image, p, noise, bearing, 4, 1, 0.5f);
+		super(image, p, noise, bearing, 4, 1, 1f);
+		maxSpeed = 4f;
+		lookahead = 50f;
 	}
 	
 	public void render(Graphics g) {

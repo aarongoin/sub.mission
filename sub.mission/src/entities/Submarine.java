@@ -28,7 +28,9 @@ public class Submarine extends MilitaryVessel {
 	Vector bearingOffset;
 
 	public Submarine(float depth, float dive) {
-		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 4, 180, 10, 10, 2);
+		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 180, 10, 10, 2);
+		
+		lookahead = 0f;
 		
 		hoverBearing = targetBearing;
 		currentDepth = depth;
@@ -38,6 +40,7 @@ public class Submarine extends MilitaryVessel {
 		
 		bearing = SubMission.getImage("bearing_target");
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);
+		setDestination(null);
 	}
 	
 	public float getDepth() {
