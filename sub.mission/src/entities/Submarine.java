@@ -115,23 +115,27 @@ public class Submarine extends MilitaryVessel {
 	
 	public void update(Input input, float ambient, float dt) {
 		
-		Vector mouse = new Vector(input.getMouseX(), input.getMouseY()).subtract(getPosition());
+		Vector mouse = new Vector( input.getMouseX(), input.getMouseY() ).subtract( getPosition() );
 		
 		if (mouse.lengthSquared() < 2000) {
 			//System.out.println("mouse: " + mouse + " length: " + mouse.length() + " bearing: " + mouse.getRotation());
-			hoverBearing = (float) mouse.getRotation() + 90;
-			if (hoverBearing < 0)
-				hoverBearing = 360 + hoverBearing;
+			hoverBearing = (float) mouse.getRotation();
+			System.out.println("mouse: " + hoverBearing);
+			if (hoverBearing > 180)
+				hoverBearing -= 360;
+			else if (hoverBearing <= -180)
+				hoverBearing += 360;
+			//if (hoverBearing < 0)
+			//	hoverBearing = 360 + hoverBearing;
 			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
 				targetBearing = hoverBearing;
 		} else {
 			hoverBearing = targetBearing;
 		}
-		//System.out.println("bearing: " + bearing.getRotation());
-		//System.out.println("sprite: " + getRotation());
-		//System.out.println("hoverBearing: " + hoverBearing);
-		bearing.setRotation(hoverBearing - 180);
-		bearingOffset = bearingOffset.setRotation(hoverBearing - 90);
+		System.out.println("current: " + currentBearing);
+		System.out.println("hoverBearing: " + hoverBearing);
+		bearing.setRotation(hoverBearing - 90);
+		bearingOffset = bearingOffset.setRotation(hoverBearing);
 		
 		if (currentDepth < targetDepth) {
 			currentDepth += diveSpeed*dt;

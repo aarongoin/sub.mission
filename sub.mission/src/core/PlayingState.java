@@ -54,6 +54,13 @@ class PlayingState extends BasicGameState {
 		
 		state = 0;
 		stage(G);
+		
+		System.out.println("theta( x, 0): " + new Vector( 1, 0).getRotation()
+					   + ", theta( 0, y): " + new Vector( 0, 1).getRotation()
+					   + ", theta(-x, 0): " + new Vector(-1, 0).getRotation()
+					   + ", theta(-x,-y): " + new Vector(-1,-1).getRotation()
+					   + ", theta( 0,-y): " + new Vector( 0,-1).getRotation()
+					   + ", theta( x,-y): " + new Vector( 1,-1).getRotation());
 	}
 	
 	boolean advance() {
