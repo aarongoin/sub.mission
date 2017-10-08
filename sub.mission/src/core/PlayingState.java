@@ -32,6 +32,8 @@ class PlayingState extends BasicGameState {
 	Submarine player;
 	MissionTarget mission;
 
+	NavigationManager navigation;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		SubMission G = (SubMission) game;
@@ -42,6 +44,7 @@ class PlayingState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		SubMission G = (SubMission) game;
 		
+		navigation = new NavigationManager();
 		sonarCountdown = 0;
 		
 		// insert submarine
@@ -55,12 +58,13 @@ class PlayingState extends BasicGameState {
 		state = 0;
 		stage(G);
 		
-		System.out.println("theta( x, 0): " + new Vector( 1, 0).getRotation()
+		/*System.out.println("theta( x, 0): " + new Vector( 1, 0).getRotation()
 					   + ", theta( 0, y): " + new Vector( 0, 1).getRotation()
 					   + ", theta(-x, 0): " + new Vector(-1, 0).getRotation()
 					   + ", theta(-x,-y): " + new Vector(-1,-1).getRotation()
 					   + ", theta( 0,-y): " + new Vector( 0,-1).getRotation()
 					   + ", theta( x,-y): " + new Vector( 1,-1).getRotation());
+		*/
 	}
 	
 	boolean advance() {
@@ -85,15 +89,17 @@ class PlayingState extends BasicGameState {
 			G.removeLayer("traffic");
 			G.addLayer("traffic");
 			CommercialVessel cv;
-			cv = new CommercialVessel("ship1", new Vector(SubMission.ScreenWidth - 500, SubMission.ScreenHeight - 50), 30, 330);
+			cv = new CommercialVessel("ship2", new Vector(500, 500), 30, 0);
+			//cv.debug(true);
 			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship2", new Vector(300, 350), 40, 80);
+			cv = new CommercialVessel("ship1", new Vector(650, 650), 30, -90);
+			//cv.debug(true);
 			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship3", new Vector(100, 10), 50, 135);
+			cv = new CommercialVessel("ship3", new Vector(650, 400), 30, 180);
+			//cv.debug(true);
 			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship4", new Vector(SubMission.ScreenWidth - 50, SubMission.ScreenHeight - 50), 60, 315);
-			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship3", new Vector(SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2), 50, 90);
+			cv = new CommercialVessel("ship1", new Vector(300, 100), 30, 90);
+			//cv.debug(true);
 			G.addEntity("traffic", (Entity) cv);
 			// generate enemy patrol boats
 			G.removeLayer("military");
@@ -203,6 +209,17 @@ class PlayingState extends BasicGameState {
 		
 		g.setFont(G.text);
 		renderObjective(g);
+		
+		/*int w = SubMission.ScreenWidth / 45;
+		int h = SubMission.ScreenHeight / 50;
+		int o;
+		for (int x=0; x < w; x++) {
+			o = (x % 2 == 0) ? 25 : 0;
+			for (int y=0; y < h; y++) {
+				g.drawOval(x*45, y*50-o, 50, 50);
+			}
+		}*/
+		
 	}
 
 	@Override
@@ -249,8 +266,12 @@ class PlayingState extends BasicGameState {
 			if (sonarCountdown <= 0)
 				DetectWithSonar((Vessel) e);
 		}
-		if (sonarCountdown <= 0)
+		
+		navigation.update(dt);
+		
+		if (sonarCountdown <= 0) {
 			sonarCountdown = 1;
+		}
 	}
 
 	@Override
