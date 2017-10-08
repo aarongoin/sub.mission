@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.HashMap;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -39,6 +41,8 @@ public class Vessel extends Entity {
 	protected Vector waypoint;
 	
 	public float lookahead;
+	
+	protected HashMap<Vessel, Float> movedFor;
 
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
@@ -46,7 +50,7 @@ public class Vessel extends Entity {
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
 		
-		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 2;
+		this.radius = Math.max(sprite.getHeight(), sprite.getWidth());
 		
 		currentBearing = bearing;
 		targetBearing = bearing;
@@ -111,6 +115,14 @@ public class Vessel extends Entity {
 		return nose;
 	}
 	
+	public Vector getTail() {
+		return getPosition().add(new Vector(1, 0).rotate(currentBearing).scale(sprite.getHeight() / (- 2)));
+	}
+	
+	public Vector getVelocity() {
+		return new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f);
+	}
+	
 	public boolean didRunAground(Image map) {
 		Color c = map.getColor((int) nose.getX(), (int) nose.getY());
 		return c.toString() == landColor;
@@ -119,6 +131,7 @@ public class Vessel extends Entity {
 	@Override
 	public void render(Graphics g) {
 		sprite.setAlpha(drawAlpha);
+		sprite.setRotation(currentBearing + 90);
 		if (debug) {
 			float noise = getNoise();
 			g.setColor(Color.red);
@@ -149,14 +162,14 @@ public class Vessel extends Entity {
 			//System.out.println(currentBearing);
 		}
 				
-		System.out.println("targetBearing: " + targetBearing + " currentBearing: " + currentBearing);
+		//System.out.println("targetBearing: " + targetBearing + " currentBearing: " + currentBearing);
 		float d = Math.abs(currentBearing - targetBearing);
 		if (d < 0.5 || d > 359.5) {
 			//System.out.println("done turning.");
 			currentBearing = targetBearing;
 		} else {
-			float turn = turnRadius*dt * 2 * currentSpeed / maxSpeed;
-			if ((targetBearing > 0 && currentBearing > 0) || (targetBearing <= 0 && currentBearing <= 0)) {
+			float turn = turnRadius*dt;
+			if ((targetBearing >= 0 && currentBearing >= 0) || (targetBearing <= 0 && currentBearing <= 0)) {
 				if (currentBearing > targetBearing) {
 					//System.out.println("turning left...");
 					currentBearing -= turn;
@@ -182,9 +195,8 @@ public class Vessel extends Entity {
 			
 		}
 		
-		System.out.println("currentBearing: " + currentBearing);
+		//System.out.println("currentBearing: " + currentBearing);
 		setPosition( getFuturePosition(dt) );
-		sprite.setRotation(currentBearing + 90);
 		//System.out.println(getPosition());
 		//System.out.println();
 		setNose();
@@ -200,16 +212,26 @@ public class Vessel extends Entity {
 	}
 	
 	public void setWaypoint(Vector w) {
+		System.out.println("setting waypoint: " + w.subtract(getPosition()));
+		System.out.println("currentBearing: " + currentBearing + " targetBearing: " + w.subtract(getPosition()).getRotation());
 		waypoint = w;
 	}
 	
-	public void moveFor(Vector pos, Vector other, float r) {
-		Vector w = other.add(new Vector(1, 0).rotate(currentBearing).getPerpendicular().scale(r));
-		setWaypoint(w);
+	public void moveFor(Vector other, float r) {
+		//Vector w = other.add(new Vector(1, 0).rotate(currentBearing).getPerpendicular().scale(r));
+		//setWaypoint(w);
+		
+	}
+	
+	public void moveFor(Vessel other) {
+		Float bearing = movedFor.get(other);
+		if (bearing != null && bearing == other.getBearing()) return;
+		moveFor(other.getPosition(), other.getRadius() * 2);
+		movedFor.put(other, other.getBearing());
 	}
 	
 	public Vector getFuturePosition(float dt) {
-		Vector t = getPosition().add( new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f * dt) );
+		Vector t = getPosition().add( getVelocity().scale(dt) );
 		//System.out.println(t + " " + dt + " " + currentBearing);
 		return t;
 	}

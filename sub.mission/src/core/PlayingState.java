@@ -49,7 +49,7 @@ class PlayingState extends BasicGameState {
 		
 		// insert submarine
 		player = new Submarine(100, 10);
-		player.debug(true);
+		//player.debug(true);
 		
 		// generate UI
 		depth = new DepthMeter((int) player.getDepth(), new Vector(SubMission.ScreenWidth - 24, 12));
@@ -89,11 +89,17 @@ class PlayingState extends BasicGameState {
 			G.removeLayer("traffic");
 			G.addLayer("traffic");
 			CommercialVessel cv;
-			cv = new CommercialVessel("ship1", new Vector(500, 500), 30, 0);
-			cv.debug(true);
+			cv = new CommercialVessel("ship2", new Vector(500, 500), 30, 0);
+			//cv.debug(true);
 			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship2", new Vector(730, 500), 40, 180);
-			cv.debug(true);
+			cv = new CommercialVessel("ship1", new Vector(650, 650), 30, -90);
+			//cv.debug(true);
+			G.addEntity("traffic", (Entity) cv);
+			cv = new CommercialVessel("ship3", new Vector(650, 400), 30, 180);
+			//cv.debug(true);
+			G.addEntity("traffic", (Entity) cv);
+			cv = new CommercialVessel("ship1", new Vector(300, 100), 30, 90);
+			//cv.debug(true);
 			G.addEntity("traffic", (Entity) cv);
 			// generate enemy patrol boats
 			G.removeLayer("military");
@@ -203,6 +209,17 @@ class PlayingState extends BasicGameState {
 		
 		g.setFont(G.text);
 		renderObjective(g);
+		
+		/*int w = SubMission.ScreenWidth / 45;
+		int h = SubMission.ScreenHeight / 50;
+		int o;
+		for (int x=0; x < w; x++) {
+			o = (x % 2 == 0) ? 25 : 0;
+			for (int y=0; y < h; y++) {
+				g.drawOval(x*45, y*50-o, 50, 50);
+			}
+		}*/
+		
 	}
 
 	@Override
@@ -241,13 +258,13 @@ class PlayingState extends BasicGameState {
 		sonarCountdown -= dt;
 		for (Entity e : G.getLayer("traffic")) {
 			((CommercialVessel) e).update(dt);
-			//if (sonarCountdown <= 0)
-			//	DetectWithSonar((Vessel) e);
+			if (sonarCountdown <= 0)
+				DetectWithSonar((Vessel) e);
 		}
 		for (Entity e : G.getLayer("military")) {
 			((MilitaryVessel) e).update(dt);
-			//if (sonarCountdown <= 0)
-			//	DetectWithSonar((Vessel) e);
+			if (sonarCountdown <= 0)
+				DetectWithSonar((Vessel) e);
 		}
 		
 		navigation.update(dt);
