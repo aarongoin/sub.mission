@@ -2,8 +2,10 @@ package core;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 
 import entities.Submarine;
+import jig.Vector;
 
 public class SubPlatform {
 
@@ -47,6 +49,40 @@ public class SubPlatform {
 			sonarBtn.setAlpha(0.5f);
 			decoyBtn.setAlpha(1);
 			break;
+		}
+	}
+	
+	public void update(Input input, float dt) {
+		Vector m = new Vector(input.getMouseX(), input.getMouseY());
+		Vector b;
+		
+		// used to reset values for when we've hovered over a button and changed it's opacity
+		setState(towableState);
+		
+		// hovering over sonar button?
+		b = new Vector(45.5f, SubMission.ScreenHeight - 80.5f);
+		if (m.distance(b) < 17) {
+			sonarBtn.setAlpha(1);
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				setState(1);
+			}
+		}
+		// hovering over retract button?
+		b = new Vector(85.5f, SubMission.ScreenHeight - 80.5f);
+		if (m.distance(b) < 17) {
+			retractBtn.setAlpha(1);
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				setState(0);
+			}
+		}
+		
+		// hovering over decoy button?
+		b = new Vector(125.5f, SubMission.ScreenHeight - 80.5f);
+		if (m.distance(b) < 17) {
+			decoyBtn.setAlpha(1);
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				setState(2);
+			}
 		}
 	}
 	
