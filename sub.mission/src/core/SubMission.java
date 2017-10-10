@@ -103,6 +103,12 @@ public class SubMission extends StateBasedGame {
 		IMG.put("marker", "resource/img/ui/marker.png");
 		IMG.put("mission_target", "resource/img/ui/mission_target.png");
 		
+		IMG.put("sub_hull", "resource/img/ui/sub_hull.png");
+		IMG.put("torpedo_full", "resource/img/ui/torpedo_full.png");
+		IMG.put("torpedo_empty", "resource/img/ui/torpedo_empty.png");
+		IMG.put("nm_full", "resource/img/ui/nm_full.png");
+		IMG.put("nm_empty", "resource/img/ui/nm_empty.png");
+		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 	}
 	
