@@ -60,7 +60,7 @@ public class MilitaryVessel extends Vessel {
 	}
 	
 	public float getSonar() {
-		float b = (towedSonar.getState() == 1) ? 3 : 0;
+		float b = (towedSonar != null && towedSonar.getState() == 1) ? 3 : 0;
 		return (175 * (baseSonar + b) - ambient - currentSpeed * 8);
 	}
 	
@@ -112,7 +112,7 @@ public class MilitaryVessel extends Vessel {
 
 	
 	public void cableSnapped(int id) {
-		System.out.println("id: " + id);
+		//System.out.println("id: " + id);
 		if (id == 1) {
 			//System.out.println("Towed Sonar Array snapped!");
 			towedSonar.detach();
