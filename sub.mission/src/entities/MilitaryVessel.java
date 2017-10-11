@@ -39,8 +39,8 @@ public class MilitaryVessel extends Vessel {
 	public void setArsenal(int t, int d, boolean s) {
 		torpedoes = t;
 		decoys = d;
-		towedSonar = new Towable(this, 400, 0.2f, "towed_sonar", "sonar_waves", 1);
-		towedDecoy = new Towable(this, 400, 0.2f, "towed_decoy", "decoy_waves", 2);
+		towedSonar = new Towable(this, 400, 0.2f, "towed_sonar", "sonar_waves", 1, 20);
+		towedDecoy = new Towable(this, 400, 0.2f, "towed_decoy", "decoy_waves", 2, 20);
 	}
 	
 	public boolean haveTowedSonar() {

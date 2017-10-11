@@ -26,8 +26,9 @@ public class Towable {
 	float alpha;
 	int id;
 	boolean waveOn;
+	int maxSpeed;
 	
-	public Towable(MilitaryVessel v, int l, float speed, String sprite, String active, int id) {
+	public Towable(MilitaryVessel v, int l, float speed, String sprite, String active, int id, int spd) {
 		
 		this.id = id;
 		line = new ArrayList<Vector>();
@@ -45,6 +46,8 @@ public class Towable {
 		
 		waves.setAlpha(0.1f);
 		waveOn = true;
+		
+		maxSpeed = spd;
 	}
 	
 	public int getState() {
@@ -68,7 +71,7 @@ public class Towable {
 		if (parent != null) {
 			p = parent.getVelocity().scale(-dt);
 		
-			if (parent.getSpeed() == 0 && ( state == 2 || state == 2 ))
+			if (parent.getSpeed() == 0 && ( state == 1 || state == 2 ))
 				state = 3;
 		}
 		Vector m = p.clampLength(winchSpeed, winchSpeed);
@@ -80,7 +83,7 @@ public class Towable {
 			break;
 		case 1: // fully extended
 			// check for line-snapping condition
-			if (m.lengthSquared() < p.lengthSquared()) {
+			if (parent.getSpeed() > maxSpeed) {
 				state = 4;
 			} else {
 				line.add(m);
@@ -132,18 +135,21 @@ public class Towable {
 		
 		Vector a = position;
 		Vector b;
+		float avg = 0;
 		// draw line
 		g.setColor(new Color(0.3f, 0.3f, 0.3f, alpha));
 		while (s-- > 0) {
 			b = a.add( line.get(s) );
 			g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
 			a = b;
+			if (s < 10)
+				avg += line.get(s).getRotation() / 10;
 		}
 		
 		// draw sprite
-		float bearing = (float) line.get(s + 1).getRotation();
+		float bearing = avg;
 		sprite.setPosition(a);
-		sprite.rotate(bearing);
+		sprite.setRotation(bearing);
 		sprite.render(g);
 		
 		if (state != 1) return;
