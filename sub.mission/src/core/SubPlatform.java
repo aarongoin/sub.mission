@@ -52,38 +52,54 @@ public class SubPlatform {
 		}
 	}
 	
-	public void update(Input input, float dt) {
+	public int update(Input input, float dt) {
 		Vector m = new Vector(input.getMouseX(), input.getMouseY());
 		Vector b;
+		
+		if (!sub.decoyDeployed() && towableState == 2) {
+			towableState = 0;
+		}
 		
 		// used to reset values for when we've hovered over a button and changed it's opacity
 		setState(towableState);
 		
-		// hovering over sonar button?
-		b = new Vector(45.5f, SubMission.ScreenHeight - 80.5f);
-		if (m.distance(b) < 17) {
-			sonarBtn.setAlpha(1);
-			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-				setState(1);
-			}
-		}
-		// hovering over retract button?
-		b = new Vector(85.5f, SubMission.ScreenHeight - 80.5f);
-		if (m.distance(b) < 17) {
-			retractBtn.setAlpha(1);
-			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-				setState(0);
+		if (sub.haveTowedSonar()) {
+			// hovering over sonar button?
+			b = new Vector(45.5f, SubMission.ScreenHeight - 80.5f);
+			if (m.distance(b) < 17) {
+				sonarBtn.setAlpha(1);
+				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+					setState(1);
+					return 2;
+				}
 			}
 		}
 		
-		// hovering over decoy button?
-		b = new Vector(125.5f, SubMission.ScreenHeight - 80.5f);
-		if (m.distance(b) < 17) {
-			decoyBtn.setAlpha(1);
-			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-				setState(2);
+		if (sub.getDecoys() > 0 || sub.haveTowedSonar()) {
+			// hovering over retract button?
+			b = new Vector(85.5f, SubMission.ScreenHeight - 80.5f);
+			if (m.distance(b) < 17) {
+				retractBtn.setAlpha(1);
+				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+					setState(0);
+					return 1;
+				}
 			}
 		}
+		
+		if (sub.getDecoys() > 0) {				
+			// hovering over decoy button?
+			b = new Vector(125.5f, SubMission.ScreenHeight - 80.5f);
+			if (m.distance(b) < 17) {
+				decoyBtn.setAlpha(1);
+				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+					setState(2);
+					return 3;
+				}
+			}
+		}
+		
+		return 0;
 	}
 	
 	public void render(Graphics g) {

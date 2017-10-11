@@ -212,8 +212,8 @@ public class Vessel extends Entity {
 	}
 	
 	public void setWaypoint(Vector w) {
-		System.out.println("setting waypoint: " + w.subtract(getPosition()));
-		System.out.println("currentBearing: " + currentBearing + " targetBearing: " + w.subtract(getPosition()).getRotation());
+		//System.out.println("setting waypoint: " + w.subtract(getPosition()));
+		//System.out.println("currentBearing: " + currentBearing + " targetBearing: " + w.subtract(getPosition()).getRotation());
 		waypoint = w;
 	}
 	

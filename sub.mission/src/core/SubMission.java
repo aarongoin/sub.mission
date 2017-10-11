@@ -112,6 +112,11 @@ public class SubMission extends StateBasedGame {
 		IMG.put("retract_btn", "resource/img/ui/retract_btn.png");
 		IMG.put("sonar_btn", "resource/img/ui/sonar_btn.png");
 		
+		IMG.put("towed_sonar", "resource/img/items/towed_sonar.png");
+		IMG.put("towed_decoy", "resource/img/items/towed_decoy.png");
+		IMG.put("decoy_waves", "resource/img/items/decoy_waves.png");
+		IMG.put("sonar_waves", "resource/img/items/sonar_waves.png");
+		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 	}
 	

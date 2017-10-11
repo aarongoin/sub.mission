@@ -252,9 +252,9 @@ class PlayingState extends BasicGameState {
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
-		player.setDepth(depth.update(input, (int) player.getDepth()));
-		player.setSpeed(speed.update(input, (int) player.getSpeed()));
-		platform.update(input, dt);
+		player.setDepth( depth.update(input, (int) player.getDepth()) );
+		player.setSpeed( speed.update(input, (int) player.getSpeed()) );
+		player.setTowState( platform.update(input, dt) );
 		
 		player.update(input, ambientNoise, dt);
 

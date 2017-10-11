@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import core.SubMission;
+import core.Towable;
 import jig.Vector;
 
 public class Submarine extends MilitaryVessel {
@@ -26,9 +27,6 @@ public class Submarine extends MilitaryVessel {
 	
 	float hoverBearing;
 	Vector bearingOffset;
-	
-	int torpedoes;
-	int decoys;
 
 	public Submarine(float depth, float dive) {
 		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 180, 10, 10, 2);
@@ -45,16 +43,8 @@ public class Submarine extends MilitaryVessel {
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);
 		setDestination(null);
 		
-		torpedoes = 5;
-		decoys = 3;
-	}
-	
-	public int getTorpedoes() {
-		return torpedoes;
-	}
-	
-	public int getDecoys() {
-		return decoys;
+		setArsenal(8, 4, true);
+		
 	}
 	
 	public float getDepth() {
@@ -67,16 +57,17 @@ public class Submarine extends MilitaryVessel {
 	
 	@Override
 	public float getSonar() {
-		return (175 * baseSonar - ambient - currentSpeed * 8 - currentDepth);
+		return super.getSonar() - currentDepth;
 	}
 	
 	@Override
 	public int detect(Vessel other) {
 		
-		float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
-		if (theta > 157.5 && theta < 202.5)
-			return 0;
-		
+		if (towedSonar == null || towedSonar.getState() != 1) {
+			float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
+			if (theta > 157.5 && theta < 202.5)
+				return 0;
+		}
 		float distance = getPosition().distance(other.getPosition());
 		float sonar = getSonar();
 		if (distance <= sonar / 2)
@@ -165,7 +156,7 @@ public class Submarine extends MilitaryVessel {
 				currentDepth = targetDepth;
 		}
 		
-		super.update(dt);
+		super.update(dt, ambient);
 	}
 	
 	@Override

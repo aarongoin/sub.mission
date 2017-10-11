@@ -2,6 +2,9 @@ package entities;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+
+import core.Towable;
+
 import java.util.Random;
 
 import jig.Vector;
@@ -11,6 +14,12 @@ public class MilitaryVessel extends Vessel {
 	protected float baseSonar;
 	float ambient;
 	Random rand;
+	
+	protected int torpedoes;
+	protected int decoys;
+	
+	protected Towable towedSonar;
+	protected Towable towedDecoy;
 
 	public MilitaryVessel(String image, Vector p, float noise, float sonar, float bearing, float speed, float radius, float accel) {
 		super(image, p, noise, bearing, speed, radius, accel);
@@ -19,23 +28,58 @@ public class MilitaryVessel extends Vessel {
 		ambient = 0;
 		
 		rand = new Random(System.currentTimeMillis());
+		
+		torpedoes = 0;
+		decoys = 0;
+		
+		towedSonar = null;
+		towedDecoy = null;
+	}
+	
+	public void setArsenal(int t, int d, boolean s) {
+		torpedoes = t;
+		decoys = d;
+		towedSonar = new Towable(this, 400, 0.2f, "towed_sonar", "sonar_waves", 1);
+		towedDecoy = new Towable(this, 400, 0.2f, "towed_decoy", "decoy_waves", 2);
+	}
+	
+	public boolean haveTowedSonar() {
+		return (towedSonar != null);
+	}
+	
+	public boolean decoyDeployed() {
+		return (towedDecoy.getState() > 0 && towedDecoy.getState() != 4);
+	}
+	
+	public int getTorpedoes() {
+		return torpedoes;
+	}
+	
+	public int getDecoys() {
+		return decoys;
 	}
 	
 	public float getSonar() {
-		return (175 * baseSonar - ambient - currentSpeed * 8);
+		float b = (towedSonar.getState() == 1) ? 3 : 0;
+		return (175 * (baseSonar + b) - ambient - currentSpeed * 8);
 	}
 	
 	public void update(float dt, float ambient) {
+		
+		if (towedSonar != null && towedSonar.getState() > 0) towedSonar.update(dt);
+		if (towedDecoy != null && towedDecoy.getState() > 0) towedDecoy.update(dt);
+		
 		this.ambient = ambient;
 		super.update(dt);
 	}
 	
 	public int detect(Vessel other) {
 		
-		float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
-		if (theta > 157.5 && theta < 202.5)
-			return 0;
-		
+		if (towedSonar.getState() != 1) {
+			float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
+			if (theta > 157.5 && theta < 202.5)
+				return 0;
+		}
 		float distance = getPosition().distance(other.getPosition());
 		float sonar = getSonar();
 		float span = sonar + other.getNoise();
@@ -52,7 +96,38 @@ public class MilitaryVessel extends Vessel {
 		
 		return 0;
 	}
+	
+	public void setTowState(int s) {
+		if (s == 1) {
+			towedSonar.deploy(false);
+			towedDecoy.deploy(false);
+		} else if (s == 2) {
+			towedSonar.deploy(true);
+			towedDecoy.deploy(false);
+		} else if (s == 3) {
+			towedSonar.deploy(false);
+			towedDecoy.deploy(true);
+		}
+	}
 
+	
+	public void cableSnapped(int id) {
+		System.out.println("id: " + id);
+		if (id == 1) {
+			//System.out.println("Towed Sonar Array snapped!");
+			towedSonar.detach();
+			towedSonar = null;
+		} else if (id == 2) {
+			if (decoys == 0) {
+				//System.out.println("No more decoys!");
+				towedDecoy.detach();
+				towedDecoy = null;
+			} else {
+				towedDecoy.reset(this);
+				decoys--;
+			}
+		}
+	}
 	
 	@Override
 	public void render(Graphics g) {
@@ -63,6 +138,10 @@ public class MilitaryVessel extends Vessel {
 			
 			g.setColor(Color.white);
 		}
+		
+		if (towedSonar != null && towedSonar.getState() > 0) towedSonar.render(g);
+		if (towedDecoy != null && towedDecoy.getState() > 0) towedDecoy.render(g);
+		
 		super.render(g);
 	}
 }
