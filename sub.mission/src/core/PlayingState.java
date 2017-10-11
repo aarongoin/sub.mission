@@ -28,6 +28,7 @@ class PlayingState extends BasicGameState {
 	
 	DepthMeter depth;
 	SpeedMeter speed;
+	SubPlatform platform;
 	
 	Submarine player;
 	MissionTarget mission;
@@ -54,6 +55,7 @@ class PlayingState extends BasicGameState {
 		// generate UI
 		depth = new DepthMeter((int) player.getDepth(), new Vector(SubMission.ScreenWidth - 24, 12));
 		speed = new SpeedMeter((int) player.getSpeed(), new Vector(SubMission.ScreenWidth - 415, SubMission.ScreenHeight - 24));
+		platform = new SubPlatform(player);
 		
 		state = 0;
 		stage(G);
@@ -197,10 +199,6 @@ class PlayingState extends BasicGameState {
 		g.drawImage(G.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		
-		depth.render(g);
-		speed.render(g);
-		
 		for (Entity e : G.getLayer("traffic"))
 			((CommercialVessel) e).render(g);
 		
@@ -209,6 +207,11 @@ class PlayingState extends BasicGameState {
 		
 		g.setFont(G.text);
 		renderObjective(g);
+		
+		depth.render(g);
+		speed.render(g);
+		
+		platform.render(g);
 		
 		/*int w = SubMission.ScreenWidth / 45;
 		int h = SubMission.ScreenHeight / 50;
@@ -249,8 +252,9 @@ class PlayingState extends BasicGameState {
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
-		player.setDepth(depth.update(input, (int) player.getDepth()));
-		player.setSpeed(speed.update(input, (int) player.getSpeed()));
+		player.setDepth( depth.update(input, (int) player.getDepth()) );
+		player.setSpeed( speed.update(input, (int) player.getSpeed()) );
+		player.setTowState( platform.update(input, dt) );
 		
 		player.update(input, ambientNoise, dt);
 
