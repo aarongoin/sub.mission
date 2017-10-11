@@ -29,7 +29,7 @@ public class Submarine extends MilitaryVessel {
 	Vector bearingOffset;
 
 	public Submarine(float depth, float dive) {
-		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 180, 10, 10, 2);
+		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 0, 10, 10, 2);
 		
 		lookahead = 0f;
 		

@@ -161,7 +161,7 @@ public class Vessel extends Entity {
 			targetBearing = (float) destination.subtract(getPosition()).getRotation();
 			//System.out.println(currentBearing);
 		}
-				
+		
 		//System.out.println("targetBearing: " + targetBearing + " currentBearing: " + currentBearing);
 		float d = Math.abs(currentBearing - targetBearing);
 		if (d < 0.5 || d > 359.5) {
@@ -169,23 +169,27 @@ public class Vessel extends Entity {
 			currentBearing = targetBearing;
 		} else {
 			float turn = turnRadius*dt;
-			if ((targetBearing >= 0 && currentBearing >= 0) || (targetBearing <= 0 && currentBearing <= 0)) {
-				if (currentBearing > targetBearing) {
-					//System.out.println("turning left...");
-					currentBearing -= turn;
-				} else {
-					//System.out.println("turning right...");
-					currentBearing += turn;
-				}
+			float cb;
+			float tb;
+			if (currentBearing <= 0 && targetBearing > 0) {
+				tb = targetBearing;
+				cb = currentBearing + 360;
+			} else if (currentBearing > 0 && targetBearing <= 0) {
+				cb = currentBearing + Math.abs(targetBearing);
+				tb = 0;
 			} else {
-				d = targetBearing - currentBearing;
-				if (d > 180 || d > -180) {
-					//System.out.println("turning left...");
-					currentBearing -= turn;
-				} else {
-					//System.out.println("turning right...");
-					currentBearing += turn;
-				}
+				cb = currentBearing;
+				tb = targetBearing;
+			}
+			
+			//System.out.println("tb: " + tb + " cb: " + cb);
+			
+			if (cb > tb && cb - tb < 180) {
+				//System.out.println("turning left...");
+				currentBearing -= turn;
+			} else {
+				//System.out.println("turning right...");
+				currentBearing += turn;
 			}
 			
 			if (currentBearing > 180)
