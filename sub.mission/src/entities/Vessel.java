@@ -12,6 +12,13 @@ import jig.Vector;
 
 public class Vessel extends Entity {
 	
+	static final String d100Color = "Color (0.0,0.0,0.6901961,1.0)";
+	static final String d200Color = "Color (0.0,0.0,0.6117647,1.0)";
+	static final String d300Color = "Color (0.0,0.0,0.5294118,1.0)";
+	static final String d400Color = "Color (0.0,0.0,0.43137255,1.0)";
+	static final String d500Color = "Color (0.0,0.0,0.3372549,1.0)";
+	static final String d600Color = "Color (0.0,0.0,0.22352941,1.0)";
+	static final String d700Color = "Color (0.0,0.0,0.11372549,1.0)";
 	static final String landColor = "Color (0.6,0.6,0.6,1.0)";
 	
 	protected Image sprite;
@@ -27,6 +34,8 @@ public class Vessel extends Entity {
 	
 	protected float currentBearing;
 	protected float targetBearing;
+	
+	protected float currentDepth;
 	
 	protected float acceleration;
 	protected float turnRadius;
@@ -52,6 +61,7 @@ public class Vessel extends Entity {
 		
 		this.radius = Math.max(sprite.getHeight(), sprite.getWidth());
 		
+		currentDepth = 0;
 		currentBearing = bearing;
 		targetBearing = bearing;
 		currentSpeed = speed;
@@ -124,8 +134,28 @@ public class Vessel extends Entity {
 	}
 	
 	public boolean didRunAground(Image map) {
+		//System.out.println("x: " + (int) nose.getX() + " y: " + (int) nose.getY());
 		Color c = map.getColor((int) nose.getX(), (int) nose.getY());
-		return c.toString() == landColor;
+		switch(c.toString()) {
+		case landColor:
+			return true;
+		case d100Color:
+			return (currentDepth >= 100);
+		case d200Color:
+			return (currentDepth >= 200);
+		case d300Color:
+			return (currentDepth >= 300);
+		case d400Color:
+			return (currentDepth >= 400);
+		case d500Color:
+			return (currentDepth >= 500);
+		case d600Color:
+			return (currentDepth >= 600);
+		case d700Color:
+			return (currentDepth >= 700);
+		default:
+			return false;
+		}
 	}
 	
 	@Override

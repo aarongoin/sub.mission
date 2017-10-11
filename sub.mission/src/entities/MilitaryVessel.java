@@ -3,8 +3,6 @@ package entities;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-import core.Towable;
-
 import java.util.Random;
 
 import jig.Vector;

@@ -6,22 +6,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import core.SubMission;
-import core.Towable;
 import jig.Vector;
 
 public class Submarine extends MilitaryVessel {
-
-	static final String d100Color = "Color (0.0,0.0,0.6901961,1.0)";
-	static final String d200Color = "Color (0.0,0.0,0.6117647,1.0)";
-	static final String d300Color = "Color (0.0,0.0,0.5294118,1.0)";
-	static final String d400Color = "Color (0.0,0.0,0.43137255,1.0)";
-	static final String d500Color = "Color (0.0,0.0,0.3372549,1.0)";
-	static final String d600Color = "Color (0.0,0.0,0.22352941,1.0)";
-	static final String d700Color = "Color (0.0,0.0,0.11372549,1.0)";
 	
 	Image bearing;
 	
-	float currentDepth;
 	float targetDepth;
 	float diveSpeed;
 	
@@ -157,31 +147,5 @@ public class Submarine extends MilitaryVessel {
 		}
 		
 		super.update(dt, ambient);
-	}
-	
-	@Override
-	public boolean didRunAground(Image map) {
-		//System.out.println("x: " + (int) nose.getX() + " y: " + (int) nose.getY());
-		Color c = map.getColor((int) nose.getX(), (int) nose.getY());
-		switch(c.toString()) {
-		case landColor:
-			return true;
-		case d100Color:
-			return (currentDepth >= 100);
-		case d200Color:
-			return (currentDepth >= 200);
-		case d300Color:
-			return (currentDepth >= 300);
-		case d400Color:
-			return (currentDepth >= 400);
-		case d500Color:
-			return (currentDepth >= 500);
-		case d600Color:
-			return (currentDepth >= 600);
-		case d700Color:
-			return (currentDepth >= 700);
-		default:
-			return false;
-		}
-	}
+	}	
 }

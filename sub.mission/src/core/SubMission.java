@@ -37,6 +37,7 @@ public class SubMission extends StateBasedGame {
 		
 	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
 	static public List<List<Entity>> entities = new ArrayList<List<Entity>>();
+	HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
 	
 	static public TrueTypeFont title;
 	static public TrueTypeFont subtitle;
@@ -116,6 +117,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("towed_decoy", "resource/img/items/towed_decoy.png");
 		IMG.put("decoy_waves", "resource/img/items/decoy_waves.png");
 		IMG.put("sonar_waves", "resource/img/items/sonar_waves.png");
+		IMG.put("sub_torpedo", "resource/img/items/sub_torpedo.png");
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 	}
@@ -195,11 +197,19 @@ public class SubMission extends StateBasedGame {
 	}
 	
 	public boolean removeEntity(String layer, Entity e) {
+		System.out.println("Removing: " + e);
 		if (layers.containsKey(layer)) {
-			entities.get(getLayerIndex(layer)).remove(e);
+			toRemove.put(e, getLayerIndex(layer));
 			return true;
 		}
 		return false;
+	}
+	
+	public void update() {
+		for (Entity e : toRemove.keySet()) {
+			entities.get(toRemove.get(e)).remove(e);
+		}
+		toRemove.clear();
 	}
 	
 
