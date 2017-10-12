@@ -45,7 +45,7 @@ public class Torpedo extends Vessel {
 		fuel -= dt;
 		if (detect(target) > 2) {
 			//System.out.println("Detected target at " + target.getAsTarget().distance(getPosition()));
-			if ( target.getAsTarget().distance(getPosition()) < 10 )
+			if ( target.getAsTarget().distance(getPosition()) < 10 || collides(target) != null )
 				explode();
 			else {
 				setDestination(target.getAsTarget());
@@ -58,8 +58,9 @@ public class Torpedo extends Vessel {
 			line.remove(0);
 		
 		if (getSpeed() < maxSpeed) {
-			setSpeed(getSpeed() * 1.25f);
+			setSpeed(getSpeed() * 1.5f);
 		}
+
 		if (getSpeed() > maxSpeed)
 			setSpeed(maxSpeed);
 		

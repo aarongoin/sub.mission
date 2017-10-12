@@ -70,6 +70,9 @@ class GameOverState extends BasicGameState {
 		case 4:
 			g.drawString("You failed to escape enemy waters in time!", SubMission.ScreenWidth / 2 - 175, SubMission.ScreenHeight / 2 + 30);
 			break;
+		case 6:
+			g.drawString("The ship is sinking, captain!", SubMission.ScreenWidth / 2 - 130, SubMission.ScreenHeight / 2 + 30);
+			break;
 		case 10:
 			g.drawString("You ran aground!", SubMission.ScreenWidth / 2 - 72, SubMission.ScreenHeight / 2 + 30);
 			break;

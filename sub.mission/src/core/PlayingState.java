@@ -109,6 +109,7 @@ class PlayingState extends BasicGameState {
 			G.addLayer("military");
 			G.removeLayer("torpedo");
 			G.addLayer("torpedo");
+			SubMission.addEntity("torpedo", new Torpedo("enemy_torpedo", new Vector(200, 200), 0, 50, 50, player.getPosition(), player));
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
@@ -163,6 +164,9 @@ class PlayingState extends BasicGameState {
 		
 		if (player.didRunAground(G.map)) {
 			G.missionFailed = 10;
+			shouldEnd = true;
+		} else if (player.isSunk) {
+			G.missionFailed = 6;
 			shouldEnd = true;
 		} else if (missionFail()) {
 			G.missionFailed = state + 1;
