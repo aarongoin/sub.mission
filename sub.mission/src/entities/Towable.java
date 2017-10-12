@@ -1,4 +1,4 @@
-package core;
+package entities;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,8 +8,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
-import entities.MilitaryVessel;
-import entities.Vessel;
+import core.SubMission;
 import jig.Entity;
 import jig.Vector;
 

@@ -2,18 +2,18 @@ package entities;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Sound;
 
-import core.Towable;
+import core.SubMission;
 
 import java.util.Random;
 
 import jig.Vector;
 
 public class MilitaryVessel extends Vessel {
+
+	float torpedoSpeed = 50;
 	
-	protected float baseSonar;
-	float ambient;
-	Random rand;
 	
 	protected int torpedoes;
 	protected int decoys;
@@ -27,13 +27,12 @@ public class MilitaryVessel extends Vessel {
 		baseSonar = sonar;
 		ambient = 0;
 		
-		rand = new Random(System.currentTimeMillis());
-		
 		torpedoes = 0;
 		decoys = 0;
 		
 		towedSonar = null;
 		towedDecoy = null;
+		
 	}
 	
 	public void setArsenal(int t, int d, boolean s) {
@@ -59,6 +58,16 @@ public class MilitaryVessel extends Vessel {
 		return decoys;
 	}
 	
+	public Torpedo fireTorpedo(Vessel v) {
+		if (torpedoes > 0) {
+			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed  * 0.5144f);
+			Vector target = v.getPosition();//.add(v.getFuturePosition(timeToTarget));
+			torpedoes -= 1;
+			return new Torpedo("sub_torpedo", getPosition(), (float) v.getPosition().subtract(getPosition()).getRotation(), torpedoSpeed, torpedoSpeed, target, v);
+		} else return null;
+	}
+	
+	@Override
 	public float getSonar() {
 		float b = (towedSonar != null && towedSonar.getState() == 1) ? 3 : 0;
 		return (175 * (baseSonar + b) - ambient - currentSpeed * 8);
@@ -131,14 +140,6 @@ public class MilitaryVessel extends Vessel {
 	
 	@Override
 	public void render(Graphics g) {
-		if (debug) {
-			float sonar = getSonar();
-			g.setColor(Color.green);
-			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
-			
-			g.setColor(Color.white);
-		}
-		
 		if (towedSonar != null && towedSonar.getState() > 0) towedSonar.render(g);
 		if (towedDecoy != null && towedDecoy.getState() > 0) towedDecoy.render(g);
 		

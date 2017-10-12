@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -12,6 +13,13 @@ import jig.Vector;
 
 public class Vessel extends Entity {
 	
+	static final String d100Color = "Color (0.0,0.0,0.6901961,1.0)";
+	static final String d200Color = "Color (0.0,0.0,0.6117647,1.0)";
+	static final String d300Color = "Color (0.0,0.0,0.5294118,1.0)";
+	static final String d400Color = "Color (0.0,0.0,0.43137255,1.0)";
+	static final String d500Color = "Color (0.0,0.0,0.3372549,1.0)";
+	static final String d600Color = "Color (0.0,0.0,0.22352941,1.0)";
+	static final String d700Color = "Color (0.0,0.0,0.11372549,1.0)";
 	static final String landColor = "Color (0.6,0.6,0.6,1.0)";
 	
 	protected Image sprite;
@@ -28,6 +36,8 @@ public class Vessel extends Entity {
 	protected float currentBearing;
 	protected float targetBearing;
 	
+	protected float currentDepth;
+	
 	protected float acceleration;
 	protected float turnRadius;
 	
@@ -42,16 +52,30 @@ public class Vessel extends Entity {
 	
 	public float lookahead;
 	
+	protected float ambient;
+	protected float baseSonar;
+	Random rand;
+	
+	protected int armor;
+	protected String layer;
+	
+	
 	protected HashMap<Vessel, Float> movedFor;
 
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
+		
+		baseSonar = 0;
+		ambient = 0;
 		
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
 		
 		this.radius = Math.max(sprite.getHeight(), sprite.getWidth());
 		
+		rand = new Random(System.currentTimeMillis());
+		
+		currentDepth = 0;
 		currentBearing = bearing;
 		targetBearing = bearing;
 		currentSpeed = speed;
@@ -124,8 +148,28 @@ public class Vessel extends Entity {
 	}
 	
 	public boolean didRunAground(Image map) {
+		//System.out.println("x: " + (int) nose.getX() + " y: " + (int) nose.getY());
 		Color c = map.getColor((int) nose.getX(), (int) nose.getY());
-		return c.toString() == landColor;
+		switch(c.toString()) {
+		case landColor:
+			return true;
+		case d100Color:
+			return (currentDepth >= 100);
+		case d200Color:
+			return (currentDepth >= 200);
+		case d300Color:
+			return (currentDepth >= 300);
+		case d400Color:
+			return (currentDepth >= 400);
+		case d500Color:
+			return (currentDepth >= 500);
+		case d600Color:
+			return (currentDepth >= 600);
+		case d700Color:
+			return (currentDepth >= 700);
+		default:
+			return false;
+		}
 	}
 	
 	@Override
@@ -136,6 +180,10 @@ public class Vessel extends Entity {
 			float noise = getNoise();
 			g.setColor(Color.red);
 			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
+			
+			float sonar = getSonar();
+			g.setColor(Color.green);
+			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
 			g.setColor(Color.white);
 			g.drawOval(getFuturePosition(lookahead).getX() - radius, getFuturePosition(lookahead).getY() - radius, radius*2, radius*2);
@@ -238,5 +286,46 @@ public class Vessel extends Entity {
 		Vector t = getPosition().add( getVelocity().scale(dt) );
 		//System.out.println(t + " " + dt + " " + currentBearing);
 		return t;
+	}
+	
+	public Vector getAsTarget() {
+		return getPosition();
+	}
+	
+	public boolean wasClicked(float x, float y) {
+		return new Vector(x, y).distance(getPosition()) < getRadius();
+	}
+	
+	public float getSonar() {
+		return (175 * baseSonar - ambient - currentSpeed * 8);
+	}
+	
+	public void takeDamage() {
+		armor -= 1;
+		if (armor <= 0)
+			SubMission.removeEntity(layer, (Entity) this);
+	}
+	
+	public int detect(Vessel other) {
+	
+		float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
+		if (theta > 157.5 && theta < 202.5)
+			return 0;
+
+		float distance = getPosition().distance(other.getPosition());
+		float sonar = getSonar();
+		float span = sonar + other.getNoise();
+
+		if (distance < span) {
+			int random = rand.nextInt((int) (distance + other.getNoise()));
+			if (random <= sonar * 2 / 3)
+				return 3;
+			else if (random <= sonar)
+				return 2;
+			else
+				return 1;
+		}
+		
+		return 0;
 	}
 }

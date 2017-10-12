@@ -4,29 +4,22 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.Sound;
 
 import core.SubMission;
-import core.Towable;
 import jig.Vector;
 
 public class Submarine extends MilitaryVessel {
-
-	static final String d100Color = "Color (0.0,0.0,0.6901961,1.0)";
-	static final String d200Color = "Color (0.0,0.0,0.6117647,1.0)";
-	static final String d300Color = "Color (0.0,0.0,0.5294118,1.0)";
-	static final String d400Color = "Color (0.0,0.0,0.43137255,1.0)";
-	static final String d500Color = "Color (0.0,0.0,0.3372549,1.0)";
-	static final String d600Color = "Color (0.0,0.0,0.22352941,1.0)";
-	static final String d700Color = "Color (0.0,0.0,0.11372549,1.0)";
 	
 	Image bearing;
 	
-	float currentDepth;
 	float targetDepth;
 	float diveSpeed;
 	
 	float hoverBearing;
 	Vector bearingOffset;
+	
+	Sound fireTorpedo;
 
 	public Submarine(float depth, float dive) {
 		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 0, 10, 10, 2);
@@ -39,6 +32,7 @@ public class Submarine extends MilitaryVessel {
 		diveSpeed = dive;
 		maxSpeed = 45;
 		
+		fireTorpedo = SubMission.getSound("fire_torpedo");
 		bearing = SubMission.getImage("bearing_target");
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);
 		setDestination(null);
@@ -80,6 +74,12 @@ public class Submarine extends MilitaryVessel {
 		return 0;
 	}
 	
+	@Override
+	public Torpedo fireTorpedo(Vessel v) {
+		Torpedo t = super.fireTorpedo(v);
+		if (t != null) fireTorpedo.play();
+		return t;
+	}
 	
 	@Override
 	public float getNoise() {
@@ -157,31 +157,5 @@ public class Submarine extends MilitaryVessel {
 		}
 		
 		super.update(dt, ambient);
-	}
-	
-	@Override
-	public boolean didRunAground(Image map) {
-		//System.out.println("x: " + (int) nose.getX() + " y: " + (int) nose.getY());
-		Color c = map.getColor((int) nose.getX(), (int) nose.getY());
-		switch(c.toString()) {
-		case landColor:
-			return true;
-		case d100Color:
-			return (currentDepth >= 100);
-		case d200Color:
-			return (currentDepth >= 200);
-		case d300Color:
-			return (currentDepth >= 300);
-		case d400Color:
-			return (currentDepth >= 400);
-		case d500Color:
-			return (currentDepth >= 500);
-		case d600Color:
-			return (currentDepth >= 600);
-		case d700Color:
-			return (currentDepth >= 700);
-		default:
-			return false;
-		}
-	}
+	}	
 }

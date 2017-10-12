@@ -15,6 +15,7 @@ import entities.CommercialVessel;
 import entities.MilitaryVessel;
 import entities.MissionTarget;
 import entities.Submarine;
+import entities.Torpedo;
 import entities.Vessel;
 import jig.Vector;
 import jig.Entity;
@@ -93,19 +94,21 @@ class PlayingState extends BasicGameState {
 			CommercialVessel cv;
 			cv = new CommercialVessel("ship2", new Vector(500, 500), 30, 0);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			cv = new CommercialVessel("ship1", new Vector(650, 650), 30, -90);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			cv = new CommercialVessel("ship3", new Vector(650, 400), 30, 180);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			cv = new CommercialVessel("ship1", new Vector(300, 100), 30, 90);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			// generate enemy patrol boats
 			G.removeLayer("military");
 			G.addLayer("military");
+			G.removeLayer("torpedo");
+			G.addLayer("torpedo");
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
@@ -172,8 +175,8 @@ class PlayingState extends BasicGameState {
 		return shouldEnd;
 	}
 	
-	void DetectWithSonar(Vessel e) {
-		switch (player.detect((Vessel) e)) {
+	boolean DetectWithSonar(Vessel e) {
+		switch (player.detect(e)) {
 		case 0:
 			e.drawAlpha = 0f;
 			break;
@@ -185,8 +188,9 @@ class PlayingState extends BasicGameState {
 			break;
 		case 3:
 			e.drawAlpha = 1f;
-			break;
+			return true;
 		}
+		return false;
 	}
 	
 	@Override
@@ -199,18 +203,20 @@ class PlayingState extends BasicGameState {
 		g.drawImage(G.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		for (Entity e : G.getLayer("traffic"))
+		for (Entity e : SubMission.getLayer("traffic"))
 			((CommercialVessel) e).render(g);
+		
+		for (Entity e : SubMission.getLayer("torpedo")) {
+			((Torpedo) e).render(g);
+		}
 		
 		player.render(g);
 		mission.render(g);
 		
-		g.setFont(G.text);
+		g.setFont(SubMission.text);
 		renderObjective(g);
-		
 		depth.render(g);
 		speed.render(g);
-		
 		platform.render(g);
 		
 		/*int w = SubMission.ScreenWidth / 45;
@@ -240,7 +246,7 @@ class PlayingState extends BasicGameState {
 			stage(G);
 		}
 		
-		float ambientNoise = G.getLayer("traffic").size() * 50 + G.getLayer("military").size() * 20;
+		float ambientNoise = SubMission.getLayer("traffic").size() * 50 + SubMission.getLayer("military").size() * 20;
 		//System.out.println(ambientNoise);
 		
 		// draw depth lines or land depending on submarine depth
@@ -259,16 +265,37 @@ class PlayingState extends BasicGameState {
 		player.update(input, ambientNoise, dt);
 
 		// submarine sonar affects how ships are drawn
+		Vessel v;
 		sonarCountdown -= dt;
-		for (Entity e : G.getLayer("traffic")) {
+		for (Entity e : SubMission.getLayer("traffic")) {
 			((CommercialVessel) e).update(dt);
-			if (sonarCountdown <= 0)
-				DetectWithSonar((Vessel) e);
+			v = (Vessel) e;
+			if (v.didRunAground(G.map))
+				SubMission.removeEntity("traffic", e);
+			else if (DetectWithSonar(v)
+					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+				
+				SubMission.addEntity("torpedo", player.fireTorpedo(v));
+			}
+				
 		}
-		for (Entity e : G.getLayer("military")) {
+		for (Entity e : SubMission.getLayer("military")) {
 			((MilitaryVessel) e).update(dt);
-			if (sonarCountdown <= 0)
-				DetectWithSonar((Vessel) e);
+			v = (Vessel) e;
+			if (((Vessel) e).didRunAground(G.map))
+				SubMission.removeEntity("military", e);
+			else if (DetectWithSonar(v)
+					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+				
+				SubMission.addEntity("torpedo", player.fireTorpedo(v));
+			}
+		}
+		for (Entity e : SubMission.getLayer("torpedo")) {
+			((Torpedo) e).update(dt);
+			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
+				SubMission.removeEntity("torpedo", e);
 		}
 		
 		navigation.update(dt);
@@ -276,6 +303,7 @@ class PlayingState extends BasicGameState {
 		if (sonarCountdown <= 0) {
 			sonarCountdown = 1;
 		}
+		G.update();
 	}
 
 	@Override
