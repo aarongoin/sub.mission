@@ -269,4 +269,9 @@ public class Vessel extends Entity {
 		//System.out.println(t + " " + dt + " " + currentBearing);
 		return t;
 	}
+	
+	public boolean wasClicked(float x, float y) {
+		System.out.println("Targeting...");
+		return new Vector(x, y).distance(getPosition()) < getRadius();
+	}
 }

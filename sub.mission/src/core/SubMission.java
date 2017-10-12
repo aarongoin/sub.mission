@@ -120,6 +120,8 @@ public class SubMission extends StateBasedGame {
 		IMG.put("sub_torpedo", "resource/img/items/sub_torpedo.png");
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
+		SND.put("fire_torpedo", "resource/sound/35530__jobro__torpedo-launch-underwater.wav");
+		
 	}
 	
 	public static Image getImage(String key) {
@@ -188,6 +190,7 @@ public class SubMission extends StateBasedGame {
 	}
 	
 	public boolean addEntity(String layer, Entity e) {
+		if (e == null) return false;
 		if (layers.containsKey(layer)) {
 			//System.out.println(entities.get(getLayerIndex(layer)));
 			entities.get(getLayerIndex(layer)).add(e);

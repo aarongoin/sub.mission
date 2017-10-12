@@ -109,9 +109,6 @@ class PlayingState extends BasicGameState {
 			G.addLayer("military");
 			G.removeLayer("torpedo");
 			G.addLayer("torpedo");
-			G.addEntity("torpedo", new Torpedo("sub_torpedo", Vector.getRandomXY(SubMission.ScreenHeight, SubMission.ScreenWidth, 0, 0), 45f, 50, Vector.getRandomXY(500, 500, 0, 0)));
-			G.addEntity("torpedo", new Torpedo("sub_torpedo", Vector.getRandomXY(SubMission.ScreenHeight, SubMission.ScreenWidth, 400, 400), 20f, 50, Vector.getRandomXY(SubMission.ScreenHeight, SubMission.ScreenWidth, 200, 200)));
-			G.addEntity("torpedo", new Torpedo("sub_torpedo", Vector.getRandomXY(SubMission.ScreenHeight, SubMission.ScreenWidth, 200, 800), 75f, 50, Vector.getRandomXY(SubMission.ScreenHeight, SubMission.ScreenWidth, 200, 500)));
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
@@ -178,8 +175,8 @@ class PlayingState extends BasicGameState {
 		return shouldEnd;
 	}
 	
-	void DetectWithSonar(Vessel e) {
-		switch (player.detect((Vessel) e)) {
+	boolean DetectWithSonar(Vessel e) {
+		switch (player.detect(e)) {
 		case 0:
 			e.drawAlpha = 0f;
 			break;
@@ -191,8 +188,9 @@ class PlayingState extends BasicGameState {
 			break;
 		case 3:
 			e.drawAlpha = 1f;
-			break;
+			return true;
 		}
+		return false;
 	}
 	
 	@Override
@@ -267,25 +265,36 @@ class PlayingState extends BasicGameState {
 		player.update(input, ambientNoise, dt);
 
 		// submarine sonar affects how ships are drawn
+		Vessel v;
 		sonarCountdown -= dt;
 		for (Entity e : SubMission.getLayer("traffic")) {
 			((CommercialVessel) e).update(dt);
-			if (((Vessel) e).didRunAground(G.map))
+			v = (Vessel) e;
+			if (v.didRunAground(G.map))
 				G.removeEntity("traffic", e);
-			else if (sonarCountdown <= 0)
-				DetectWithSonar((Vessel) e);
+			else if (DetectWithSonar(v)
+					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+				
+				G.addEntity("torpedo", player.fireTorpedo(v));
+			}
+				
 		}
 		for (Entity e : SubMission.getLayer("military")) {
 			((MilitaryVessel) e).update(dt);
+			v = (Vessel) e;
 			if (((Vessel) e).didRunAground(G.map))
 				G.removeEntity("military", e);
-			else if (sonarCountdown <= 0)
-				DetectWithSonar((Vessel) e);
+			else if (DetectWithSonar(v)
+					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+				
+				G.addEntity("torpedo", player.fireTorpedo(v));
+			}
 		}
-		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
-			if (((Vessel) e).didRunAground(G.map))
+			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
 				G.removeEntity("torpedo", e);
 		}
 		

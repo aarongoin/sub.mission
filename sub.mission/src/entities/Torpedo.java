@@ -12,21 +12,30 @@ import jig.Vector;
 
 public class Torpedo extends Vessel {
 	
+	float fuel;
 	float maxSpeed;
 	List<Vector> line;
 
-	public Torpedo(String image, Vector p, float bearing, float speed, Vector dest) {
+	public Torpedo(String image, Vector p, float bearing, float speed, float f, Vector dest) {
 		super(image, p, 20, bearing, 10, 20, 4);
 		
 		maxSpeed = speed;
 		line = new ArrayList<Vector>();
 		currentDepth = 10;
+		fuel = f;
 		
 		setDestination(dest);
 	}
 	
+	public boolean haveFuel() {
+		return fuel > 0;
+	}
+	
 	@Override
 	public void update(float dt) {
+		
+		fuel -= dt;
+		
 		line.add(getVelocity().scale(-dt));
 		if (line.size() > 50)
 			line.remove(0);

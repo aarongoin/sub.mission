@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.Sound;
 
 import core.SubMission;
 import jig.Vector;
@@ -17,6 +18,8 @@ public class Submarine extends MilitaryVessel {
 	
 	float hoverBearing;
 	Vector bearingOffset;
+	
+	Sound fireTorpedo;
 
 	public Submarine(float depth, float dive) {
 		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 0, 10, 10, 2);
@@ -29,6 +32,7 @@ public class Submarine extends MilitaryVessel {
 		diveSpeed = dive;
 		maxSpeed = 45;
 		
+		fireTorpedo = SubMission.getSound("fire_torpedo");
 		bearing = SubMission.getImage("bearing_target");
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);
 		setDestination(null);
@@ -70,6 +74,12 @@ public class Submarine extends MilitaryVessel {
 		return 0;
 	}
 	
+	@Override
+	public Torpedo fireTorpedo(Vessel v) {
+		Torpedo t = super.fireTorpedo(v);
+		if (t != null) fireTorpedo.play();
+		return t;
+	}
 	
 	@Override
 	public float getNoise() {

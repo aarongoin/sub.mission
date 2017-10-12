@@ -2,13 +2,17 @@ package entities;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Sound;
+
+import core.SubMission;
 
 import java.util.Random;
 
 import jig.Vector;
 
 public class MilitaryVessel extends Vessel {
-	
+
+	float torpedoSpeed = 50;
 	protected float baseSonar;
 	float ambient;
 	Random rand;
@@ -32,6 +36,7 @@ public class MilitaryVessel extends Vessel {
 		
 		towedSonar = null;
 		towedDecoy = null;
+		
 	}
 	
 	public void setArsenal(int t, int d, boolean s) {
@@ -55,6 +60,16 @@ public class MilitaryVessel extends Vessel {
 	
 	public int getDecoys() {
 		return decoys;
+	}
+	
+	public Torpedo fireTorpedo(Vessel v) {
+		if (torpedoes > 0) {
+			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed  * 0.5144f);
+			Vector target = v.getPosition();//.add(v.getFuturePosition(timeToTarget));
+			System.out.println("Target: " + target + " time: " + timeToTarget);
+			torpedoes -= 1;
+			return new Torpedo("sub_torpedo", getPosition(), (float) v.getPosition().subtract(getPosition()).getRotation(), torpedoSpeed, torpedoSpeed, target);
+		} else return null;
 	}
 	
 	public float getSonar() {
