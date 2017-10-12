@@ -8,6 +8,7 @@ import core.SubMission;
 
 import java.util.Random;
 
+import jig.Entity;
 import jig.Vector;
 
 public class MilitaryVessel extends Vessel {
@@ -119,6 +120,22 @@ public class MilitaryVessel extends Vessel {
 		}
 	}
 
+	@Override
+	public Vector getAsTarget() {
+		if (towedDecoy != null && towedDecoy.getState() == 1) {
+			return towedDecoy.sprite.getPosition();
+		} else {
+			return getPosition();
+		}
+	}
+	
+	public void takeDamage() {
+		if (towedDecoy != null && towedDecoy.getState() == 1) {
+			// destroy decoy instead of taking damage
+			towedDecoy.reset(this);
+			decoys--;
+		} else super.takeDamage();
+	}
 	
 	public void cableSnapped(int id) {
 		//System.out.println("id: " + id);
