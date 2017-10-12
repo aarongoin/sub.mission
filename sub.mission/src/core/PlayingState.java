@@ -109,7 +109,7 @@ class PlayingState extends BasicGameState {
 			G.addLayer("military");
 			G.removeLayer("torpedo");
 			G.addLayer("torpedo");
-			SubMission.addEntity("torpedo", new Torpedo("enemy_torpedo", new Vector(200, 200), 0, 50, 50, player.getPosition(), player));
+			SubMission.addEntity("torpedo", new Torpedo("enemy_torpedo", new Vector(600, 400), 0, 50, 50, player.getPosition(), player));
 			break;
 			
 		case 1: // deploy special forces & surge of enemies

@@ -105,6 +105,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("mission_target", "resource/img/ui/mission_target.png");
 		
 		IMG.put("sub_hull", "resource/img/ui/sub_hull.png");
+		IMG.put("sub_hull0", "resource/img/ui/sub_hull0.png");
 		IMG.put("torpedo_full", "resource/img/ui/torpedo_full.png");
 		IMG.put("torpedo_empty", "resource/img/ui/torpedo_empty.png");
 		IMG.put("nm_full", "resource/img/ui/nm_full.png");

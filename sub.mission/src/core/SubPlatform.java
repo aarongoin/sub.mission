@@ -10,8 +10,11 @@ import jig.Vector;
 public class SubPlatform {
 
 	Image background = SubMission.getImage("sub_hull");
+	Image overlay = SubMission.getImage("sub_hull0");
+	
 	Image torpedoFull = SubMission.getImage("torpedo_full");
 	Image torpedoEmpty = SubMission.getImage("torpedo_empty");
+	
 	Image decoyFull = SubMission.getImage("nm_full");
 	Image decoyEmpty = SubMission.getImage("nm_empty");
 	
@@ -22,9 +25,11 @@ public class SubPlatform {
 	Submarine sub;
 	
 	int towableState;
+	boolean blink;
 	
 	public SubPlatform(Submarine s) {
 		sub = s;
+		blink = false;
 		setState(0);
 	}
 	
@@ -58,6 +63,18 @@ public class SubPlatform {
 		
 		if (!sub.decoyDeployed() && towableState == 2) {
 			towableState = 0;
+		}
+		
+		// blink overlay
+		if (sub.getArmor() == 1) {
+			float a = overlay.getAlpha();
+			if (blink) {
+				overlay.setAlpha(a * 0.95f);
+				if (a <= 0.1) blink = false;
+			} else {
+				overlay.setAlpha(a * 1.15f);
+				if (a >= 0.99) blink = true;
+			}
 		}
 		
 		// used to reset values for when we've hovered over a button and changed it's opacity
@@ -104,6 +121,9 @@ public class SubPlatform {
 	
 	public void render(Graphics g) {
 		g.drawImage(background, 10, SubMission.ScreenHeight - 160);
+		if (sub.getArmor() == 1) {
+			g.drawImage(overlay, 10, SubMission.ScreenHeight - 160);
+		}
 		
 		// render torpedo arsenal
 		int i;

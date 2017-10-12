@@ -53,6 +53,10 @@ public class Submarine extends MilitaryVessel {
 	public void setDepth(float d) {
 		targetDepth = d;
 	}
+	
+	public float getArmor() {
+		return armor;
+	}
 
 	@Override
 	public float getSonar() {
