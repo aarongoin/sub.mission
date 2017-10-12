@@ -15,6 +15,12 @@ public class Submarine extends MilitaryVessel {
 
 	float targetDepth;
 	float diveSpeed;
+	
+	float crushDepth = 700;
+	float dangerDepth = 600;
+	
+	float crushSpeed = 40;
+	float dangerSpeed = 35;
 
 	float hoverBearing;
 	Vector bearingOffset;
@@ -22,15 +28,19 @@ public class Submarine extends MilitaryVessel {
 	Sound fireTorpedo;
 	
 	public boolean isSunk;
+	
+	Vessel target;
+	
+	Image targetLock;
 
 	public Submarine(float depth, float dive) {
-		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 0, 10, 10, 2);
+		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 0, 10, 20, 2);
 
 		lookahead = 0f;
 
 		hoverBearing = targetBearing;
-		currentDepth = depth;
-		targetDepth = depth;
+		currentDepth = 100;
+		targetDepth = 100;
 		diveSpeed = dive;
 		maxSpeed = 45;
 
@@ -41,9 +51,13 @@ public class Submarine extends MilitaryVessel {
 
 		setArsenal(8, 4, true);
 		
-		armor = 1;
+		armor = 2;
 		isSunk = false;
+		
+		target = null;
+		targetLock = SubMission.getImage("target_lock");
 
+		debug = true;
 	}
 
 	public float getDepth() {
@@ -52,6 +66,10 @@ public class Submarine extends MilitaryVessel {
 
 	public void setDepth(float d) {
 		targetDepth = d;
+	}
+	
+	public float getArmor() {
+		return armor;
 	}
 
 	@Override
@@ -80,6 +98,22 @@ public class Submarine extends MilitaryVessel {
 		return 0;
 	}
 
+	public void getLock(Vessel v) {
+		target = v;
+		targetLock.rotate(3);
+	}
+	
+	public void lockOn() {
+		if (targetLock.getRotation() > -0.01 && targetLock.getRotation() < 0.01) {
+			SubMission.addEntity("torpedo", fireTorpedo(target));
+			target = null;
+			targetLock.setRotation(0);
+		} else {
+			targetLock.rotate(3);
+		}
+	}
+
+	
 	@Override
 	public Torpedo fireTorpedo(Vessel v) {
 		Torpedo t = super.fireTorpedo(v);
@@ -87,40 +121,44 @@ public class Submarine extends MilitaryVessel {
 			fireTorpedo.play();
 		return t;
 	}
-
+	
 	@Override
 	public float getNoise() {
+		float noise = 0;
 		if (currentDepth < 100)
-			return super.getNoise() * (24 + (12 * (0 - currentDepth) / 100));
+			noise = super.getNoise() * (24 + (12 * (0 - currentDepth) / 100));
 		else if (currentDepth < 200)
-			return super.getNoise() * (12 + (6 * (100 - currentDepth) / 100));
+			noise = super.getNoise() * (12 + (6 * (100 - currentDepth) / 100));
 		else if (currentDepth < 300)
-			return super.getNoise() * (6 + (3 * (200 - currentDepth) / 100));
+			noise = super.getNoise() * (6 + (3 * (200 - currentDepth) / 100));
 		else if (currentDepth < 400)
-			return super.getNoise() * (3 + (2 * (300 - currentDepth) / 100));
+			noise = super.getNoise() * (3 + (2 * (300 - currentDepth) / 100));
 		else if (currentDepth < 500)
-			return super.getNoise() * (1 + (1 * (400 - currentDepth) / 100));
-		else
-			return 0f;
+			noise = super.getNoise() * (1 + (1 * (400 - currentDepth) / 100));
+		
+		return noise * (currentSpeed > 20 ? 2 : 1);
 	}
 
 	public float getNoise(float depth) {
+		float noise = 0;
 		if (currentDepth < 100)
-			return super.getNoise() * (24 + (12 * (0 - currentDepth) / 100));
+			noise = super.getNoise() * (24 + (12 * (0 - currentDepth) / 100));
 		else if (currentDepth < 200)
-			return super.getNoise() * (14 + (7 * (100 - currentDepth) / 100));
+			noise = super.getNoise() * (14 + (7 * (100 - currentDepth) / 100));
 		else if (currentDepth < 300)
-			return super.getNoise() * (20 + (10 * (200 - currentDepth) / 100));
+			noise = super.getNoise() * (20 + (10 * (200 - currentDepth) / 100));
 		else if (currentDepth < 400)
-			return super.getNoise() * (24 + (12 * (300 - currentDepth) / 100));
+			noise = super.getNoise() * (24 + (12 * (300 - currentDepth) / 100));
 		else if (currentDepth < 500)
-			return super.getNoise() * (38 + (19 * (400 - currentDepth) / 100));
+			noise = super.getNoise() * (38 + (19 * (400 - currentDepth) / 100));
 		else if (currentDepth < 600)
-			return super.getNoise() * (30 + (15 * (500 - currentDepth) / 100));
+			noise = super.getNoise() * (30 + (15 * (500 - currentDepth) / 100));
 		else if (currentDepth < 700)
-			return super.getNoise() * (22 + (11 * (600 - currentDepth) / 100));
+			noise = super.getNoise() * (22 + (11 * (600 - currentDepth) / 100));
 		else
-			return super.getNoise() * (20 + (10 * (700 - currentDepth) / 100));
+			noise = super.getNoise() * (20 + (10 * (700 - currentDepth) / 100));
+		
+		return noise * (currentSpeed > 20 ? 2 : 1);
 	}
 
 	@Override
@@ -133,6 +171,9 @@ public class Submarine extends MilitaryVessel {
 		super.render(g);
 		g.drawImage(bearing, getPosition().getX() + bearingOffset.getX() - 4,
 				getPosition().getY() + bearingOffset.getY() - 4);
+		
+		if (target != null)
+			g.drawImage(targetLock, target.getX() - targetLock.getWidth() / 2, target.getY() - targetLock.getWidth() / 2);
 	}
 
 	public void update(Input input, float ambient, float dt) {
@@ -169,6 +210,20 @@ public class Submarine extends MilitaryVessel {
 			if (currentDepth < targetDepth)
 				currentDepth = targetDepth;
 		}
+		
+		if  (	(currentDepth >  crushDepth && rand.nextInt(1500) == 0) 
+			 || (currentDepth > dangerDepth && rand.nextInt(2000) == 0)
+			) {
+			takeDamage();
+		}
+		
+		if  (	(currentSpeed > crushSpeed && rand.nextInt(1500) == 0) 
+				 || (currentSpeed > dangerSpeed && rand.nextInt(2000) == 0)
+				) {
+				takeDamage();
+			}
+		
+		if (target != null) lockOn();
 
 		super.update(dt, ambient);
 	}

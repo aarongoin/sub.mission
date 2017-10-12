@@ -105,6 +105,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("mission_target", "resource/img/ui/mission_target.png");
 		
 		IMG.put("sub_hull", "resource/img/ui/sub_hull.png");
+		IMG.put("sub_hull0", "resource/img/ui/sub_hull0.png");
 		IMG.put("torpedo_full", "resource/img/ui/torpedo_full.png");
 		IMG.put("torpedo_empty", "resource/img/ui/torpedo_empty.png");
 		IMG.put("nm_full", "resource/img/ui/nm_full.png");
@@ -112,6 +113,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("decoy_btn", "resource/img/ui/decoy_btn.png");
 		IMG.put("retract_btn", "resource/img/ui/retract_btn.png");
 		IMG.put("sonar_btn", "resource/img/ui/sonar_btn.png");
+		IMG.put("target_lock", "resource/img/ui/target_lock.png");
 		
 		IMG.put("towed_sonar", "resource/img/items/towed_sonar.png");
 		IMG.put("towed_decoy", "resource/img/items/towed_decoy.png");
