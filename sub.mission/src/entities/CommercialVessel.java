@@ -13,6 +13,8 @@ public class CommercialVessel extends Vessel {
 		maxSpeed = 4f;
 		lookahead = 5f;
 		movedFor = new HashMap<Vessel, Float>();
+		layer = "traffic";
+		armor = 1;
 	}
 	
 	public void render(Graphics g) {

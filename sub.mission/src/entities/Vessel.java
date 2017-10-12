@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -51,15 +52,28 @@ public class Vessel extends Entity {
 	
 	public float lookahead;
 	
+	protected float ambient;
+	protected float baseSonar;
+	Random rand;
+	
+	protected int armor;
+	protected String layer;
+	
+	
 	protected HashMap<Vessel, Float> movedFor;
 
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
 		
+		baseSonar = 0;
+		ambient = 0;
+		
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
 		
 		this.radius = Math.max(sprite.getHeight(), sprite.getWidth());
+		
+		rand = new Random(System.currentTimeMillis());
 		
 		currentDepth = 0;
 		currentBearing = bearing;
@@ -167,6 +181,10 @@ public class Vessel extends Entity {
 			g.setColor(Color.red);
 			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
 			
+			float sonar = getSonar();
+			g.setColor(Color.green);
+			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
+			
 			g.setColor(Color.white);
 			g.drawOval(getFuturePosition(lookahead).getX() - radius, getFuturePosition(lookahead).getY() - radius, radius*2, radius*2);
 		}
@@ -270,8 +288,44 @@ public class Vessel extends Entity {
 		return t;
 	}
 	
+	public Vector getAsTarget() {
+		return getPosition();
+	}
+	
 	public boolean wasClicked(float x, float y) {
-		System.out.println("Targeting...");
 		return new Vector(x, y).distance(getPosition()) < getRadius();
+	}
+	
+	public float getSonar() {
+		return (175 * baseSonar - ambient - currentSpeed * 8);
+	}
+	
+	public void takeDamage() {
+		armor -= 1;
+		if (armor <= 0)
+			SubMission.removeEntity(layer, (Entity) this);
+	}
+	
+	public int detect(Vessel other) {
+	
+		float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
+		if (theta > 157.5 && theta < 202.5)
+			return 0;
+
+		float distance = getPosition().distance(other.getPosition());
+		float sonar = getSonar();
+		float span = sonar + other.getNoise();
+
+		if (distance < span) {
+			int random = rand.nextInt((int) (distance + other.getNoise()));
+			if (random <= sonar * 2 / 3)
+				return 3;
+			else if (random <= sonar)
+				return 2;
+			else
+				return 1;
+		}
+		
+		return 0;
 	}
 }

@@ -37,7 +37,7 @@ public class SubMission extends StateBasedGame {
 		
 	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
 	static public List<List<Entity>> entities = new ArrayList<List<Entity>>();
-	HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
+	static HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
 	
 	static public TrueTypeFont title;
 	static public TrueTypeFont subtitle;
@@ -121,6 +121,8 @@ public class SubMission extends StateBasedGame {
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 		SND.put("fire_torpedo", "resource/sound/35530__jobro__torpedo-launch-underwater.wav");
+		SND.put("torpedo_explosion", "resource/sound/159402__noirenex__overheadexplosion.wav");
+		
 		
 	}
 	
@@ -189,7 +191,7 @@ public class SubMission extends StateBasedGame {
 		return entities.get(getLayerIndex(layer));
 	}
 	
-	public boolean addEntity(String layer, Entity e) {
+	static public boolean addEntity(String layer, Entity e) {
 		if (e == null) return false;
 		if (layers.containsKey(layer)) {
 			//System.out.println(entities.get(getLayerIndex(layer)));
@@ -199,8 +201,8 @@ public class SubMission extends StateBasedGame {
 		return false;
 	}
 	
-	public boolean removeEntity(String layer, Entity e) {
-		System.out.println("Removing: " + e);
+	static public boolean removeEntity(String layer, Entity e) {
+		//System.out.println("Removing: " + e);
 		if (layers.containsKey(layer)) {
 			toRemove.put(e, getLayerIndex(layer));
 			return true;

@@ -94,16 +94,16 @@ class PlayingState extends BasicGameState {
 			CommercialVessel cv;
 			cv = new CommercialVessel("ship2", new Vector(500, 500), 30, 0);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			cv = new CommercialVessel("ship1", new Vector(650, 650), 30, -90);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			cv = new CommercialVessel("ship3", new Vector(650, 400), 30, 180);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			cv = new CommercialVessel("ship1", new Vector(300, 100), 30, 90);
 			//cv.debug(true);
-			G.addEntity("traffic", (Entity) cv);
+			SubMission.addEntity("traffic", (Entity) cv);
 			// generate enemy patrol boats
 			G.removeLayer("military");
 			G.addLayer("military");
@@ -271,12 +271,12 @@ class PlayingState extends BasicGameState {
 			((CommercialVessel) e).update(dt);
 			v = (Vessel) e;
 			if (v.didRunAground(G.map))
-				G.removeEntity("traffic", e);
+				SubMission.removeEntity("traffic", e);
 			else if (DetectWithSonar(v)
 					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
 					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
 				
-				G.addEntity("torpedo", player.fireTorpedo(v));
+				SubMission.addEntity("torpedo", player.fireTorpedo(v));
 			}
 				
 		}
@@ -284,18 +284,18 @@ class PlayingState extends BasicGameState {
 			((MilitaryVessel) e).update(dt);
 			v = (Vessel) e;
 			if (((Vessel) e).didRunAground(G.map))
-				G.removeEntity("military", e);
+				SubMission.removeEntity("military", e);
 			else if (DetectWithSonar(v)
 					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
 					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
 				
-				G.addEntity("torpedo", player.fireTorpedo(v));
+				SubMission.addEntity("torpedo", player.fireTorpedo(v));
 			}
 		}
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
 			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
-				G.removeEntity("torpedo", e);
+				SubMission.removeEntity("torpedo", e);
 		}
 		
 		navigation.update(dt);
