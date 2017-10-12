@@ -141,8 +141,8 @@ public class Towable {
 			b = a.add( line.get(s) );
 			g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
 			a = b;
-			if (s < 10)
-				avg += line.get(s).getRotation() / 10;
+			if (s < 3)
+				avg += line.get(s).getRotation() / 3;
 		}
 		
 		// draw sprite

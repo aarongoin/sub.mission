@@ -71,7 +71,7 @@ public class Vessel extends Entity {
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
 		
-		this.radius = Math.max(sprite.getHeight(), sprite.getWidth());
+		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 4;
 		
 		rand = new Random(System.currentTimeMillis());
 		
@@ -186,7 +186,7 @@ public class Vessel extends Entity {
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
 			g.setColor(Color.white);
-			g.drawOval(getFuturePosition(lookahead).getX() - radius, getFuturePosition(lookahead).getY() - radius, radius*2, radius*2);
+			g.drawOval(getX() - radius, getY() - radius, radius*2, radius*2);
 		}
 		super.render(g);
 	}
@@ -302,8 +302,12 @@ public class Vessel extends Entity {
 	
 	public void takeDamage() {
 		armor -= 1;
-		if (armor <= 0)
-			SubMission.removeEntity(layer, (Entity) this);
+		if (armor <= 0) sink();
+			
+	}
+	
+	public void sink() {
+		SubMission.removeEntity(layer, (Entity) this);
 	}
 	
 	public int detect(Vessel other) {
