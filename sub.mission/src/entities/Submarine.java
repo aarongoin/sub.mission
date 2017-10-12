@@ -41,7 +41,7 @@ public class Submarine extends MilitaryVessel {
 
 		setArsenal(8, 4, true);
 		
-		armor = 1;
+		armor = 2;
 		isSunk = false;
 
 	}
