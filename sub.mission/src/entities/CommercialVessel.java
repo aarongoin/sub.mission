@@ -9,8 +9,8 @@ import jig.Vector;
 public class CommercialVessel extends Vessel {
 	
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
-		super(image, p, noise, bearing, 4, 1f, 1f);
-		maxSpeed = 4f;
+		super(image, p, noise, bearing, 4, 5, 10);
+		maxSpeed = 10;
 		lookahead = 5f;
 		movedFor = new HashMap<Vessel, Float>();
 		layer = "traffic";

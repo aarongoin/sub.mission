@@ -113,6 +113,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("decoy_btn", "resource/img/ui/decoy_btn.png");
 		IMG.put("retract_btn", "resource/img/ui/retract_btn.png");
 		IMG.put("sonar_btn", "resource/img/ui/sonar_btn.png");
+		IMG.put("target_lock", "resource/img/ui/target_lock.png");
 		
 		IMG.put("towed_sonar", "resource/img/items/towed_sonar.png");
 		IMG.put("towed_decoy", "resource/img/items/towed_decoy.png");
