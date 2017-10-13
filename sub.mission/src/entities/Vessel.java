@@ -65,6 +65,7 @@ public class Vessel extends Entity {
 
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
+		//debug = true;
 		
 		baseSonar = 0;
 		ambient = 0;
@@ -149,7 +150,15 @@ public class Vessel extends Entity {
 		return new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f);
 	}
 	
+	public boolean outOfBounds() {
+		Vector p = getNose();
+		return (		p.getX() < 0 || p.getX() > SubMission.ScreenWidth
+				||	p.getY() < 0 || p.getY() > SubMission.ScreenHeight
+		);
+	}
+	
 	public boolean didRunAground(Image map) {
+		if (outOfBounds()) return false;
 		//System.out.println("x: " + (int) nose.getX() + " y: " + (int) nose.getY());
 		Color c = map.getColor((int) nose.getX(), (int) nose.getY());
 		switch(c.toString()) {
@@ -188,7 +197,8 @@ public class Vessel extends Entity {
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
 			g.setColor(Color.white);
-			g.drawOval(getX() - radius, getY() - radius, radius*2, radius*2);
+			Vector fp = getFuturePosition(lookahead);
+			g.drawOval(fp.getX() - radius, fp.getY() - radius, radius*2, radius*2);
 		}
 		super.render(g);
 	}
@@ -275,17 +285,22 @@ public class Vessel extends Entity {
 		waypoint = w;
 	}
 	
-	public void moveFor(Vector other, float r) {
-		//Vector w = other.add(new Vector(1, 0).rotate(currentBearing).getPerpendicular().scale(r));
-		//setWaypoint(w);
+	public void moveFor(Vector land, float radius) {
+		Vector tangent = new Vector(1, 0).rotate(currentBearing).getPerpendicular();
+		Vector adjustment = tangent.clampLength(radius, radius);
+		Vector waypoint = land.add(adjustment);
 		
+		setWaypoint(waypoint);
+
 	}
 	
-	public void moveFor(Vessel other) {
-		Float bearing = movedFor.get(other);
-		if (bearing != null && bearing == other.getBearing()) return;
-		moveFor(other.getPosition(), other.getRadius() * 2);
-		movedFor.put(other, other.getBearing());
+	public void moveFor(Vessel other, Vector otherFuture, Vector myFuture) {
+		Vector tangent = new Vector(1, 0).rotate(currentBearing).getPerpendicular();
+		float d = otherFuture.distance(myFuture);
+		Vector adjustment = other.getVelocity().project(tangent).clampLength(d, d);
+		Vector waypoint = otherFuture.add(adjustment);
+		setWaypoint(waypoint);
+
 	}
 	
 	public Vector getFuturePosition(float dt) {

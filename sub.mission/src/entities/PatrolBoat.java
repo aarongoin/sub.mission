@@ -24,6 +24,8 @@ public class PatrolBoat extends MilitaryVessel {
 		decoys = 0;
 		layer = "patrol";
 		shouldUpdate = 0;
+		
+		lookahead = 10f;
 	}
 	
 	@Override

@@ -38,13 +38,12 @@ public class NavigationManager {
 	
 	
 	public void update(float dt) {
-		float classE;
 		Vessel E;
 		Vessel O;
 		Vector posE;
 		Vector posO;
 		Vector waypoint;
-		
+				
 		traffic -= dt;
 		if (traffic < 0) {
 			traffic = 0.2f;
@@ -52,9 +51,8 @@ public class NavigationManager {
 			for (Entity e : SubMission.getLayer("traffic")) {
 				E = (Vessel) e;
 				posE = E.getFuturePosition(E.lookahead);
-				classE = E.getRadius() / E.getSpeed();
 				waypoint = posE.subtract(E.getPosition());
-				
+				/*
 				Vector land;
 				// make sure won't run aground
 				for (int[] l : SubMission.landMasses) {
@@ -64,15 +62,15 @@ public class NavigationManager {
 						E.moveFor(land, l[2]);
 					}
 				}
-				
+				*/
 				for (Entity o : SubMission.getLayer("traffic")) {
 					if (e == o) continue;
 					O = (Vessel) o;
 					posO = O.getFuturePosition(E.lookahead);
 					
-					if (willCollide(E, O, 60f) && classE <= O.getRadius() / O.getSpeed()) {
-						//E.moveFor(O);
-						waypoint = waypoint.add(O.getVelocity().scale(-1).scale(O.getRadius() / E.getPosition().distanceSquared(O.getPosition())));
+					if ( Physics.didCollide(posE, posO, E.getRadius(), O.getRadius()) ) {
+						E.moveFor(O, posO, posE);
+						//waypoint = waypoint.add(O.getVelocity().scale(-1).scale(O.getRadius() / E.getPosition().distanceSquared(O.getPosition())));
 					}
 				}
 				E.setWaypoint(waypoint);
@@ -82,14 +80,12 @@ public class NavigationManager {
 		for (Entity e : SubMission.getLayer("patrol")) {
 			E = (Vessel) e;
 			posE = E.getFuturePosition(E.lookahead);
-			classE = E.getRadius() / E.getSpeed();
 			
 			Vector land;
 			// make sure won't run aground
 			for (int[] l : SubMission.landMasses) {
 				land = new Vector(l[0], l[1]);
 				if (Physics.didCollide( posE, land, (float) E.getRadius(), (float) l[2] )) {
-					// adjust course
 					E.moveFor(land, l[2]);
 				}
 			}
@@ -99,10 +95,7 @@ public class NavigationManager {
 				posO = O.getFuturePosition(E.lookahead);
 				
 				if (Physics.didCollide( posE, posO, (float) E.getRadius(), (float) O.getRadius() )) {
-					// should E adjust course to avoid O
-					if (classE <= O.getRadius() / O.getSpeed()) {
-						E.moveFor(O);
-					}
+					E.moveFor(O, posO, posE);
 				}
 			}
 			for (Entity o : SubMission.getLayer("patrol")) {
@@ -111,10 +104,7 @@ public class NavigationManager {
 				posO = O.getFuturePosition(E.lookahead);
 				
 				if (Physics.didCollide( posE, posO, (float) E.getRadius(), (float) O.getRadius() )) {
-					// should E adjust course to avoid O
-					if (classE <= O.getRadius() / O.getSpeed()) {
-						E.moveFor(O);
-					}
+					E.moveFor(O, posO, posE);
 				}
 			}
 		}

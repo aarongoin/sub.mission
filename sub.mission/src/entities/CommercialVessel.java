@@ -11,10 +11,11 @@ public class CommercialVessel extends Vessel {
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
 		super(image, p, noise, bearing, 4, 5, 10);
 		maxSpeed = 10;
-		lookahead = 5f;
+		lookahead = 60f;
 		movedFor = new HashMap<Vessel, Float>();
 		layer = "traffic";
 		armor = 1;
+		debug = false;
 	}
 	
 	public void render(Graphics g) {
