@@ -19,6 +19,8 @@ public class MilitaryVessel extends Vessel {
 
 	protected Towable towedSonar;
 	protected Towable towedDecoy;
+	
+	protected String torpedoType;
 
 	public MilitaryVessel(String image, Vector p, float noise, float sonar, float bearing, float speed, float radius,
 			float accel) {
@@ -64,7 +66,7 @@ public class MilitaryVessel extends Vessel {
 			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed * 0.5144f);
 			Vector target = v.getPosition();// .add(v.getFuturePosition(timeToTarget));
 			torpedoes -= 1;
-			return new Torpedo("sub_torpedo", getPosition(),
+			return new Torpedo(torpedoType, getPosition(),
 					(float) v.getPosition().subtract(getPosition()).getRotation(), torpedoSpeed, torpedoSpeed, target,
 					v);
 		} else

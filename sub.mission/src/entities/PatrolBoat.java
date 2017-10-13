@@ -25,7 +25,9 @@ public class PatrolBoat extends MilitaryVessel {
 		layer = "patrol";
 		shouldUpdate = 0;
 		
-		lookahead = 10f;
+		lookahead = 2f;
+		
+		torpedoType = "enemy_torpedo";
 	}
 	
 	@Override

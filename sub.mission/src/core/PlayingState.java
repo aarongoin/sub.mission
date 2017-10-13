@@ -75,10 +75,10 @@ class PlayingState extends BasicGameState {
 	
 	boolean advance() {
 		switch (state) {
-		case 2:
+		case 1:
 			return mission.getPercent() <= 0f;
 		case 0:
-		case 1:
+		case 2:
 		case 3:
 			return mission.collides(player) != null;
 		default:
@@ -113,18 +113,20 @@ class PlayingState extends BasicGameState {
 			SubMission.addEntity("patrol", new PatrolBoat(new Vector(100, 100), 45));
 			SubMission.addEntity("patrol", new PatrolBoat(new Vector(1000, 700), -45));
 			SubMission.addEntity("patrol", new PatrolBoat(new Vector(300, 800), 0));
+			SubMission.addEntity("patrol", new PatrolBoat(new Vector(700, 400), -45));
+			SubMission.addEntity("patrol", new PatrolBoat(new Vector(1200, 800), 0));
 			G.removeLayer("torpedo");
 			G.addLayer("torpedo");
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
-			mission = new MissionTarget(new Vector(300f, 200f), 0);
+			mission = new MissionTarget(new Vector(300f, 200f), 120);
 			break;
 		case 2: // rendezvous with special forces
 			mission = new MissionTarget(new Vector(100f, 150f), 60);
 			break;
 		case 3: // escape
-			mission = new MissionTarget(new Vector(SubMission.ScreenWidth - 100f, 100f), 60);
+			mission = new MissionTarget(new Vector(SubMission.ScreenWidth - 100f, 100f), 120);
 			break;
 		default:
 			break;
@@ -137,7 +139,7 @@ class PlayingState extends BasicGameState {
 			g.drawString("Get to the mission target to deploy your special forces.", 75f, 15f);
 			break;
 		case 1:
-			g.drawString("Remain undetected until your rendezvous window opens.", 75f, 15f);
+			g.drawString("Move into deep water and remain undetected until your rendezvous window opens.", 75f, 15f);
 			break;
 		case 2:
 			g.drawString("Rendezvous with your team before the enemy captures them!", 75f, 15f);

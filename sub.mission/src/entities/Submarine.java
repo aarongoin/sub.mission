@@ -46,6 +46,7 @@ public class Submarine extends MilitaryVessel {
 		diveSpeed = dive;
 		maxSpeed = 45;
 
+		torpedoType = "sub_torpedo";
 		
 		bearing = SubMission.getImage("bearing_target");
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);

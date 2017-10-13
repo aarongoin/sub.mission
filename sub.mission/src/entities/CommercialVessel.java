@@ -15,7 +15,7 @@ public class CommercialVessel extends Vessel {
 		movedFor = new HashMap<Vessel, Float>();
 		layer = "traffic";
 		armor = 1;
-		debug = false;
+		//debug = false;
 	}
 	
 	public void render(Graphics g) {
