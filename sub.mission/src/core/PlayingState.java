@@ -75,10 +75,10 @@ class PlayingState extends BasicGameState {
 	
 	boolean advance() {
 		switch (state) {
-		case 1:
+		case 2:
 			return mission.getPercent() <= 0f;
 		case 0:
-		case 2:
+		case 1:
 		case 3:
 			return mission.collides(player) != null;
 		default:
@@ -95,16 +95,16 @@ class PlayingState extends BasicGameState {
 			G.removeLayer("traffic");
 			G.addLayer("traffic");
 			CommercialVessel cv;
-			cv = new CommercialVessel("ship2", new Vector(500, 500), 30, 0);
+			cv = new CommercialVessel("ship2", new Vector(500, 500), 60, 0);
 			//cv.debug(true);
 			SubMission.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship1", new Vector(650, 650), 30, -90);
+			cv = new CommercialVessel("ship1", new Vector(650, 650), 60, -90);
 			//cv.debug(true);
 			SubMission.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship3", new Vector(650, 400), 30, 180);
+			cv = new CommercialVessel("ship3", new Vector(650, 400), 60, 180);
 			//cv.debug(true);
 			SubMission.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship1", new Vector(300, 100), 30, 90);
+			cv = new CommercialVessel("ship1", new Vector(300, 100), 60, 90);
 			//cv.debug(true);
 			SubMission.addEntity("traffic", (Entity) cv);
 			// generate enemy patrol boats
@@ -115,11 +115,10 @@ class PlayingState extends BasicGameState {
 			SubMission.addEntity("patrol", new PatrolBoat(new Vector(300, 800), 0));
 			G.removeLayer("torpedo");
 			G.addLayer("torpedo");
-			//SubMission.addEntity("torpedo", new Torpedo("enemy_torpedo", new Vector(200, 200), 0, 50, 50, player.getPosition(), player));
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
-			mission = new MissionTarget(new Vector(100f, 150f), 0);
+			mission = new MissionTarget(new Vector(300f, 200f), 0);
 			break;
 		case 2: // rendezvous with special forces
 			mission = new MissionTarget(new Vector(100f, 150f), 60);

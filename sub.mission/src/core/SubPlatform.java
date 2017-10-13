@@ -64,6 +64,9 @@ public class SubPlatform {
 		if (!sub.decoyDeployed() && towableState == 2) {
 			towableState = 0;
 		}
+		if (!sub.haveTowedSonar() && towableState == 1) {
+			towableState = 0;
+		}
 		
 		// blink overlay
 		if (sub.getArmor() == 1) {
