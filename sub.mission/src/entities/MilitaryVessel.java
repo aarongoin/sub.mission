@@ -85,7 +85,7 @@ public class MilitaryVessel extends Vessel {
 	
 	public int detect(Vessel other) {
 		
-		if (towedSonar.getState() != 1) {
+		if (towedSonar == null || towedSonar.getState() != 1) {
 			float theta = Math.abs((float) (getNose().subtract(getPosition()).getRotation() - other.getPosition().subtract(getPosition()).getRotation()));
 			if (theta > 157.5 && theta < 202.5)
 				return 0;
@@ -93,12 +93,12 @@ public class MilitaryVessel extends Vessel {
 		float distance = getPosition().distance(other.getPosition());
 		float sonar = getSonar();
 		float span = sonar + other.getNoise();
-
+		//System.out.println("Distance: " + distance + " Sonar: " + sonar);
 		if (distance < span) {
-			int random = rand.nextInt((int) (distance + other.getNoise()));
-			if (random <= sonar * 2 / 3)
+			int random = rand.nextInt((int) (distance * 2));
+			if (random <= sonar)
 				return 3;
-			else if (random <= sonar)
+			else if (random <= sonar * 1.5)
 				return 2;
 			else
 				return 1;

@@ -79,7 +79,7 @@ public class NavigationManager {
 			}
 		}
 		
-		for (Entity e : SubMission.getLayer("military")) {
+		for (Entity e : SubMission.getLayer("patrol")) {
 			E = (Vessel) e;
 			posE = E.getFuturePosition(E.lookahead);
 			classE = E.getRadius() / E.getSpeed();
@@ -105,7 +105,7 @@ public class NavigationManager {
 					}
 				}
 			}
-			for (Entity o : SubMission.getLayer("military")) {
+			for (Entity o : SubMission.getLayer("patrol")) {
 				if (e == o) continue;
 				O = (Vessel) o;
 				posO = O.getFuturePosition(E.lookahead);

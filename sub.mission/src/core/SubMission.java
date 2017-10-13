@@ -14,6 +14,7 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entities.Submarine;
 import jig.ResourceManager;
 import jig.Vector;
 import jig.Entity;
@@ -32,6 +33,8 @@ public class SubMission extends StateBasedGame {
 
 	public static int ScreenWidth;
 	public static int ScreenHeight;
+	
+	public static Submarine player;
 	
 	public int missionFailed;
 		

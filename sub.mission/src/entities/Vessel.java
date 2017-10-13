@@ -205,6 +205,9 @@ public class Vessel extends Entity {
 		if (waypoint != null) {
 			//System.out.println(waypoint);
 			targetBearing = (float) waypoint.subtract(getPosition()).getRotation();
+			if (getPosition().distance(waypoint) < 5) {
+				waypoint = null;
+			}
 		} else if (destination != null) {
 			targetBearing = (float) destination.subtract(getPosition()).getRotation();
 			//System.out.println(currentBearing);
@@ -302,8 +305,7 @@ public class Vessel extends Entity {
 	
 	public void takeDamage() {
 		armor -= 1;
-		if (armor <= 0) sink();
-			
+		if (armor <= 0) sink();	
 	}
 	
 	public void sink() {
