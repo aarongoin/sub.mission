@@ -297,7 +297,7 @@ public class Vessel extends Entity {
 	public void moveFor(Vessel other, Vector otherFuture, Vector myFuture) {
 		Vector tangent = new Vector(1, 0).rotate(currentBearing).getPerpendicular();
 		float d = otherFuture.distance(myFuture);
-		Vector adjustment = other.getVelocity().project(tangent).clampLength(d, d);
+		Vector adjustment = other.getVelocity().scale(-1).project(tangent).clampLength(d, d);
 		Vector waypoint = otherFuture.add(adjustment);
 		setWaypoint(waypoint);
 
