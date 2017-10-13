@@ -14,7 +14,9 @@ import org.newdawn.slick.state.StateBasedGame;
 import entities.CommercialVessel;
 import entities.MilitaryVessel;
 import entities.MissionTarget;
+import entities.PatrolBoat;
 import entities.Submarine;
+import entities.Torpedo;
 import entities.Vessel;
 import jig.Vector;
 import jig.Entity;
@@ -28,10 +30,13 @@ class PlayingState extends BasicGameState {
 	
 	DepthMeter depth;
 	SpeedMeter speed;
+	SubPlatform platform;
 	
 	Submarine player;
 	MissionTarget mission;
 
+	NavigationManager navigation;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		SubMission G = (SubMission) game;
@@ -42,6 +47,7 @@ class PlayingState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		SubMission G = (SubMission) game;
 		
+		navigation = new NavigationManager();
 		sonarCountdown = 0;
 		
 		// insert submarine
@@ -51,17 +57,28 @@ class PlayingState extends BasicGameState {
 		// generate UI
 		depth = new DepthMeter((int) player.getDepth(), new Vector(SubMission.ScreenWidth - 24, 12));
 		speed = new SpeedMeter((int) player.getSpeed(), new Vector(SubMission.ScreenWidth - 415, SubMission.ScreenHeight - 24));
+		platform = new SubPlatform(player);
+		
+		SubMission.player = player;
 		
 		state = 0;
 		stage(G);
+		
+		/*System.out.println("theta( x, 0): " + new Vector( 1, 0).getRotation()
+					   + ", theta( 0, y): " + new Vector( 0, 1).getRotation()
+					   + ", theta(-x, 0): " + new Vector(-1, 0).getRotation()
+					   + ", theta(-x,-y): " + new Vector(-1,-1).getRotation()
+					   + ", theta( 0,-y): " + new Vector( 0,-1).getRotation()
+					   + ", theta( x,-y): " + new Vector( 1,-1).getRotation());
+		*/
 	}
 	
 	boolean advance() {
 		switch (state) {
-		case 1:
+		case 2:
 			return mission.getPercent() <= 0f;
 		case 0:
-		case 2:
+		case 1:
 		case 3:
 			return mission.collides(player) != null;
 		default:
@@ -78,23 +95,30 @@ class PlayingState extends BasicGameState {
 			G.removeLayer("traffic");
 			G.addLayer("traffic");
 			CommercialVessel cv;
-			cv = new CommercialVessel("ship1", new Vector(SubMission.ScreenWidth - 500, SubMission.ScreenHeight - 50), 30, 330);
-			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship2", new Vector(300, 350), 40, 80);
-			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship3", new Vector(100, 10), 50, 135);
-			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship4", new Vector(SubMission.ScreenWidth - 50, SubMission.ScreenHeight - 50), 60, 315);
-			G.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship3", new Vector(SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2), 50, 90);
-			G.addEntity("traffic", (Entity) cv);
+			cv = new CommercialVessel("ship2", new Vector(500, 500), 60, 0);
+			//cv.debug(true);
+			SubMission.addEntity("traffic", (Entity) cv);
+			cv = new CommercialVessel("ship1", new Vector(650, 650), 60, -90);
+			//cv.debug(true);
+			SubMission.addEntity("traffic", (Entity) cv);
+			cv = new CommercialVessel("ship3", new Vector(650, 400), 60, 180);
+			//cv.debug(true);
+			SubMission.addEntity("traffic", (Entity) cv);
+			cv = new CommercialVessel("ship1", new Vector(300, 100), 60, 90);
+			//cv.debug(true);
+			SubMission.addEntity("traffic", (Entity) cv);
 			// generate enemy patrol boats
-			G.removeLayer("military");
-			G.addLayer("military");
+			G.removeLayer("patrol");
+			G.addLayer("patrol");
+			SubMission.addEntity("patrol", new PatrolBoat(new Vector(100, 100), 45));
+			SubMission.addEntity("patrol", new PatrolBoat(new Vector(1000, 700), -45));
+			SubMission.addEntity("patrol", new PatrolBoat(new Vector(300, 800), 0));
+			G.removeLayer("torpedo");
+			G.addLayer("torpedo");
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
-			mission = new MissionTarget(new Vector(100f, 150f), 0);
+			mission = new MissionTarget(new Vector(300f, 200f), 0);
 			break;
 		case 2: // rendezvous with special forces
 			mission = new MissionTarget(new Vector(100f, 150f), 60);
@@ -146,6 +170,9 @@ class PlayingState extends BasicGameState {
 		if (player.didRunAground(G.map)) {
 			G.missionFailed = 10;
 			shouldEnd = true;
+		} else if (player.isSunk) {
+			G.missionFailed = 6;
+			shouldEnd = true;
 		} else if (missionFail()) {
 			G.missionFailed = state + 1;
 			shouldEnd = true;
@@ -157,8 +184,8 @@ class PlayingState extends BasicGameState {
 		return shouldEnd;
 	}
 	
-	void DetectWithSonar(Vessel e) {
-		switch (player.detect((Vessel) e)) {
+	boolean DetectWithSonar(Vessel e) {
+		switch (player.detect(e)) {
 		case 0:
 			e.drawAlpha = 0f;
 			break;
@@ -170,8 +197,9 @@ class PlayingState extends BasicGameState {
 			break;
 		case 3:
 			e.drawAlpha = 1f;
-			break;
+			return true;
 		}
+		return false;
 	}
 	
 	@Override
@@ -184,18 +212,35 @@ class PlayingState extends BasicGameState {
 		g.drawImage(G.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		
-		depth.render(g);
-		speed.render(g);
-		
-		for (Entity e : G.getLayer("traffic"))
+		for (Entity e : SubMission.getLayer("traffic"))
 			((CommercialVessel) e).render(g);
+		
+		for (Entity e : SubMission.getLayer("patrol"))
+			((PatrolBoat) e).render(g);
+		
+		for (Entity e : SubMission.getLayer("torpedo")) {
+			((Torpedo) e).render(g);
+		}
 		
 		player.render(g);
 		mission.render(g);
 		
-		g.setFont(G.text);
+		g.setFont(SubMission.text);
 		renderObjective(g);
+		depth.render(g);
+		speed.render(g);
+		platform.render(g);
+		
+		/*int w = SubMission.ScreenWidth / 45;
+		int h = SubMission.ScreenHeight / 50;
+		int o;
+		for (int x=0; x < w; x++) {
+			o = (x % 2 == 0) ? 25 : 0;
+			for (int y=0; y < h; y++) {
+				g.drawOval(x*45, y*50-o, 50, 50);
+			}
+		}*/
+		
 	}
 
 	@Override
@@ -213,7 +258,7 @@ class PlayingState extends BasicGameState {
 			stage(G);
 		}
 		
-		float ambientNoise = G.getLayer("traffic").size() * 50 + G.getLayer("military").size() * 20;
+		float ambientNoise = SubMission.getLayer("traffic").size() * 50 + SubMission.getLayer("patrol").size() * 20;
 		//System.out.println(ambientNoise);
 		
 		// draw depth lines or land depending on submarine depth
@@ -225,24 +270,52 @@ class PlayingState extends BasicGameState {
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
-		player.setDepth(depth.update(input, (int) player.getDepth()));
-		player.setSpeed(speed.update(input, (int) player.getSpeed()));
+		player.setDepth( depth.update(input, (int) player.getDepth()) );
+		player.setSpeed( speed.update(input, (int) player.getSpeed()) );
+		player.setTowState( platform.update(input, dt) );
 		
 		player.update(input, ambientNoise, dt);
 
 		// submarine sonar affects how ships are drawn
+		Vessel v;
 		sonarCountdown -= dt;
+		for (Entity e : SubMission.getLayer("traffic")) {
+			((CommercialVessel) e).update(dt);
+			v = (Vessel) e;
+			if (v.didRunAground(G.map))
+				SubMission.removeEntity("traffic", e);
+			else if (DetectWithSonar(v)
+					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+				
+				player.getLock(v);
+			}
+				
+		}
+		for (Entity e : SubMission.getLayer("patrol")) {
+			v = (Vessel) e;
+			((PatrolBoat) e).update(dt, ambientNoise);
+			if (((Vessel) e).didRunAground(G.map))
+				SubMission.removeEntity("patrol", e);
+			else if (DetectWithSonar(v)
+					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+				
+				player.getLock(v);
+			}
+		}
+		for (Entity e : SubMission.getLayer("torpedo")) {
+			((Torpedo) e).update(dt);
+			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
+				SubMission.removeEntity("torpedo", e);
+		}
+		
+		navigation.update(dt);
+		
 		if (sonarCountdown <= 0) {
-			for (Entity e : G.getLayer("traffic")) {
-				((CommercialVessel) e).update(dt);
-				DetectWithSonar((Vessel) e);
-			}
-			for (Entity e : G.getLayer("military")) {
-				((MilitaryVessel) e).update(dt);
-				DetectWithSonar((Vessel) e);
-			}
 			sonarCountdown = 1;
 		}
+		G.update();
 	}
 
 	@Override

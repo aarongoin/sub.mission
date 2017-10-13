@@ -14,6 +14,7 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entities.Submarine;
 import jig.ResourceManager;
 import jig.Vector;
 import jig.Entity;
@@ -33,10 +34,13 @@ public class SubMission extends StateBasedGame {
 	public static int ScreenWidth;
 	public static int ScreenHeight;
 	
+	public static Submarine player;
+	
 	public int missionFailed;
 		
-	HashMap<String, Integer> layers;
-	public List<List<Entity>> entities;
+	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
+	static public List<List<Entity>> entities = new ArrayList<List<Entity>>();
+	static HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
 	
 	static public TrueTypeFont title;
 	static public TrueTypeFont subtitle;
@@ -46,6 +50,13 @@ public class SubMission extends StateBasedGame {
 	
 	public Image map;
 	public Image depth;
+	static public int[][] landMasses = {
+			/* x, y, r */
+			{37, 287, 27},
+			{0, 75, 118},
+			{80, 660, 250},
+			{945, 76, 69}
+	};
 	
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -65,8 +76,6 @@ public class SubMission extends StateBasedGame {
 		
 		
 		missionFailed = 0;
-		layers = new HashMap<String, Integer>();
-		entities = new ArrayList<List<Entity>>();
 		
 		IMG.put("land", "resource/img/map1/land.png");
 		IMG.put("map", "resource/img/map1/map.png");
@@ -98,7 +107,32 @@ public class SubMission extends StateBasedGame {
 		IMG.put("marker", "resource/img/ui/marker.png");
 		IMG.put("mission_target", "resource/img/ui/mission_target.png");
 		
+		IMG.put("sub_hull", "resource/img/ui/sub_hull.png");
+		IMG.put("sub_hull0", "resource/img/ui/sub_hull0.png");
+		IMG.put("torpedo_full", "resource/img/ui/torpedo_full.png");
+		IMG.put("torpedo_empty", "resource/img/ui/torpedo_empty.png");
+		IMG.put("nm_full", "resource/img/ui/nm_full.png");
+		IMG.put("nm_empty", "resource/img/ui/nm_empty.png");
+		IMG.put("decoy_btn", "resource/img/ui/decoy_btn.png");
+		IMG.put("retract_btn", "resource/img/ui/retract_btn.png");
+		IMG.put("sonar_btn", "resource/img/ui/sonar_btn.png");
+		IMG.put("target_lock", "resource/img/ui/target_lock.png");
+		
+		IMG.put("towed_sonar", "resource/img/items/towed_sonar.png");
+		IMG.put("towed_decoy", "resource/img/items/towed_decoy.png");
+		IMG.put("decoy_waves", "resource/img/items/decoy_waves.png");
+		IMG.put("sonar_waves", "resource/img/items/sonar_waves.png");
+		IMG.put("sub_torpedo", "resource/img/items/sub_torpedo.png");
+		IMG.put("enemy_torpedo", "resource/img/items/enemy_torpedo.png");
+		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
+		SND.put("fire_torpedo", "resource/sound/35530__jobro__torpedo-launch-underwater.wav");
+		SND.put("torpedo_explosion", "resource/sound/159402__noirenex__overheadexplosion.wav");
+		SND.put("explosion_a", "resource/sound/203331__veiler__explosion-documentary-veiler.wav");
+		SND.put("explosion_b", "resource/sound/94185__nbs-dark__explosion.wav");
+		
+		
+		
 	}
 	
 	public static Image getImage(String key) {
@@ -158,15 +192,16 @@ public class SubMission extends StateBasedGame {
 		return result;
 	}
 	
-	public int getLayerIndex(String layer) {
+	static public int getLayerIndex(String layer) {
 		return Math.abs(layers.get(layer)) - 1;
 	}
 	
-	public List<Entity> getLayer(String layer) {
+	static public List<Entity> getLayer(String layer) {
 		return entities.get(getLayerIndex(layer));
 	}
 	
-	public boolean addEntity(String layer, Entity e) {
+	static public boolean addEntity(String layer, Entity e) {
+		if (e == null) return false;
 		if (layers.containsKey(layer)) {
 			//System.out.println(entities.get(getLayerIndex(layer)));
 			entities.get(getLayerIndex(layer)).add(e);
@@ -175,12 +210,20 @@ public class SubMission extends StateBasedGame {
 		return false;
 	}
 	
-	public boolean removeEntity(String layer, Entity e) {
+	static public boolean removeEntity(String layer, Entity e) {
+		//System.out.println("Removing: " + e);
 		if (layers.containsKey(layer)) {
-			entities.get(getLayerIndex(layer)).remove(e);
+			toRemove.put(e, getLayerIndex(layer));
 			return true;
 		}
 		return false;
+	}
+	
+	public void update() {
+		for (Entity e : toRemove.keySet()) {
+			entities.get(toRemove.get(e)).remove(e);
+		}
+		toRemove.clear();
 	}
 	
 
@@ -217,12 +260,12 @@ public class SubMission extends StateBasedGame {
 			SubMission g = new SubMission("sub.mission");
 			app = new AppGameContainer(g);
 			
-			g.ScreenWidth = app.getScreenWidth() - 40;
-			g.ScreenHeight = app.getScreenHeight() - 50;
+			SubMission.ScreenWidth = app.getScreenWidth() - 40;
+			SubMission.ScreenHeight = app.getScreenHeight() - 50;
 			
-			System.out.println(g.ScreenWidth + " " + g.ScreenHeight);
+			System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
 			
-			app.setDisplayMode(g.ScreenWidth, g.ScreenHeight, false);
+			app.setDisplayMode(SubMission.ScreenWidth, SubMission.ScreenHeight, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
