@@ -34,7 +34,7 @@ public class Submarine extends MilitaryVessel {
 	Image targetLock;
 
 	public Submarine(float depth, float dive) {
-		super("sub0", new Vector(SubMission.ScreenWidth - 700f, 300f), 1.5f, 4, 0, 10, 20, 2);
+		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 4, 180, 10, 20, 2);
 
 		lookahead = 0f;
 
@@ -56,8 +56,6 @@ public class Submarine extends MilitaryVessel {
 		
 		target = null;
 		targetLock = SubMission.getImage("target_lock");
-
-		debug = true;
 	}
 
 	public float getDepth() {
@@ -136,7 +134,7 @@ public class Submarine extends MilitaryVessel {
 		else if (currentDepth < 500)
 			noise = super.getNoise() * (1 + (1 * (400 - currentDepth) / 100));
 		
-		return noise * (currentSpeed > 20 ? 2 : 1);
+		return noise * (currentSpeed > 20 ? 1.5f : 1);
 	}
 
 	public float getNoise(float depth) {
@@ -158,7 +156,7 @@ public class Submarine extends MilitaryVessel {
 		else
 			noise = super.getNoise() * (20 + (10 * (700 - currentDepth) / 100));
 		
-		return noise * (currentSpeed > 20 ? 2 : 1);
+		return noise * (currentSpeed > 20 ? 1.5f : 1);
 	}
 
 	@Override
