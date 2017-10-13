@@ -43,10 +43,6 @@ public class NavigationManager {
 		Vector posE;
 		Vector posO;
 		Vector waypoint;
-				
-		traffic -= dt;
-		if (traffic < 0) {
-			traffic = 0.2f;
 		
 			for (Entity e : SubMission.getLayer("traffic")) {
 				E = (Vessel) e;
@@ -75,7 +71,6 @@ public class NavigationManager {
 				}
 				E.setWaypoint(waypoint);
 			}
-		}
 		
 		for (Entity e : SubMission.getLayer("patrol")) {
 			E = (Vessel) e;
@@ -89,7 +84,7 @@ public class NavigationManager {
 					E.moveFor(land, l[2]);
 				}
 			}
-			
+						
 			for (Entity o : SubMission.getLayer("traffic")) {
 				O = (Vessel) o;
 				posO = O.getFuturePosition(E.lookahead);

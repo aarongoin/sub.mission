@@ -65,7 +65,7 @@ public class Vessel extends Entity {
 
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
-		//debug = true;
+		debug = true;
 		
 		baseSonar = 0;
 		ambient = 0;
@@ -74,7 +74,7 @@ public class Vessel extends Entity {
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
 		
-		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 4;
+		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 2;
 		
 		rand = new Random(System.currentTimeMillis());
 		
@@ -297,7 +297,7 @@ public class Vessel extends Entity {
 	public void moveFor(Vessel other, Vector otherFuture, Vector myFuture) {
 		Vector tangent = new Vector(1, 0).rotate(currentBearing).getPerpendicular();
 		float d = otherFuture.distance(myFuture);
-		Vector adjustment = other.getVelocity().project(tangent).clampLength(d, d);
+		Vector adjustment = other.getVelocity().scale(-1).project(tangent).clampLength(d, d);
 		Vector waypoint = otherFuture.add(adjustment);
 		setWaypoint(waypoint);
 
