@@ -128,6 +128,9 @@ public class SubMission extends StateBasedGame {
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 		SND.put("fire_torpedo", "resource/sound/35530__jobro__torpedo-launch-underwater.wav");
 		SND.put("torpedo_explosion", "resource/sound/159402__noirenex__overheadexplosion.wav");
+		SND.put("explosion_a", "resource/sound/203331__veiler__explosion-documentary-veiler.wav");
+		SND.put("explosion_b", "resource/sound/94185__nbs-dark__explosion.wav");
+		
 		
 		
 	}

@@ -306,7 +306,7 @@ public class Vessel extends Entity {
 		return (175 * baseSonar - ambient - currentSpeed * 8);
 	}
 	
-	public void takeDamage() {
+	public void takeDamage(String source) {
 		armor -= 1;
 		if (armor <= 0) sink();	
 	}

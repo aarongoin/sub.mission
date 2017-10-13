@@ -26,6 +26,8 @@ public class Submarine extends MilitaryVessel {
 	Vector bearingOffset;
 
 	Sound fireTorpedo;
+	Sound explosionA;
+	Sound explosionB;
 	
 	public boolean isSunk;
 	
@@ -44,7 +46,7 @@ public class Submarine extends MilitaryVessel {
 		diveSpeed = dive;
 		maxSpeed = 45;
 
-		fireTorpedo = SubMission.getSound("fire_torpedo");
+		
 		bearing = SubMission.getImage("bearing_target");
 		bearingOffset = new Vector(0, -1).scale(30).setRotation(hoverBearing);
 		setDestination(null);
@@ -56,6 +58,10 @@ public class Submarine extends MilitaryVessel {
 		
 		target = null;
 		targetLock = SubMission.getImage("target_lock");
+		
+		fireTorpedo = SubMission.getSound("fire_torpedo");
+		explosionA = SubMission.getSound("explosion_a");
+		explosionB = SubMission.getSound("explosion_b");
 	}
 
 	public float getDepth() {
@@ -134,7 +140,7 @@ public class Submarine extends MilitaryVessel {
 		else if (currentDepth < 500)
 			noise = super.getNoise() * (1 + (1 * (400 - currentDepth) / 100));
 		
-		return noise * (currentSpeed > 20 ? 1.5f : 1);
+		return noise * (currentSpeed > 20 ? 1f : 0.5f);
 	}
 
 	public float getNoise(float depth) {
@@ -162,6 +168,15 @@ public class Submarine extends MilitaryVessel {
 	@Override
 	public void sink() {
 		isSunk = true;
+	}
+	
+	@Override
+	public void takeDamage(String source) {
+		super.takeDamage(source);
+		if (source == "torpedo") {
+			explosionA.play();
+			explosionB.play();
+		}
 	}
 	
 	@Override
@@ -212,13 +227,13 @@ public class Submarine extends MilitaryVessel {
 		if  (	(currentDepth >  crushDepth && rand.nextInt(1500) == 0) 
 			 || (currentDepth > dangerDepth && rand.nextInt(2000) == 0)
 			) {
-			takeDamage();
+			takeDamage("depth");
 		}
 		
 		if  (	(currentSpeed > crushSpeed && rand.nextInt(1500) == 0) 
 				 || (currentSpeed > dangerSpeed && rand.nextInt(2000) == 0)
 				) {
-				takeDamage();
+				takeDamage("speed");
 			}
 		
 		if (target != null) lockOn();

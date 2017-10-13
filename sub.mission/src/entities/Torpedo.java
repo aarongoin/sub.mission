@@ -69,7 +69,7 @@ public class Torpedo extends Vessel {
 	
 	void explode() {
 		explosion.play();
-		target.takeDamage();
+		target.takeDamage("torpedo");
 		SubMission.removeEntity(layer, (Entity) this);
 	}
 	

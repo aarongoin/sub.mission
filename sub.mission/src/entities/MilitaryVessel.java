@@ -22,7 +22,7 @@ public class MilitaryVessel extends Vessel {
 
 	public MilitaryVessel(String image, Vector p, float noise, float sonar, float bearing, float speed, float radius, float accel) {
 		super(image, p, noise, bearing, speed, radius, accel);
-		debug = true;
+		//debug = true;
 		baseSonar = sonar;
 		ambient = 0;
 		
@@ -134,12 +134,13 @@ public class MilitaryVessel extends Vessel {
 		}
 	}
 	
-	public void takeDamage() {
-		if (towedDecoy != null && towedDecoy.getState() == 1) {
+	@Override
+	public void takeDamage(String source) {
+		if (source == "torpedo" && towedDecoy != null && towedDecoy.getState() == 1) {
 			// destroy decoy instead of taking damage
 			towedDecoy.reset(this);
 			decoys--;
-		} else super.takeDamage();
+		} else super.takeDamage(source);
 	}
 	
 	public void cableSnapped(int id) {
