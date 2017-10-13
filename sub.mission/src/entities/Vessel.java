@@ -42,6 +42,7 @@ public class Vessel extends Entity {
 	protected float turnRadius;
 	
 	float baseNoise;
+	float actionNoise;
 	
 	int radius;
 	
@@ -67,6 +68,7 @@ public class Vessel extends Entity {
 		
 		baseSonar = 0;
 		ambient = 0;
+		actionNoise = 0;
 		
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
@@ -112,7 +114,7 @@ public class Vessel extends Entity {
 	}
 	
 	public float getNoise() {
-		return currentSpeed * baseNoise;
+		return currentSpeed * baseNoise + actionNoise;
 	}
 	
 	public float getSpeed() {
@@ -192,6 +194,7 @@ public class Vessel extends Entity {
 	}
 	
 	public void update(float dt) {
+		
 		if (currentSpeed < targetSpeed) {
 			currentSpeed += acceleration*dt;
 			if (currentSpeed > targetSpeed)

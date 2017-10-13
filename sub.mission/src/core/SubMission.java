@@ -257,12 +257,12 @@ public class SubMission extends StateBasedGame {
 			SubMission g = new SubMission("sub.mission");
 			app = new AppGameContainer(g);
 			
-			g.ScreenWidth = app.getScreenWidth() - 40;
-			g.ScreenHeight = app.getScreenHeight() - 50;
+			SubMission.ScreenWidth = app.getScreenWidth() - 40;
+			SubMission.ScreenHeight = app.getScreenHeight() - 50;
 			
-			System.out.println(g.ScreenWidth + " " + g.ScreenHeight);
+			System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
 			
-			app.setDisplayMode(g.ScreenWidth, g.ScreenHeight, false);
+			app.setDisplayMode(SubMission.ScreenWidth, SubMission.ScreenHeight, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {

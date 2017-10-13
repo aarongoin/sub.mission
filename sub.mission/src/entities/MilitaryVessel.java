@@ -1,6 +1,5 @@
 package entities;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Sound;
 
@@ -15,7 +14,6 @@ public class MilitaryVessel extends Vessel {
 
 	float torpedoSpeed = 50;
 	
-	
 	protected int torpedoes;
 	protected int decoys;
 	
@@ -24,7 +22,7 @@ public class MilitaryVessel extends Vessel {
 
 	public MilitaryVessel(String image, Vector p, float noise, float sonar, float bearing, float speed, float radius, float accel) {
 		super(image, p, noise, bearing, speed, radius, accel);
-		
+		debug = true;
 		baseSonar = sonar;
 		ambient = 0;
 		
@@ -61,6 +59,7 @@ public class MilitaryVessel extends Vessel {
 	
 	public Torpedo fireTorpedo(Vessel v) {
 		if (torpedoes > 0) {
+			actionNoise += 100;
 			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed  * 0.5144f);
 			Vector target = v.getPosition();//.add(v.getFuturePosition(timeToTarget));
 			torpedoes -= 1;
@@ -75,6 +74,12 @@ public class MilitaryVessel extends Vessel {
 	}
 	
 	public void update(float dt, float ambient) {
+		if (actionNoise > 0.01) {
+			actionNoise *= 0.9f;
+		} else {
+			actionNoise = 0;
+		}
+		
 		
 		if (towedSonar != null && towedSonar.getState() > 0) towedSonar.update(dt);
 		if (towedDecoy != null && towedDecoy.getState() > 0) towedDecoy.update(dt);
@@ -92,13 +97,13 @@ public class MilitaryVessel extends Vessel {
 		}
 		float distance = getPosition().distance(other.getPosition());
 		float sonar = getSonar();
-		float span = sonar + other.getNoise();
+		float span = (sonar + other.getNoise()) - distance;
 		//System.out.println("Distance: " + distance + " Sonar: " + sonar);
-		if (distance < span) {
-			int random = rand.nextInt((int) (distance * 2));
-			if (random <= sonar)
+		if (span > 0) {
+			int random = rand.nextInt((int) sonar);
+			if (random < span)
 				return 3;
-			else if (random <= sonar * 1.5)
+			else if (random < span * 2)
 				return 2;
 			else
 				return 1;
