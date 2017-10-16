@@ -10,10 +10,10 @@ import jig.Vector;
 
 public class MissionTarget extends Entity {
 
-	float time;
-	float timeRemaining;
 	float percent;
 	Image sprite;
+	float time;
+	float timeRemaining;
 	
 	public MissionTarget(Vector p, float t) {
 		super(p);
@@ -26,6 +26,10 @@ public class MissionTarget extends Entity {
 		percent = 1f;
 	}
 
+	public float getPercent() {
+		return percent;
+	}
+	
 	@Override
 	public void render(Graphics g) {
 		
@@ -41,10 +45,6 @@ public class MissionTarget extends Entity {
 		timeRemaining -= dt;
 		if (timeRemaining < 0f) timeRemaining = 0f;
 		percent = timeRemaining / time;
-	}
-	
-	public float getPercent() {
-		return percent;
 	}
 
 }

@@ -12,43 +12,33 @@ public class NavigationManager {
 		traffic = 0f;
 	}
 	
-	public boolean willCollide(Vessel a, Vessel b, float time) {
-		return willCollide(a.getVelocity(), b.getVelocity(), a.getPosition(), b.getPosition(), time);
-	}
-	
-	public boolean willCollide(Vector Va, Vector Vb, Vector Pa, Vector Pb, float time) {
-		int xN = (int) (Pb.getX() - Pa.getX());
-		int xD = (int) (Va.getX() - Vb.getX());
-		
-		int yN = (int) (Pb.getY() - Pa.getY());
-		int yD = (int) (Va.getY() - Vb.getY());
-		
-		float tx = ( xN + 0.01f ) / ( xD + 0.01f);
-		float ty = ( yN + 0.01f ) / ( yD + 0.01f);
-		
-		//System.out.println("tx: " + xN + "/" + xD + " ty: " + yN + "/" + yD);
-		
-		if (xN == 0 && xD == 0 || yN == 0 && yD == 0)
-			
-			
-			return ( (tx == 1 && ty < time) || (ty == 1 && tx < time) );
-		else
-			return ( (Math.abs(tx - ty) < 10) && tx < time );
-	}
-	
-	
 	public void update(float dt) {
+		if (true) return;
+		String tLayers[] = {"traffic"};
+		String pLayers[] = {"traffic", "patrol"};
+		
+		for (Entity e : SubMission.getLayer("traffic"))
+			((Vessel) e).navigate(tLayers);
+		
+		for (Entity e : SubMission.getLayer("patrol"))
+			((Vessel) e).navigate(pLayers);
+		
+		
+		
 		Vessel E;
 		Vessel O;
 		Vector posE;
+		Vector posE0;
 		Vector posO;
 		Vector waypoint;
+		Vector toAvoid = null;
 		
 			for (Entity e : SubMission.getLayer("traffic")) {
 				E = (Vessel) e;
+				posE0 = E.getFuturePosition(E.lookahead / 2);
 				posE = E.getFuturePosition(E.lookahead);
 				waypoint = posE.subtract(E.getPosition());
-				/*
+				
 				Vector land;
 				// make sure won't run aground
 				for (int[] l : SubMission.landMasses) {
@@ -58,7 +48,7 @@ public class NavigationManager {
 						E.moveFor(land, l[2]);
 					}
 				}
-				*/
+				
 				for (Entity o : SubMission.getLayer("traffic")) {
 					if (e == o) continue;
 					O = (Vessel) o;
@@ -103,6 +93,31 @@ public class NavigationManager {
 				}
 			}
 		}
+	}
+	
+	public boolean willCollide(Vector Va, Vector Vb, Vector Pa, Vector Pb, float time) {
+		int xN = (int) (Pb.getX() - Pa.getX());
+		int xD = (int) (Va.getX() - Vb.getX());
+		
+		int yN = (int) (Pb.getY() - Pa.getY());
+		int yD = (int) (Va.getY() - Vb.getY());
+		
+		float tx = ( xN + 0.01f ) / ( xD + 0.01f);
+		float ty = ( yN + 0.01f ) / ( yD + 0.01f);
+		
+		//System.out.println("tx: " + xN + "/" + xD + " ty: " + yN + "/" + yD);
+		
+		if (xN == 0 && xD == 0 || yN == 0 && yD == 0)
+			
+			
+			return ( (tx == 1 && ty < time) || (ty == 1 && tx < time) );
+		else
+			return ( (Math.abs(tx - ty) < 10) && tx < time );
+	}
+	
+	
+	public boolean willCollide(Vessel a, Vessel b, float time) {
+		return willCollide(a.getVelocity(), b.getVelocity(), a.getPosition(), b.getPosition(), time);
 	}
 
 }

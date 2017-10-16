@@ -22,34 +22,9 @@ import jig.Entity;
 
 public class SubMission extends StateBasedGame {
 	
-	public static final int LOADINGSTATE 	= 0;
-	public static final int MENUSTATE 		= 1;
-	public static final int PLAYINGSTATE 	= 2;
-	public static final int GAMEOVERSTATE 	= 3;
-	
-	
-	public static HashMap<String, String> IMG = new HashMap<String, String>();
-	public static HashMap<String, String> SND = new HashMap<String, String>();
-
-	public static int ScreenWidth;
-	public static int ScreenHeight;
-	
-	public static Submarine player;
-	
-	public int missionFailed;
-		
-	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
 	static public List<List<Entity>> entities = new ArrayList<List<Entity>>();
-	static HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
-	
-	static public TrueTypeFont title;
-	static public TrueTypeFont subtitle;
-	static public TrueTypeFont text;
-	
-	public Sound bg;
-	
-	public Image map;
-	public Image depth;
+	public static final int GAMEOVERSTATE 	= 3;
+	public static HashMap<String, String> IMG = new HashMap<String, String>();
 	static public int[][] landMasses = {
 			/* x, y, r */
 			{37, 287, 27},
@@ -57,6 +32,86 @@ public class SubMission extends StateBasedGame {
 			{80, 660, 250},
 			{945, 76, 69}
 	};
+	
+	
+	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
+	public static final int LOADINGSTATE 	= 0;
+
+	public static final int MENUSTATE 		= 1;
+	public static Submarine player;
+	
+	public static final int PLAYINGSTATE 	= 2;
+	
+	public static int ScreenHeight;
+		
+	public static int ScreenWidth;
+	public static HashMap<String, String> SND = new HashMap<String, String>();
+	static public TrueTypeFont subtitle;
+	
+	static public TrueTypeFont text;
+	static public TrueTypeFont title;
+	static HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
+	
+	static public boolean addEntity(String layer, Entity e) {
+		if (e == null) return false;
+		if (layers.containsKey(layer)) {
+			//System.out.println(entities.get(getLayerIndex(layer)));
+			entities.get(getLayerIndex(layer)).add(e);
+			return true;
+		}
+		return false;
+	}
+	
+	public static Image getImage(String key) {
+		return ResourceManager.getImage(SubMission.IMG.get(key));
+	}
+	static public List<Entity> getLayer(String layer) {
+		return entities.get(getLayerIndex(layer));
+	}
+	static public int getLayerIndex(String layer) {
+		return Math.abs(layers.get(layer)) - 1;
+	}
+	
+	public static Sound getSound(String key) {
+		return ResourceManager.getSound(SubMission.SND.get(key));
+	}
+	
+	public static void main(String[] args) {
+		AppGameContainer app;
+		try {
+			SubMission g = new SubMission("sub.mission");
+			app = new AppGameContainer(g);
+			
+			SubMission.ScreenWidth = app.getScreenWidth() - 40;
+			SubMission.ScreenHeight = app.getScreenHeight() - 50;
+			
+			System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
+			
+			app.setDisplayMode(SubMission.ScreenWidth, SubMission.ScreenHeight, false);
+			app.setVSync(true);
+			app.start();
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	static public boolean removeEntity(String layer, Entity e) {
+		//System.out.println("Removing: " + e);
+		if (layers.containsKey(layer)) {
+			toRemove.put(e, getLayerIndex(layer));
+			return true;
+		}
+		return false;
+	}
+	
+	public Sound bg;
+	
+	public Image depth;
+	
+	public Image map;
+	
+	public int missionFailed;
 	
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
@@ -135,52 +190,10 @@ public class SubMission extends StateBasedGame {
 		
 	}
 	
-	public static Image getImage(String key) {
-		return ResourceManager.getImage(SubMission.IMG.get(key));
-	}
-	
-	public static Sound getSound(String key) {
-		return ResourceManager.getSound(SubMission.SND.get(key));
-	}
-	
-	public void setTitleFont(TrueTypeFont t) {
-		title = t;
-	}
-	
-	public void setSubtitleFont(TrueTypeFont t) {
-		subtitle = t;
-	}
-	
-	public void setFont(TrueTypeFont t) {
-		text = t;
-	}
-	
-	public void setLayers(List<String> types) {
-		for (String layer : types) {
-			addLayer(layer);
-		}
-	}
-	
 	public void addLayer(String layer) {
 		if (!layers.containsKey(layer))
 			layers.put(layer, entities.size() + 1);
 			entities.add( new ArrayList<Entity>() );
-	}
-	
-	public void removeLayer(String layer) {
-		if (layers.containsKey(layer)) {
-			entities.remove( Math.abs(layers.get(layer)) - 1 );
-			layers.remove(layer);
-		}
-	}
-	
-	public void setLayerVisibility(String layer, boolean b) {
-		if (layers.containsKey(layer)) {
-			if (b)
-				layers.put( layer, Math.abs(layers.get(layer)) );
-			else	
-				layers.put(layer, 0 - Math.abs(layers.get(layer)) );
-		}
 	}
 	
 	public ArrayList<Integer> getVisibleLayers() {
@@ -192,41 +205,6 @@ public class SubMission extends StateBasedGame {
 		return result;
 	}
 	
-	static public int getLayerIndex(String layer) {
-		return Math.abs(layers.get(layer)) - 1;
-	}
-	
-	static public List<Entity> getLayer(String layer) {
-		return entities.get(getLayerIndex(layer));
-	}
-	
-	static public boolean addEntity(String layer, Entity e) {
-		if (e == null) return false;
-		if (layers.containsKey(layer)) {
-			//System.out.println(entities.get(getLayerIndex(layer)));
-			entities.get(getLayerIndex(layer)).add(e);
-			return true;
-		}
-		return false;
-	}
-	
-	static public boolean removeEntity(String layer, Entity e) {
-		//System.out.println("Removing: " + e);
-		if (layers.containsKey(layer)) {
-			toRemove.put(e, getLayerIndex(layer));
-			return true;
-		}
-		return false;
-	}
-	
-	public void update() {
-		for (Entity e : toRemove.keySet()) {
-			entities.get(toRemove.get(e)).remove(e);
-		}
-		toRemove.clear();
-	}
-	
-
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		
@@ -254,24 +232,46 @@ public class SubMission extends StateBasedGame {
 		}
 	}
 	
-	public static void main(String[] args) {
-		AppGameContainer app;
-		try {
-			SubMission g = new SubMission("sub.mission");
-			app = new AppGameContainer(g);
-			
-			SubMission.ScreenWidth = app.getScreenWidth() - 40;
-			SubMission.ScreenHeight = app.getScreenHeight() - 50;
-			
-			System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
-			
-			app.setDisplayMode(SubMission.ScreenWidth, SubMission.ScreenHeight, false);
-			app.setVSync(true);
-			app.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
+	public void removeLayer(String layer) {
+		if (layers.containsKey(layer)) {
+			entities.remove( Math.abs(layers.get(layer)) - 1 );
+			layers.remove(layer);
 		}
+	}
+	
+	public void setFont(TrueTypeFont t) {
+		text = t;
+	}
+	
+	public void setLayers(List<String> types) {
+		for (String layer : types) {
+			addLayer(layer);
+		}
+	}
+	
+	public void setLayerVisibility(String layer, boolean b) {
+		if (layers.containsKey(layer)) {
+			if (b)
+				layers.put( layer, Math.abs(layers.get(layer)) );
+			else	
+				layers.put(layer, 0 - Math.abs(layers.get(layer)) );
+		}
+	}
+	
+	public void setSubtitleFont(TrueTypeFont t) {
+		subtitle = t;
+	}
+	
 
+	public void setTitleFont(TrueTypeFont t) {
+		title = t;
+	}
+	
+	public void update() {
+		for (Entity e : toRemove.keySet()) {
+			entities.get(toRemove.get(e)).remove(e);
+		}
+		toRemove.clear();
 	}
 
 	

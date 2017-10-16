@@ -14,18 +14,18 @@ import jig.Vector;
 
 public class Towable {
 
-	Entity sprite;
-	Image waves;
-	int fullLength;
-	Vector position;
-	List<Vector> line;
-	int state;
-	MilitaryVessel parent;
-	float winchSpeed;
 	float alpha;
+	int fullLength;
 	int id;
-	boolean waveOn;
+	List<Vector> line;
 	int maxSpeed;
+	MilitaryVessel parent;
+	Vector position;
+	Entity sprite;
+	int state;
+	boolean waveOn;
+	Image waves;
+	float winchSpeed;
 	
 	public Towable(MilitaryVessel v, int l, float speed, String sprite, String active, int id, int spd) {
 		
@@ -49,8 +49,46 @@ public class Towable {
 		maxSpeed = spd;
 	}
 	
+	public void deploy(boolean value) {
+		state = value ? 2 : 3;
+	}
+	
+	public void detach() {
+		parent = null;
+	}
+		
 	public int getState() {
 		return state;
+	}
+	
+	public void render(Graphics g) {
+		
+		int s = line.size();
+		if (state == 0 || s == 0) return;
+		
+		Vector a = position;
+		Vector b;
+		float avg = 0;
+		// draw line
+		g.setColor(new Color(0.3f, 0.3f, 0.3f, alpha));
+		while (s-- > 0) {
+			b = a.add( line.get(s) );
+			g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
+			a = b;
+			if (s < 3)
+				avg += line.get(s).getRotation() / 3;
+		}
+		
+		// draw sprite
+		float bearing = avg;
+		sprite.setPosition(a);
+		sprite.setRotation(bearing);
+		sprite.render(g);
+		
+		if (state != 1) return;
+		
+		g.drawImage(waves, a.getX() - waves.getWidth() / 2, a.getY() - waves.getHeight() / 2);
+		
 	}
 	
 	public void reset(MilitaryVessel v) {
@@ -60,10 +98,6 @@ public class Towable {
 		line = new ArrayList<Vector>();
 	}
 		
-	public void deploy(boolean value) {
-		state = value ? 2 : 3;
-	}
-	
 	public void update(float dt) {
 		
 		Vector p = new Vector(0, 0);
@@ -121,39 +155,5 @@ public class Towable {
 			waves.setAlpha(waves.getAlpha() * 1.1f);
 			if (waves.getAlpha() >= 0.7) waveOn = true;
 		}
-	}
-	
-	public void detach() {
-		parent = null;
-	}
-		
-	public void render(Graphics g) {
-		
-		int s = line.size();
-		if (state == 0 || s == 0) return;
-		
-		Vector a = position;
-		Vector b;
-		float avg = 0;
-		// draw line
-		g.setColor(new Color(0.3f, 0.3f, 0.3f, alpha));
-		while (s-- > 0) {
-			b = a.add( line.get(s) );
-			g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
-			a = b;
-			if (s < 3)
-				avg += line.get(s).getRotation() / 3;
-		}
-		
-		// draw sprite
-		float bearing = avg;
-		sprite.setPosition(a);
-		sprite.setRotation(bearing);
-		sprite.render(g);
-		
-		if (state != 1) return;
-		
-		g.drawImage(waves, a.getX() - waves.getWidth() / 2, a.getY() - waves.getHeight() / 2);
-		
 	}
 }

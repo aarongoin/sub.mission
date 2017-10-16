@@ -13,25 +13,25 @@ public class Submarine extends MilitaryVessel {
 
 	Image bearing;
 
-	float targetDepth;
-	float diveSpeed;
-	
+	Vector bearingOffset;
 	float crushDepth = 700;
-	float dangerDepth = 600;
 	
 	float crushSpeed = 40;
+	float dangerDepth = 600;
+	
 	float dangerSpeed = 35;
+	float diveSpeed;
 
-	float hoverBearing;
-	Vector bearingOffset;
-
-	Sound fireTorpedo;
 	Sound explosionA;
 	Sound explosionB;
-	
+
+	Sound fireTorpedo;
+	float hoverBearing;
 	public boolean isSunk;
 	
 	Vessel target;
+	
+	float targetDepth;
 	
 	Image targetLock;
 
@@ -65,23 +65,6 @@ public class Submarine extends MilitaryVessel {
 		explosionB = SubMission.getSound("explosion_b");
 	}
 
-	public float getDepth() {
-		return currentDepth;
-	}
-
-	public void setDepth(float d) {
-		targetDepth = d;
-	}
-	
-	public float getArmor() {
-		return armor;
-	}
-
-	@Override
-	public float getSonar() {
-		return super.getSonar() - currentDepth;
-	}
-
 	@Override
 	public int detect(Vessel other) {
 
@@ -103,22 +86,6 @@ public class Submarine extends MilitaryVessel {
 		return 0;
 	}
 
-	public void getLock(Vessel v) {
-		target = v;
-		targetLock.rotate(3);
-	}
-	
-	public void lockOn() {
-		if (targetLock.getRotation() > -0.01 && targetLock.getRotation() < 0.01) {
-			SubMission.addEntity("torpedo", fireTorpedo(target));
-			target = null;
-			targetLock.setRotation(0);
-		} else {
-			targetLock.rotate(3);
-		}
-	}
-
-	
 	@Override
 	public Torpedo fireTorpedo(Vessel v) {
 		Torpedo t = super.fireTorpedo(v);
@@ -127,6 +94,19 @@ public class Submarine extends MilitaryVessel {
 		return t;
 	}
 	
+	public float getArmor() {
+		return armor;
+	}
+
+	public float getDepth() {
+		return currentDepth;
+	}
+
+	public void getLock(Vessel v) {
+		target = v;
+		targetLock.rotate(3);
+	}
+
 	@Override
 	public float getNoise() {
 		float noise = 0;
@@ -143,7 +123,7 @@ public class Submarine extends MilitaryVessel {
 		
 		return noise * (currentSpeed > 20 ? 1f : 0.5f);
 	}
-
+	
 	public float getNoise(float depth) {
 		float noise = 0;
 		if (currentDepth < 100)
@@ -166,6 +146,36 @@ public class Submarine extends MilitaryVessel {
 		return noise * (currentSpeed > 20 ? 1.5f : 1);
 	}
 
+	
+	@Override
+	public float getSonar() {
+		return super.getSonar() - currentDepth;
+	}
+	
+	public void lockOn() {
+		if (targetLock.getRotation() > -0.01 && targetLock.getRotation() < 0.01) {
+			SubMission.addEntity("torpedo", fireTorpedo(target));
+			target = null;
+			targetLock.setRotation(0);
+		} else {
+			targetLock.rotate(3);
+		}
+	}
+
+	@Override
+	public void render(Graphics g) {
+		super.render(g);
+		g.drawImage(bearing, getPosition().getX() + bearingOffset.getX() - 4,
+				getPosition().getY() + bearingOffset.getY() - 4);
+		
+		if (target != null)
+			g.drawImage(targetLock, target.getX() - targetLock.getWidth() / 2, target.getY() - targetLock.getWidth() / 2);
+	}
+
+	public void setDepth(float d) {
+		targetDepth = d;
+	}
+	
 	@Override
 	public void sink() {
 		isSunk = true;
@@ -178,16 +188,6 @@ public class Submarine extends MilitaryVessel {
 			explosionA.play();
 			explosionB.play();
 		}
-	}
-	
-	@Override
-	public void render(Graphics g) {
-		super.render(g);
-		g.drawImage(bearing, getPosition().getX() + bearingOffset.getX() - 4,
-				getPosition().getY() + bearingOffset.getY() - 4);
-		
-		if (target != null)
-			g.drawImage(targetLock, target.getX() - targetLock.getWidth() / 2, target.getY() - targetLock.getWidth() / 2);
 	}
 
 	public void update(Input input, float ambient, float dt) {

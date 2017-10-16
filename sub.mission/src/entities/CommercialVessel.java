@@ -8,6 +8,8 @@ import jig.Vector;
 
 public class CommercialVessel extends Vessel {
 	
+	float shouldUpdate;
+	
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
 		super(image, p, noise, bearing, 4, 5, 10);
 		maxSpeed = 10;
@@ -21,5 +23,15 @@ public class CommercialVessel extends Vessel {
 	public void render(Graphics g) {
 		sprite.setAlpha(drawAlpha);
 		super.render(g);
+	}
+	
+	@Override
+	public void update(float dt) {
+		shouldUpdate += dt;
+		if (shouldUpdate > 0.5) {
+			shouldUpdate = 0;
+			avoidLand();
+		}
+		super.update(dt);
 	}
 }

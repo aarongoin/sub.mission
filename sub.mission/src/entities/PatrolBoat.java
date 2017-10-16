@@ -10,6 +10,10 @@ import jig.Vector;
 
 public class PatrolBoat extends MilitaryVessel {
 	
+	String collideWith[] = {"traffic", "patrol"};
+	
+	float patrolTimer;
+	
 	float safeDistance = 150f;
 	
 	float shouldUpdate;
@@ -28,35 +32,8 @@ public class PatrolBoat extends MilitaryVessel {
 		lookahead = 2f;
 		
 		torpedoType = "enemy_torpedo";
-	}
-	
-	@Override
-	public void update(float dt, float ambient) {
 		
-		super.update(dt, ambient);
-		
-		shouldUpdate += dt;
-		if (shouldUpdate < 1) return;
-		shouldUpdate = 0;
-		
-		int detection = detect((Vessel) SubMission.player);
-		//System.out.println("Detection: " + detection);
-	
-		if (detect(SubMission.player) > 2) {
-			destination = SubMission.player.getAsTarget();
-		} else if (destination == null) {
-			destination = Vector.getRandomXY(SubMission.ScreenHeight - 200, SubMission.ScreenWidth - 200, 200, 200);
-		}
-		float d = getPosition().distance(destination);
-		if (d > safeDistance) {
-			waypoint = destination;
-		} else if (d < safeDistance) {
-			waypoint = getPosition().add( getPosition().subtract(destination).clampLength(safeDistance - d, safeDistance - d) );
-			
-		}
-		
-		if (detection == 3 && torpedoes > 0)
-			SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
+		patrolTimer = 0;
 	}
 	
 	@Override
@@ -72,6 +49,42 @@ public class PatrolBoat extends MilitaryVessel {
 		if (debug && destination != null) g.drawLine(destination.getX(), destination.getY(), getX(), getY());
 				
 		super.render(g);
+	}
+	
+	@Override
+	public void update(float dt, float ambient) {
+		
+		patrolTimer -= dt;
+		if (patrolTimer < 0)
+			patrolTimer = 0;
+		
+		shouldUpdate += dt;
+		if (shouldUpdate > 0.5) {
+			shouldUpdate = 0;
+			
+			int detection = detect((Vessel) SubMission.player);
+			//System.out.println("Detection: " + detection);
+		
+			if (detect(SubMission.player) > 2) {
+				destination = SubMission.player.getAsTarget();
+			} else if (patrolTimer == 0) {
+				setDestination( Vector.getRandomXY(SubMission.ScreenHeight - 200, SubMission.ScreenWidth - 200, 200, 200) );
+				patrolTimer = rand.nextFloat() * 20f;
+			}
+			/*float d = getPosition().distance(destination);
+			if (d < safeDistance) {
+				setWaypoint( getPosition().add( getPosition().subtract(destination).clampLength(safeDistance - d, safeDistance - d).rotate(rand.nextInt(90) - 90) ) );
+			}*/
+			
+			if (false && detection == 3 && torpedoes > 0)
+				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
+			
+			avoidLand();
+		}
+		
+		super.update(dt, ambient);
+		
+		//navigate(collideWith);
 	}
 
 }
