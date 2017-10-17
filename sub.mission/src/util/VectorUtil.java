@@ -4,6 +4,12 @@ import jig.Vector;
 
 public class VectorUtil {
 
+	public static float getAngleBetween(Vector a, Vector b) {
+		//float theta =  (float) (180 * Math.acos( ( a.getX()*b.getX() + a.getY()*b.getY() ) / ( a.length() * b.length() ) ) / Math.PI);
+		float theta = (float) ( 180 * (Math.atan2(a.getX(), a.getY()) - Math.atan2(b.getX(), b.getY())) / Math.PI );
+		return theta;
+	}
+	
 	public static Vector changeBasis(Vector v, Vector[] basis) {
 		return new Vector(
 			v.getX()*basis[0].getX() + v.getY()*basis[1].getX(),
