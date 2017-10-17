@@ -151,11 +151,11 @@ class PlayingState extends BasicGameState {
 		speed.render(g);
 		platform.render(g);
 		
-		
+		/*
 		for (int[] l : SubMission.landMasses) {
 			g.drawOval(l[0] - l[2], l[1] - l[2], l[2] * 2, l[2] * 2);
 		}
-		/*int w = SubMission.ScreenWidth / 45;
+		int w = SubMission.ScreenWidth / 45;
 		int h = SubMission.ScreenHeight / 50;
 		int o;
 		for (int x=0; x < w; x++) {

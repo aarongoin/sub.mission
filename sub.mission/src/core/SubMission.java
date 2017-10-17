@@ -186,12 +186,6 @@ public class SubMission extends StateBasedGame {
 		SND.put("torpedo_explosion", "resource/sound/159402__noirenex__overheadexplosion.wav");
 		SND.put("explosion_a", "resource/sound/203331__veiler__explosion-documentary-veiler.wav");
 		SND.put("explosion_b", "resource/sound/94185__nbs-dark__explosion.wav");
-		
-		System.out.println("angle: " + VectorUtil.getAngleBetween(new Vector(0, 1), new Vector(1, -1f)));
-		System.out.println("angle: " + VectorUtil.getAngleBetween(new Vector(0, 1), new Vector(1, 1f)));
-		System.out.println("angle: " + VectorUtil.getAngleBetween(new Vector(0, 1), new Vector(-1, 1f)));
-		System.out.println("angle: " + VectorUtil.getAngleBetween(new Vector(1, 2), new Vector(0f, -2f)));
-		System.out.println("angle: " + VectorUtil.getAngleBetween(new Vector(0f, -2f), new Vector(1, 2)));
 	}
 	
 	public void addLayer(String layer) {

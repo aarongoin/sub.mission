@@ -13,9 +13,9 @@ public class CommercialVessel extends Vessel {
 	float shouldUpdate;
 	
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
-		super(image, p, noise, bearing, 4, 5, 10);
+		super(image, p, noise, bearing, 4, 2, 10);
 		maxSpeed = 10;
-		lookahead = 60f;
+		lookahead = 10;
 		movedFor = new HashMap<Vessel, Float>();
 		layer = "traffic";
 		armor = 1;
@@ -32,9 +32,10 @@ public class CommercialVessel extends Vessel {
 		shouldUpdate += dt;
 		if (shouldUpdate > 0.5) {
 			shouldUpdate = 0;
-			avoidLand();
+			//avoidLand();
 		}
-		navigate(collideWith);
+		fieldNav(collideWith);
+		//navigate(collideWith);
 		super.update(dt);
 	}
 }

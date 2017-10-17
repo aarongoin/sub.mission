@@ -77,7 +77,7 @@ public class Vessel extends Entity {
 	
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
-		debug = true;
+		//debug = true;
 		
 		id = Vessel.getID();
 		
@@ -90,7 +90,7 @@ public class Vessel extends Entity {
 		sprite = SubMission.getImage(image);
 		addImageWithBoundingBox(sprite);
 		
-		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 2;
+		this.radius = Math.max(sprite.getHeight(), sprite.getWidth()) / 4;
 		
 		rand = new Random(System.currentTimeMillis());
 		
@@ -316,8 +316,36 @@ public class Vessel extends Entity {
 		System.out.println("CA: " + Ca);
 		System.out.println("CB: " + Cb);
 		
-		System.out.println("willCollide: " + (Ta > 0  && Ta <= within && Ca.distance(Cb) < (radius + other.getRadius())));
-		return (Ta > 0  && Ta <= within && Ca.distance(Cb) < (radius + other.getRadius())) ? Ta : 0f;
+		System.out.println("willCollide: " + (Ta > 0  && Ta <= within && Ca.distance(Cb) < Math.max(radius, other.getRadius())));
+		return (Ta > 0  && Ta <= within && Ca.distance(Cb) < Math.max(radius, other.getRadius())) ? Ta : 0f;
+	}
+	
+	public void fieldNav(String layers[]) {
+		Vector target = (destination != null) ? destination.subtract( getPosition() ).clampLength(currentSpeed, currentSpeed) : velocity;
+		Vessel other;
+		Vector line;
+		float distance;
+		float theta;
+		float perimeter = radius * currentSpeed;
+		
+		target = target.scale(2);
+		
+		for (int[] land : SubMission.landMasses) {
+			line = getPosition().subtract(new Vector(land[0], land[1]));
+			target = target.add( line.scale(10 / line.length()) );
+		}
+		
+		for (String layer : layers) {
+			for (Entity e : SubMission.getLayer(layer)) {
+				other = (Vessel) e;
+				if (other.id == id) continue;
+				distance = other.getPosition().distance(getPosition());
+				if (distance < perimeter) {
+					target = target.add(getPosition().subtract(other.getPosition()).scale(10/distance));
+				}	
+			}
+		}
+		setWaypoint(getPosition().add(target.scale(10)));
 	}
 	
 	public void navigate(String layers[]) {
@@ -334,7 +362,7 @@ public class Vessel extends Entity {
 			for (Entity e : SubMission.getLayer(layer)) {
 				other = (Vessel) e;
 				if (other.id == id) continue;
-				time = willCollideIn(other, 1);
+				time = willCollideIn(other, lookahead);
 				if (time > 0) {
 					theta = VectorUtil.getAngleBetween(target, other.getVelocity());
 					System.out.println("time: " + time);
@@ -366,6 +394,7 @@ public class Vessel extends Entity {
 	
 	@Override
 	public void render(Graphics g) {
+		float r = currentSpeed * radius;
 		sprite.setAlpha(drawAlpha);
 		sprite.setRotation(currentBearing + 90);
 		if (debug) {
@@ -378,8 +407,8 @@ public class Vessel extends Entity {
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
 			g.setColor(Color.white);
-			Vector fp = getFuture(currentSpeed / 4);
-			g.drawOval(fp.getX() - radius, fp.getY() - radius, radius*2, radius*2);
+			Vector fp = getPosition();
+			g.drawOval(fp.getX() - r, fp.getY() - r, r*2, r*2);
 			
 			g.setColor(new Color(0.5f, 0.5f, 0.5f));
 			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());

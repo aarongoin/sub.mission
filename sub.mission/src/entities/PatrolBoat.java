@@ -54,12 +54,13 @@ public class PatrolBoat extends MilitaryVessel {
 	@Override
 	public void update(float dt, float ambient) {
 		
+				
 		patrolTimer -= dt;
 		if (patrolTimer < 0)
 			patrolTimer = 0;
 		
 		shouldUpdate += dt;
-		if (shouldUpdate > 0.5) {
+		if (shouldUpdate > 1) {
 			shouldUpdate = 0;
 			
 			int detection = detect((Vessel) SubMission.player);
@@ -79,7 +80,8 @@ public class PatrolBoat extends MilitaryVessel {
 			if (detection == 3 && torpedoes > 0)
 				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
 			
-			navigate(collideWith);
+			fieldNav(collideWith);
+			//navigate(collideWith);
 		}
 		
 		super.update(dt, ambient);
