@@ -33,7 +33,12 @@ public class SubMission extends StateBasedGame {
 			{80, 660, 250},
 			{945, 76, 69}
 	};
-	
+	static public int[][][] shippingLanes = {
+			{
+				{100, -50, 850, -100},
+				{400, 900, 1200, 950}
+			}
+	};
 	
 	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
 	public static final int LOADINGSTATE 	= 0;
@@ -188,7 +193,7 @@ public class SubMission extends StateBasedGame {
 		SND.put("explosion_b", "resource/sound/94185__nbs-dark__explosion.wav");
 	}
 	
-	public void addLayer(String layer) {
+	static public void addLayer(String layer) {
 		if (!layers.containsKey(layer))
 			layers.put(layer, entities.size() + 1);
 			entities.add( new ArrayList<Entity>() );
@@ -230,7 +235,7 @@ public class SubMission extends StateBasedGame {
 		}
 	}
 	
-	public void removeLayer(String layer) {
+	static public void removeLayer(String layer) {
 		if (layers.containsKey(layer)) {
 			entities.remove( Math.abs(layers.get(layer)) - 1 );
 			layers.remove(layer);

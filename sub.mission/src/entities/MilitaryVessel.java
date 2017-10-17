@@ -73,7 +73,7 @@ public class MilitaryVessel extends Vessel {
 		// System.out.println("Distance: " + distance + " Sonar: " + sonar);
 		if (span > 0) {
 			int random = rand.nextInt((int) sonar);
-			if (random < span)
+			if (random < other.getNoise())
 				return 3;
 			else if (random < span * 2)
 				return 2;
