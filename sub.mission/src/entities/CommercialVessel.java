@@ -8,6 +8,8 @@ import jig.Vector;
 
 public class CommercialVessel extends Vessel {
 	
+	String collideWith[] = {"traffic", "patrol"};
+	
 	float shouldUpdate;
 	
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
@@ -32,6 +34,7 @@ public class CommercialVessel extends Vessel {
 			shouldUpdate = 0;
 			avoidLand();
 		}
+		navigate(collideWith);
 		super.update(dt);
 	}
 }

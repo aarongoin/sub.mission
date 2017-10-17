@@ -28,7 +28,6 @@ class PlayingState extends BasicGameState {
 	DepthMeter depth;
 	MissionTarget mission;
 	
-	NavigationManager navigation;
 	SubPlatform platform;
 	Submarine player;
 	
@@ -72,7 +71,6 @@ class PlayingState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) {
 		SubMission G = (SubMission) game;
 		
-		navigation = new NavigationManager();
 		sonarCountdown = 0;
 		
 		// insert submarine

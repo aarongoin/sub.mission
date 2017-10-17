@@ -19,7 +19,7 @@ public class PatrolBoat extends MilitaryVessel {
 	float shouldUpdate;
 
 	public PatrolBoat(Vector p, float bearing) {
-		super("patrol", p, 3, 2.5f, bearing, 45, 20, 10);
+		super("patrol", p, 3, 2.5f, bearing, 35, 10, 10);
 		movedFor = new HashMap<Vessel, Float>();
 		
 		towedSonar = null;
@@ -69,17 +69,17 @@ public class PatrolBoat extends MilitaryVessel {
 				destination = SubMission.player.getAsTarget();
 			} else if (patrolTimer == 0) {
 				setDestination( Vector.getRandomXY(SubMission.ScreenHeight - 200, SubMission.ScreenWidth - 200, 200, 200) );
-				patrolTimer = rand.nextFloat() * 20f;
+				patrolTimer = rand.nextFloat() * 60f;
 			}
 			/*float d = getPosition().distance(destination);
 			if (d < safeDistance) {
 				setWaypoint( getPosition().add( getPosition().subtract(destination).clampLength(safeDistance - d, safeDistance - d).rotate(rand.nextInt(90) - 90) ) );
 			}*/
 			
-			if (false && detection == 3 && torpedoes > 0)
+			if (detection == 3 && torpedoes > 0)
 				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
 			
-			avoidLand();
+			navigate(collideWith);
 		}
 		
 		super.update(dt, ambient);

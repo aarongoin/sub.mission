@@ -11,6 +11,7 @@ import core.Physics;
 import core.SubMission;
 import jig.Entity;
 import jig.Vector;
+import util.VectorUtil;
 
 public class Vessel extends Entity {
 	
@@ -174,13 +175,13 @@ public class Vessel extends Entity {
 	}
 	
 	public void avoidLand() {
-		Vector future = getFuturePosition(lookahead);
+		Vector future = getFuture(lookahead);
 		Vector land;
 		for (int[] l : SubMission.landMasses) {
 			land = new Vector(l[0], l[1]);
 			if (Physics.didCollide(future, land, (float) radius, (float) l[2] )) {
 				// adjust course
-				moveFor(land, l[2]);
+				//moveFor(land, l[2]);
 			}
 		}
 	}
@@ -260,10 +261,6 @@ public class Vessel extends Entity {
 	public Vector getFuture(float dt) {
 		return getPosition().add( getVelocity().scale(dt) );
 	}
-	
-	public Vector getFuturePosition(float dt) {
-		return getPosition().add( getVelocity().scale(dt) );
-	}
 		
 	public float getNoise() {
 		return currentSpeed * baseNoise + actionNoise;
@@ -300,54 +297,61 @@ public class Vessel extends Entity {
 		return velocity;
 	}
 	
-	public void moveFor(Vector land, float radius) {
-		Vector tangent = new Vector(1, 0).rotate(currentBearing).getPerpendicular().clampLength(radius, radius);
-		Vector a = land.add(tangent);
-		Vector b = land.add(tangent.scale(-1));
+	public float willCollideIn(Vessel other, float within) {
+		float Dx = other.getPosition().getX() - getPosition().getX();
+		float Dy = other.getPosition().getY() - getPosition().getY();
 		
-		if  ((destination != null) && (destination.distanceSquared(a) < destination.distanceSquared(b)) ) {
-			setWaypoint(a);
-		} else setWaypoint(b);
-	}
-	
-	public void moveFor(Vessel other, Vector otherFuture, Vector myFuture) {
-		Vector tangent = new Vector(1, 0).rotate(currentBearing).getPerpendicular();
-		float d = otherFuture.distance(myFuture);
-		Vector adjustment = other.getVelocity().scale(-1).project(tangent).clampLength(d, d);
-		Vector waypoint = otherFuture.add(adjustment);
-		setWaypoint(waypoint);
-
+		System.out.println("DX: " + Dx);
+		System.out.println("DY: " + Dy);
+		
+		float denom = other.getVelocity().getX()*velocity.getY() - velocity.getX()*other.getVelocity().getY();
+		System.out.println("denom: " + denom);
+		float Ta = ( other.getVelocity().getX()*Dy - Dx*other.getVelocity().getY() ) / denom;
+		float Tb = ( velocity.getX()*Dy - Dx*velocity.getY() ) / denom;
+		System.out.println("timeA: " + Ta);
+		System.out.println("timeB: " + Tb);
+		
+		Vector Ca = getFuture(Ta);
+		Vector Cb = other.getFuture(Tb);
+		System.out.println("CA: " + Ca);
+		System.out.println("CB: " + Cb);
+		
+		System.out.println("willCollide: " + (Ta > 0  && Ta <= within && Ca.distance(Cb) < (radius + other.getRadius())));
+		return (Ta > 0  && Ta <= within && Ca.distance(Cb) < (radius + other.getRadius())) ? Ta : 0f;
 	}
 	
 	public void navigate(String layers[]) {
+		Vector target = (destination != null) ? destination.subtract( getPosition() ) : velocity;
 		Vessel other;
 		Vessel toAvoid = null;
-		Vector avoid = new Vector(0, 0);
-		Vector me = avoid;
-		Vector myFuture;
-		Vector otherFuture;
-		Vector position = getPosition();
+		float nearestTime = 100;
+		float nearestTheta = 0;
+		float time;
+		float theta;
 		
 		// get closest potential collision
 		for (String layer : layers) {
 			for (Entity e : SubMission.getLayer(layer)) {
 				other = (Vessel) e;
-				for (int i = 3; i > 0; i--) {
-					myFuture = getFuturePosition(lookahead / i);
-					otherFuture = other.getFuturePosition(lookahead / i);
-					if ( Physics.didCollide(myFuture, otherFuture, radius, other.getRadius()) ) {
-						if (toAvoid == null || position.distance(otherFuture) < position.distance(avoid) ) {
-							toAvoid = other;
-							avoid = otherFuture;
-							me = myFuture;
-							break;
-						}
+				if (other.id == id) continue;
+				time = willCollideIn(other, 1);
+				if (time > 0) {
+					theta = VectorUtil.getAngleBetween(target, other.getVelocity());
+					System.out.println("time: " + time);
+					if ( !(theta > 0 && theta > 135) && (toAvoid == null || time < nearestTime) ) {
+						toAvoid = other;
+						nearestTime = time;
+						nearestTheta = theta;
 					}
 				}
 			}
 		}
 		if (toAvoid != null) {
-			moveFor(toAvoid, avoid, me);
+			if (Math.abs(nearestTheta) > 135) { // handle potential head-on collision
+				setWaypoint( getPosition().add( velocity.getPerpendicular().clampLength(toAvoid.getRadius() + radius, toAvoid.getRadius() + radius) ) );
+			} else { // handle crossing collision
+				setWaypoint( toAvoid.getFuture(toAvoid.getRadius()) );
+			}
 		} else {
 			setWaypoint(destination);
 		}
@@ -374,8 +378,13 @@ public class Vessel extends Entity {
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
 			g.setColor(Color.white);
-			Vector fp = getFuturePosition(lookahead);
+			Vector fp = getFuture(currentSpeed / 4);
 			g.drawOval(fp.getX() - radius, fp.getY() - radius, radius*2, radius*2);
+			
+			g.setColor(new Color(0.5f, 0.5f, 0.5f));
+			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());
+			g.setColor(new Color(1f, 1f, 1f));
+			if (destination != null) g.drawLine(destination.getX(), destination.getY(), getX(), getY());
 		}
 		super.render(g);
 	}
@@ -431,7 +440,7 @@ public class Vessel extends Entity {
 		adjustBearing(dt);
 		
 		velocity = new Vector(1, 0).rotate(currentBearing).scale(currentSpeed * 0.5144f);
-		setPosition( getFuturePosition(dt) );
+		setPosition( getFuture(dt) );
 	}
 	
 	public boolean wasClicked(float x, float y) {
