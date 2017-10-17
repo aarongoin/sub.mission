@@ -8,11 +8,11 @@ import jig.Vector;
 
 public class DepthMeter {
 	
-	int mark;
-	int target;
-	int hover;
 	String depth;
+	int hover;
+	int mark;
 	Vector position;
+	int target;
 
 	public DepthMeter(int value, Vector pos) {
 		position = pos;

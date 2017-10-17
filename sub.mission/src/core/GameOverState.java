@@ -24,11 +24,6 @@ class GameOverState extends BasicGameState {
 	private float timer;
 	
 	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
-	}
-	
-	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		SubMission G = (SubMission) game;
 		timer = 1000f;
@@ -37,10 +32,17 @@ class GameOverState extends BasicGameState {
 	}
 	
 	@Override
-	public void leave(GameContainer container, StateBasedGame game) {
+	public int getID() {
+		return SubMission.GAMEOVERSTATE;
+	}
+	
+	@Override
+	public void init(GameContainer container, StateBasedGame game)
+			throws SlickException {
 	}
 		
-	public void setUserScore(int bounces) {
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) {
 	}
 	
 	@Override
@@ -79,6 +81,9 @@ class GameOverState extends BasicGameState {
 		}
 	}
 
+	public void setUserScore(int bounces) {
+	}
+
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		SubMission bg = (SubMission)game;
@@ -88,11 +93,6 @@ class GameOverState extends BasicGameState {
 		if (timer <= 0)
 			game.enterState(SubMission.MENUSTATE);
 
-	}
-
-	@Override
-	public int getID() {
-		return SubMission.GAMEOVERSTATE;
 	}
 	
 }

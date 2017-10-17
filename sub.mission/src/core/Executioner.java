@@ -9,10 +9,10 @@ import javax.script.SimpleBindings;
 
 public class Executioner {
 	
-	ScriptEngineManager manager;
 	ScriptEngine engine;
-	
 	SimpleBindings global;
+	
+	ScriptEngineManager manager;
 	
 	String name;
 	
@@ -23,23 +23,11 @@ public class Executioner {
 		name = n;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String n) {
-		name = n;
-	}
-	
 	public void addToScope(String key, Object value) {
 		global.put(key, value);
 		engine.setBindings(global, ScriptContext.ENGINE_SCOPE);
 	}
 	
-	public void removeFromScope(String key) {
-		global.remove(key);
-		engine.setBindings(global, ScriptContext.ENGINE_SCOPE);
-	}
 	public void execute(String script) {
 		execute(script, true);
 	}
@@ -53,6 +41,18 @@ public class Executioner {
 		} catch (ScriptException e) {
 			System.err.println(e.getMessage().replace("<eval>", name));
 		}
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void removeFromScope(String key) {
+		global.remove(key);
+		engine.setBindings(global, ScriptContext.ENGINE_SCOPE);
+	}
+	
+	public void setName(String n) {
+		name = n;
 	}
 
 }

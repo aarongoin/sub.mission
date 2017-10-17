@@ -4,15 +4,15 @@ import jig.Vector;
 
 public class Camera {
 	
-	Vector position;
-	
-	public float width;
 	public float height;
 	
-	float minX;
 	float maxX;
-	float minY;
 	float maxY;
+	
+	float minX;
+	float minY;
+	Vector position;
+	public float width;
 
 	public Camera(Vector p, float w, float h) {
 		width = w;
@@ -20,14 +20,6 @@ public class Camera {
 		setPosition(p);
 	}
 	
-	public void setPosition(Vector p) {
-		position = p;
-		minX = position.getX() - width / 2;
-		maxX = minX + width;
-		minY = position.getY() - height / 2;
-		maxY = minY + height;
-	}
-
 	// return true if position is within camera bounds plus-or-minus some margin
 	public boolean inBounds(Vector pos, float margin) {
 		if ( pos.getX() > minX - margin && pos.getX() < maxX + margin &&
@@ -36,6 +28,14 @@ public class Camera {
 		}
 		
 		return false;
+	}
+
+	public void setPosition(Vector p) {
+		position = p;
+		minX = position.getX() - width / 2;
+		maxX = minX + width;
+		minY = position.getY() - height / 2;
+		maxY = minY + height;
 	}
 	
 }

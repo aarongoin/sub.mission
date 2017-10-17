@@ -23,22 +23,18 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 class MenuState extends BasicGameState {
 	
-	float t;
+	Button back;
 	int d;
 	int dir;
 	
-	Button start;
 	Button help;
+	Button next;
 	Button quit;
 	
-	Button back;
-	Button next;
-	
+	Button start;
 	int substate;
 	
-	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException { 
-	}
+	float t;
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
@@ -58,33 +54,14 @@ class MenuState extends BasicGameState {
 		
 		substate = 0;
 	}
+	
+	@Override
+	public int getID() {
+		return SubMission.MENUSTATE;
+	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		SubMission G = (SubMission) game;
-		float dt = delta / 1000f;
-		
-		Input input = container.getInput();
-		if (substate == 0) {
-			if (help.clicked(input))
-				substate = 2;
-			else if (quit.clicked(input))
-				container.exit();
-			else if (start.clicked(input))
-				substate = 1;
-				
-		} else if (substate == 1) {
-			if (next.clicked(input))
-				game.enterState(SubMission.PLAYINGSTATE);
-			else if (back.clicked(input))
-				substate = 0;
-			
-		} else {
-			if (back.clicked(input))
-				substate = 0;
-			else if (substate < 4 && next.clicked(input))
-				substate += 1;
-		}
+	public void init(GameContainer container, StateBasedGame game) throws SlickException { 
 	}
 
 	@Override
@@ -188,8 +165,31 @@ class MenuState extends BasicGameState {
 	}
 
 	@Override
-	public int getID() {
-		return SubMission.MENUSTATE;
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		SubMission G = (SubMission) game;
+		float dt = delta / 1000f;
+		
+		Input input = container.getInput();
+		if (substate == 0) {
+			if (help.clicked(input))
+				substate = 2;
+			else if (quit.clicked(input))
+				container.exit();
+			else if (start.clicked(input))
+				substate = 1;
+				
+		} else if (substate == 1) {
+			if (next.clicked(input))
+				game.enterState(SubMission.PLAYINGSTATE);
+			else if (back.clicked(input))
+				substate = 0;
+			
+		} else {
+			if (back.clicked(input))
+				substate = 0;
+			else if (substate < 4 && next.clicked(input))
+				substate += 1;
+		}
 	}
 	
 }

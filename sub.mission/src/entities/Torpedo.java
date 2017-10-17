@@ -13,11 +13,11 @@ import jig.Vector;
 
 public class Torpedo extends Vessel {
 	
-	float fuel;
-	float maxSpeed;
-	List<Vector> line;
-	Vessel target;
 	Sound explosion;
+	float fuel;
+	List<Vector> line;
+	float maxSpeed;
+	Vessel target;
 
 	public Torpedo(String image, Vector p, float bearing, float speed, float f, Vector dest, Vessel t) {
 		super(image, p, 20, bearing, 10, 20, 20);
@@ -35,8 +35,37 @@ public class Torpedo extends Vessel {
 		setDestination(dest);
 	}
 
+	void explode() {
+		explosion.play();
+		target.takeDamage("torpedo");
+		SubMission.removeEntity(layer, (Entity) this);
+	}
+	
+	@Override
+	public float getSonar() {
+		return (175 * baseSonar - ambient - currentSpeed * 2);
+	}
+	
 	public boolean haveFuel() {
 		return fuel > 0;
+	}
+	
+	@Override
+	public void render(Graphics g) {
+		// draw line
+		g.setColor(new Color(0.8f, 0.8f, 0.8f, 0.3f));
+		int s = line.size();
+		Vector a = getPosition();
+		Vector b;
+		while (s-- > 0) {
+			b = a.add( line.get(s) );
+			g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
+			a = b;
+		}
+		
+		if (debug) g.drawLine(destination.getX(), destination.getY(), getX(), getY());
+				
+		super.render(g);
 	}
 	
 	@Override
@@ -65,34 +94,5 @@ public class Torpedo extends Vessel {
 			setSpeed(maxSpeed);
 		
 		super.update(dt);
-	}
-	
-	void explode() {
-		explosion.play();
-		target.takeDamage("torpedo");
-		SubMission.removeEntity(layer, (Entity) this);
-	}
-	
-	@Override
-	public float getSonar() {
-		return (175 * baseSonar - ambient - currentSpeed * 2);
-	}
-	
-	@Override
-	public void render(Graphics g) {
-		// draw line
-		g.setColor(new Color(0.8f, 0.8f, 0.8f, 0.3f));
-		int s = line.size();
-		Vector a = getPosition();
-		Vector b;
-		while (s-- > 0) {
-			b = a.add( line.get(s) );
-			g.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
-			a = b;
-		}
-		
-		if (debug) g.drawLine(destination.getX(), destination.getY(), getX(), getY());
-				
-		super.render(g);
 	}
 }

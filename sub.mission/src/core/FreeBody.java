@@ -5,10 +5,10 @@ import jig.Entity;
 
 public abstract class FreeBody extends Entity {
 
-	private Vector velocity;
 	public float mass;
-	protected float traction;
 	protected float radius;
+	protected float traction;
+	private Vector velocity;
 	
 	public FreeBody(final Vector pos, final float m, final float r) {
 		super(pos);
@@ -26,40 +26,6 @@ public abstract class FreeBody extends Entity {
 		radius = r;
 	}
 
-	public void setVelocity(final Vector v) {
-		velocity = v;
-	}
-
-	public Vector getVelocity() {
-		return velocity;
-	}
-	
-	public void setMass(final float m) {
-		mass = m;
-	}
-
-	public float getMass() {
-		return mass;
-	}
-	
-	public void setRadius(final float r) {
-		radius = r;
-	}
-
-	public float getRadius() {
-		return radius;
-	}
-
-	/**
-	 * Update the FreeBody based on how much time has passed...
-	 * 
-	 * @param delta
-	 *            the number of milliseconds since the last update
-	 */
-	public void update(final float delta, final float friction) {
-		translate(velocity.scale(delta * (1 - traction * friction) ));
-	}
-	
 	public void collision(final Entity other) {
 		if (super.collides(other) != null) onCollide(other);
 	}
@@ -89,6 +55,40 @@ public abstract class FreeBody extends Entity {
 			other.onCollide(this);
 		}
 	}*/
+
+	public float getMass() {
+		return mass;
+	}
+	
+	public float getRadius() {
+		return radius;
+	}
+
+	public Vector getVelocity() {
+		return velocity;
+	}
 	
 	abstract public void onCollide(Entity other);
+
+	public void setMass(final float m) {
+		mass = m;
+	}
+
+	public void setRadius(final float r) {
+		radius = r;
+	}
+	
+	public void setVelocity(final Vector v) {
+		velocity = v;
+	}
+	
+	/**
+	 * Update the FreeBody based on how much time has passed...
+	 * 
+	 * @param delta
+	 *            the number of milliseconds since the last update
+	 */
+	public void update(final float delta, final float friction) {
+		translate(velocity.scale(delta * (1 - traction * friction) ));
+	}
 }

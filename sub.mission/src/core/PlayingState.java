@@ -25,29 +25,52 @@ import jig.Entity;
 class PlayingState extends BasicGameState {
 	
 	
-	int state;
-	float sonarCountdown;
-	
 	DepthMeter depth;
-	SpeedMeter speed;
-	SubPlatform platform;
-	
-	Submarine player;
 	MissionTarget mission;
-
-	NavigationManager navigation;
 	
-	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		SubMission G = (SubMission) game;
-		
+	SubPlatform platform;
+	Submarine player;
+	
+	float sonarCountdown;
+	SpeedMeter speed;
+
+	int state;
+	
+	boolean advance() {
+		switch (state) {
+		case 1:
+			return mission.getPercent() <= 0f;
+		case 0:
+		case 2:
+		case 3:
+			return mission.collides(player) != null;
+		default:
+			return false;
+		}
 	}
 
+	boolean DetectWithSonar(Vessel e) {
+		switch (player.detect(e)) {
+		case 0:
+			e.drawAlpha = 0f;
+			break;
+		case 1:
+			e.drawAlpha = 0.33f;
+			break;
+		case 2:
+			e.drawAlpha = 0.6f;
+			break;
+		case 3:
+			e.drawAlpha = 1f;
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		SubMission G = (SubMission) game;
 		
-		navigation = new NavigationManager();
 		sonarCountdown = 0;
 		
 		// insert submarine
@@ -73,16 +96,91 @@ class PlayingState extends BasicGameState {
 		*/
 	}
 	
-	boolean advance() {
+	@Override
+	public int getID() {
+		return SubMission.PLAYINGSTATE;
+	}
+	
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		SubMission G = (SubMission) game;
+		
+	}
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) {
+	}
+	
+	boolean missionFail() {
 		switch (state) {
-		case 1:
-			return mission.getPercent() <= 0f;
 		case 0:
 		case 2:
 		case 3:
-			return mission.collides(player) != null;
+			return (mission.getPercent() < 0f);
 		default:
 			return false;
+		}
+	}
+	
+	boolean missionWin() {
+		return (state == 3 && mission.collides(player) != null);
+	}
+	
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		SubMission G = (SubMission) game;
+		g.drawImage(G.map, 0, 0);
+		g.drawImage(G.depth, 0, 0);
+		
+		for (Entity e : SubMission.getLayer("traffic"))
+			((CommercialVessel) e).render(g);
+		
+		for (Entity e : SubMission.getLayer("patrol"))
+			((PatrolBoat) e).render(g);
+		
+		for (Entity e : SubMission.getLayer("torpedo")) {
+			((Torpedo) e).render(g);
+		}
+		
+		player.render(g);
+		mission.render(g);
+		
+		g.setFont(SubMission.text);
+		renderObjective(g);
+		depth.render(g);
+		speed.render(g);
+		platform.render(g);
+		
+		/*
+		for (int[] l : SubMission.landMasses) {
+			g.drawOval(l[0] - l[2], l[1] - l[2], l[2] * 2, l[2] * 2);
+		}
+		int w = SubMission.ScreenWidth / 45;
+		int h = SubMission.ScreenHeight / 50;
+		int o;
+		for (int x=0; x < w; x++) {
+			o = (x % 2 == 0) ? 25 : 0;
+			for (int y=0; y < h; y++) {
+				g.drawOval(x*45, y*50-o, 50, 50);
+			}
+		}*/
+		
+	}
+	
+	void renderObjective(Graphics g) {
+		switch (state) {
+		case 0:
+			g.drawString("Get to the mission target to deploy your special forces.", 75f, 15f);
+			break;
+		case 1:
+			g.drawString("Move into deep water and remain undetected until your rendezvous window opens.", 75f, 15f);
+			break;
+		case 2:
+			g.drawString("Rendezvous with your team before the enemy captures them!", 75f, 15f);
+			break;
+		case 3:
+			g.drawString("The package has been wounded! Escape to open waters and get him to medical help!", 75f, 15f);
+			break;
 		}
 	}
 	
@@ -131,118 +229,6 @@ class PlayingState extends BasicGameState {
 		default:
 			break;
 		}
-	}
-	
-	void renderObjective(Graphics g) {
-		switch (state) {
-		case 0:
-			g.drawString("Get to the mission target to deploy your special forces.", 75f, 15f);
-			break;
-		case 1:
-			g.drawString("Move into deep water and remain undetected until your rendezvous window opens.", 75f, 15f);
-			break;
-		case 2:
-			g.drawString("Rendezvous with your team before the enemy captures them!", 75f, 15f);
-			break;
-		case 3:
-			g.drawString("The package has been wounded! Escape to open waters and get him to medical help!", 75f, 15f);
-			break;
-		}
-	}
-	
-	boolean missionFail() {
-		switch (state) {
-		case 0:
-		case 2:
-		case 3:
-			return (mission.getPercent() < 0f);
-		default:
-			return false;
-		}
-	}
-	
-	boolean missionWin() {
-		return (state == 3 && mission.collides(player) != null);
-	}
-	
-	boolean WinOrLose(SubMission G) {
-		
-		boolean shouldEnd = false;
-		
-		if (player.didRunAground(G.map)) {
-			G.missionFailed = 10;
-			shouldEnd = true;
-		} else if (player.isSunk) {
-			G.missionFailed = 6;
-			shouldEnd = true;
-		} else if (missionFail()) {
-			G.missionFailed = state + 1;
-			shouldEnd = true;
-		} else if (missionWin()) {
-			G.missionFailed = 0;
-			shouldEnd = true;
-		}
-		
-		return shouldEnd;
-	}
-	
-	boolean DetectWithSonar(Vessel e) {
-		switch (player.detect(e)) {
-		case 0:
-			e.drawAlpha = 0f;
-			break;
-		case 1:
-			e.drawAlpha = 0.33f;
-			break;
-		case 2:
-			e.drawAlpha = 0.6f;
-			break;
-		case 3:
-			e.drawAlpha = 1f;
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public void leave(GameContainer container, StateBasedGame game) {
-	}
-	
-	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		SubMission G = (SubMission) game;
-		g.drawImage(G.map, 0, 0);
-		g.drawImage(G.depth, 0, 0);
-		
-		for (Entity e : SubMission.getLayer("traffic"))
-			((CommercialVessel) e).render(g);
-		
-		for (Entity e : SubMission.getLayer("patrol"))
-			((PatrolBoat) e).render(g);
-		
-		for (Entity e : SubMission.getLayer("torpedo")) {
-			((Torpedo) e).render(g);
-		}
-		
-		player.render(g);
-		mission.render(g);
-		
-		g.setFont(SubMission.text);
-		renderObjective(g);
-		depth.render(g);
-		speed.render(g);
-		platform.render(g);
-		
-		/*int w = SubMission.ScreenWidth / 45;
-		int h = SubMission.ScreenHeight / 50;
-		int o;
-		for (int x=0; x < w; x++) {
-			o = (x % 2 == 0) ? 25 : 0;
-			for (int y=0; y < h; y++) {
-				g.drawOval(x*45, y*50-o, 50, 50);
-			}
-		}*/
-		
 	}
 
 	@Override
@@ -312,7 +298,7 @@ class PlayingState extends BasicGameState {
 				SubMission.removeEntity("torpedo", e);
 		}
 		
-		navigation.update(dt);
+		//navigation.update(dt);
 		
 		if (sonarCountdown <= 0) {
 			sonarCountdown = 1;
@@ -320,9 +306,25 @@ class PlayingState extends BasicGameState {
 		G.update();
 	}
 
-	@Override
-	public int getID() {
-		return SubMission.PLAYINGSTATE;
+	boolean WinOrLose(SubMission G) {
+		
+		boolean shouldEnd = false;
+		
+		if (player.didRunAground(G.map)) {
+			G.missionFailed = 10;
+			shouldEnd = true;
+		} else if (player.isSunk) {
+			G.missionFailed = 6;
+			shouldEnd = true;
+		} else if (missionFail()) {
+			G.missionFailed = state + 1;
+			shouldEnd = true;
+		} else if (missionWin()) {
+			G.missionFailed = 0;
+			shouldEnd = true;
+		}
+		
+		return shouldEnd;
 	}
 	
 }

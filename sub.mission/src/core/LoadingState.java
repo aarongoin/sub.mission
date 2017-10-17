@@ -28,15 +28,10 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 class LoadingState extends BasicGameState {
 	
-	int state;
+	Stack<String> assets;
 	String message; 
 	
-	Stack<String> assets;
-	
-	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		state = 1;
-	}
+	int state;
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
@@ -44,7 +39,17 @@ class LoadingState extends BasicGameState {
 		assets = new Stack<String>();
 		message = "Loading Images.";
 	}
+	
+	@Override
+	public int getID() {
+		return SubMission.LOADINGSTATE;
+	}
 
+
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		state = 1;
+	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -80,11 +85,6 @@ class LoadingState extends BasicGameState {
 			G.enterState(SubMission.MENUSTATE);
 			break;
 		}
-	}
-
-	@Override
-	public int getID() {
-		return SubMission.LOADINGSTATE;
 	}
 	
 }

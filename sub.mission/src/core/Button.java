@@ -9,17 +9,17 @@ import org.newdawn.slick.gui.MouseOverArea;
 
 public class Button {
 
-	int[] pos = {0, 0};
+	MouseOverArea bounds;
 		
+	TrueTypeFont font;
 	int height;
-	int width;
 	int margin;
 	
-	TrueTypeFont font;
+	int[] pos = {0, 0};
 	
 	String text;
 	
-	MouseOverArea bounds;
+	int width;
 	
 	public Button(GameContainer c, TrueTypeFont f, String t, int x, int y, int m) {
 		text = t;

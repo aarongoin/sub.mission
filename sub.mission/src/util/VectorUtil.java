@@ -4,14 +4,28 @@ import jig.Vector;
 
 public class VectorUtil {
 
-	public VectorUtil() {
+	public static float getAngleBetween(Vector a, Vector b) {
+		//float theta =  (float) (180 * Math.acos( ( a.getX()*b.getX() + a.getY()*b.getY() ) / ( a.length() * b.length() ) ) / Math.PI);
+		float theta = (float) ( 180 * (Math.atan2(a.getX(), a.getY()) - Math.atan2(b.getX(), b.getY())) / Math.PI );
+		return theta;
 	}
-
+	
 	public static Vector changeBasis(Vector v, Vector[] basis) {
 		return new Vector(
 			v.getX()*basis[0].getX() + v.getY()*basis[1].getX(),
 			v.getX()*basis[0].getY() + v.getY()*basis[1].getY()
 		);
+	}
+
+	public static Vector[] getBasis(Vector a, Vector b) {
+		
+		Vector X = new Vector(a.getX() - b.getX(), a.getY() - b.getY()).unit();
+		Vector[] result = {
+			X,
+			X.getPerpendicular().scale(-1)
+		};
+		
+		return result;
 	}
 	
 	public static Vector[] invertBasis(Vector[] basis) {
@@ -23,14 +37,6 @@ public class VectorUtil {
 		return inverse;
 	}
 	
-	public static Vector[] getBasis(Vector a, Vector b) {
-		
-		Vector X = new Vector(a.getX() - b.getX(), a.getY() - b.getY()).unit();
-		Vector[] result = {
-			X,
-			X.getPerpendicular().scale(-1)
-		};
-		
-		return result;
+	public VectorUtil() {
 	}
 }

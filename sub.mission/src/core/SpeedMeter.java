@@ -8,12 +8,12 @@ import jig.Vector;
 
 public class SpeedMeter {
 	
-	int mark;
-	int target;
-	int hover;
-	int speed;
 	String depth;
+	int hover;
+	int mark;
 	Vector position;
+	int speed;
+	int target;
 
 	public SpeedMeter(int value, Vector pos) {
 		position = pos;
@@ -21,10 +21,6 @@ public class SpeedMeter {
 		mark = hover;
 		target = hover;
 		speed = value;
-	}
-	
-	int speedFromMark(int hover) {
-		return (int) ((379 - hover) / 8.422222);
 	}
 	
 	int markFromSpeed(int speed) {
@@ -41,6 +37,10 @@ public class SpeedMeter {
 			g.drawString(Integer.toString(speed), position.getX() + hover - 9, position.getY() - 30);
 		else
 			g.drawString(Integer.toString(speed), position.getX() + hover - 3, position.getY() - 30);
+	}
+	
+	int speedFromMark(int hover) {
+		return (int) ((379 - hover) / 8.422222);
 	}
 	
 	// returns target speed
