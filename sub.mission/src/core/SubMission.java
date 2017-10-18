@@ -39,10 +39,10 @@ public class SubMission extends StateBasedGame {
 				{400, 900, 1200, 950}
 			}
 	};
-	static public int[][] patrolZones = {
-			{580, 270},
-			{1080, 500},
-			{640, 725}
+	static public Vector[] patrolZones = {
+			new Vector(580, 270),
+			new Vector(1080, 500),
+			new Vector(640, 725)
 	};
 	
 	static HashMap<String, Integer> layers = new HashMap<String, Integer>();

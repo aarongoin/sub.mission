@@ -14,7 +14,7 @@ public class PatrolManager {
 	
 	Random rand;
 	
-	int zones[][];
+	Vector zones[];
 	Stack<Vector> needsAssigned;
 	Vector spawnPoint;
 	int onPatrol;
@@ -24,7 +24,7 @@ public class PatrolManager {
 	//				{x, y},
 	//				...
 	//			}
-	public PatrolManager(int zones[][], Vector spawn) {
+	public PatrolManager(Vector zones[], Vector spawn) {
 		SubMission.addLayer("patrol");
 		this.zones = zones;
 		rand = new Random(System.currentTimeMillis());
@@ -66,7 +66,7 @@ public class PatrolManager {
 	}
 	
 	public void addShip() {
-		addShip(VectorUtil.vectorFrom( zones[ rand.nextInt(zones.length) ] ).add( Vector.getRandomXY(-50, 50, -50, 50) ));
+		addShip( zones[ rand.nextInt(zones.length) ].add( Vector.getRandomXY(-50, 50, -50, 50) ) );
 	}
 	
 	public void addShip(Vector assignment) {
