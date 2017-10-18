@@ -19,7 +19,7 @@ public class PatrolBoat extends MilitaryVessel {
 	float shouldUpdate;
 
 	public PatrolBoat(Vector p, float bearing) {
-		super("patrol", p, 3, 2.5f, bearing, 35, 10, 10);
+		super("patrol", p, 10, 2.5f, bearing, 35, 10, 10);
 		movedFor = new HashMap<Vessel, Float>();
 		
 		towedSonar = null;

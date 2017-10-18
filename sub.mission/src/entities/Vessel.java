@@ -77,7 +77,7 @@ public class Vessel extends Entity {
 	
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
-		//debug = true;
+		debug = true;
 		
 		id = Vessel.getID();
 		
@@ -161,7 +161,7 @@ public class Vessel extends Entity {
 		
 		clampBearing();
 	}
-	
+
 	public void adjustSpeed(float dt) {
 		if (currentSpeed < targetSpeed) {
 			currentSpeed += acceleration*dt;
@@ -405,10 +405,6 @@ public class Vessel extends Entity {
 			float sonar = getSonar();
 			g.setColor(Color.green);
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
-			
-			g.setColor(Color.white);
-			Vector fp = getPosition();
-			g.drawOval(fp.getX() - r, fp.getY() - r, r*2, r*2);
 			
 			g.setColor(new Color(0.5f, 0.5f, 0.5f));
 			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());

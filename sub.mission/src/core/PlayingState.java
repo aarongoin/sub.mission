@@ -36,6 +36,8 @@ class PlayingState extends BasicGameState {
 
 	int state;
 	
+	CommercialManager trafficManager;
+	
 	boolean advance() {
 		switch (state) {
 		case 1:
@@ -84,6 +86,8 @@ class PlayingState extends BasicGameState {
 		
 		SubMission.player = player;
 		
+		trafficManager = new CommercialManager(SubMission.shippingLanes);
+		
 		state = 0;
 		stage(G);
 		
@@ -104,7 +108,6 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		SubMission G = (SubMission) game;
-		
 	}
 	
 	@Override
@@ -190,21 +193,8 @@ class PlayingState extends BasicGameState {
 		case 0: // mission start
 			mission = new MissionTarget(new Vector(80f, 550f), 300f);
 			// generate commercial traffic
-			G.removeLayer("traffic");
-			G.addLayer("traffic");
-			CommercialVessel cv;
-			cv = new CommercialVessel("ship2", new Vector(500, 500), 60, 0);
-			//cv.debug(true);
-			SubMission.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship1", new Vector(650, 650), 60, -90);
-			//cv.debug(true);
-			SubMission.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship3", new Vector(650, 400), 60, 180);
-			//cv.debug(true);
-			SubMission.addEntity("traffic", (Entity) cv);
-			cv = new CommercialVessel("ship1", new Vector(300, 100), 60, 90);
-			//cv.debug(true);
-			SubMission.addEntity("traffic", (Entity) cv);
+			trafficManager.reset();
+			trafficManager.setTraffic(10);
 			// generate enemy patrol boats
 			G.removeLayer("patrol");
 			G.addLayer("patrol");
@@ -246,7 +236,7 @@ class PlayingState extends BasicGameState {
 			stage(G);
 		}
 		
-		float ambientNoise = SubMission.getLayer("traffic").size() * 50 + SubMission.getLayer("patrol").size() * 20;
+		float ambientNoise = SubMission.getLayer("traffic").size() * 20 + SubMission.getLayer("patrol").size() * 20;
 		//System.out.println(ambientNoise);
 		
 		// draw depth lines or land depending on submarine depth
