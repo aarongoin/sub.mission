@@ -4,15 +4,12 @@ package core;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import entities.CommercialVessel;
-import entities.MilitaryVessel;
 import entities.MissionTarget;
 import entities.PatrolBoat;
 import entities.Submarine;
@@ -37,6 +34,7 @@ class PlayingState extends BasicGameState {
 	int state;
 	
 	CommercialManager trafficManager;
+	PatrolManager patrolManager;
 	
 	boolean advance() {
 		switch (state) {
@@ -87,6 +85,7 @@ class PlayingState extends BasicGameState {
 		SubMission.player = player;
 		
 		trafficManager = new CommercialManager(SubMission.shippingLanes);
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
@@ -196,15 +195,10 @@ class PlayingState extends BasicGameState {
 			trafficManager.reset();
 			trafficManager.setTraffic(10);
 			// generate enemy patrol boats
-			G.removeLayer("patrol");
-			G.addLayer("patrol");
-			SubMission.addEntity("patrol", new PatrolBoat(new Vector(100, 100), 45));
-			SubMission.addEntity("patrol", new PatrolBoat(new Vector(1000, 700), -45));
-			SubMission.addEntity("patrol", new PatrolBoat(new Vector(300, 800), 0));
-			SubMission.addEntity("patrol", new PatrolBoat(new Vector(700, 400), -45));
-			SubMission.addEntity("patrol", new PatrolBoat(new Vector(1200, 800), 0));
-			G.removeLayer("torpedo");
-			G.addLayer("torpedo");
+			patrolManager.reset();
+			patrolManager.setPatrol(5);
+			SubMission.removeLayer("torpedo");
+			SubMission.addLayer("torpedo");
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
@@ -274,7 +268,7 @@ class PlayingState extends BasicGameState {
 			v = (Vessel) e;
 			((PatrolBoat) e).update(dt, ambientNoise);
 			if (((Vessel) e).didRunAground(G.map))
-				SubMission.removeEntity("patrol", e);
+				((PatrolBoat) e).sink();
 			else if (DetectWithSonar(v)
 					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
 					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
@@ -293,6 +287,7 @@ class PlayingState extends BasicGameState {
 		if (sonarCountdown <= 0) {
 			sonarCountdown = 1;
 		}
+		patrolManager.update();
 		G.update();
 	}
 

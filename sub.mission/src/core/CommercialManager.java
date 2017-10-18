@@ -26,6 +26,7 @@ public class CommercialManager {
 		SubMission.addLayer("traffic");
 		this.lanes = lanes;
 		rand = new Random(System.currentTimeMillis());
+		trafficLevel = 0;
 	}
 	
 	public void removeShip() {
@@ -82,7 +83,7 @@ public class CommercialManager {
 		//System.out.println("Creating ship at: " + cv.getPosition());
 		
 		// and add to the game
-		SubMission.addEntity("traffic", cv);
+		SubMission.addEntity("traffic", (Entity) cv);
 	}
 	
 	public void reset() {
