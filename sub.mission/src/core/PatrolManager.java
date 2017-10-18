@@ -16,7 +16,9 @@ public class PatrolManager {
 	
 	Vector zones[];
 	Stack<Vector> needsAssigned;
+	ArrayList<PatrolBoat> cowards;
 	Vector spawnPoint;
+	Vector fleePoint;
 	int onPatrol;
 	
 	// zones are defined as points on the map where Patrol Boats can be assigned to patrol
@@ -24,13 +26,19 @@ public class PatrolManager {
 	//				{x, y},
 	//				...
 	//			}
-	public PatrolManager(Vector zones[], Vector spawn) {
+	public PatrolManager(Vector zones[], Vector spawn, Vector flee) {
 		SubMission.addLayer("patrol");
 		this.zones = zones;
 		rand = new Random(System.currentTimeMillis());
 		spawnPoint = spawn;
 		onPatrol = 0;
 		needsAssigned = new Stack<Vector>();
+		cowards = new ArrayList<PatrolBoat>();
+		fleePoint = flee;
+	}
+	
+	public Vector getFleePoint() {
+		return fleePoint;
 	}
 	
 	public void removeShip() {
@@ -86,14 +94,13 @@ public class PatrolManager {
 		return new Vector(x, y);
 	}
 	
-	public void addShip() {
-		addShip( zones[ rand.nextInt(zones.length) ].add( Vector.getRandomXY(-50, 50, -50, 50) ) );
+	public void addShip(Vector start) {
+		addShip( zones[ rand.nextInt(zones.length) ].add( Vector.getRandomXY(-50, 50, -50, 50) ), start );
 	}
 	
-	public void addShip(Vector assignment) {
-		
-		Vector delta = assignment.subtract(spawnPoint);
-		Vector current = spawnPoint.add(Vector.getRandomXY(-50, 50, -50, 50));
+	public void addShip(Vector assignment, Vector start) {
+		Vector delta = assignment.subtract(start);
+		Vector current = start.add(Vector.getRandomXY(-50, 50, -50, 50));
 		
 		PatrolBoat pb = new PatrolBoat(current, (float) delta.getRotation(), assignment, this);
 		pb.setDestination(assignment);
@@ -112,7 +119,7 @@ public class PatrolManager {
 	public void setPatrol(int qty) {
 		
 		while (onPatrol < qty) {
-			addShip();
+			addShip(spawnPoint);
 			onPatrol++;
 		}
 		
@@ -125,19 +132,23 @@ public class PatrolManager {
 	public void onSink(PatrolBoat pb) {
 		needsAssigned.push(pb.assignment);
 	}
+	
+	public void onReturn(PatrolBoat pb) {
+		cowards.add(pb);
+		needsAssigned.push(pb.assignment);
+		pb.assignment = fleePoint;
+	}
 
 	public void update() {
+
 		while (needsAssigned.size() > 0) {
-			addShip(needsAssigned.pop());
+			addShip(needsAssigned.pop(), fleePoint);
 		}
-		/*for (Entity e : SubMission.getLayer("patrol")) {
-			
-			if (((Vessel) e).getDestination().distance(e.getPosition()) < 10) {
-				SubMission.removeEntity("patrol", e);
-				addShip();
-			}
-		}*/
 		
+		for (int i = cowards.size() - 1; i >= 0; i--) {
+			if (cowards.get(i).getPosition().distance(fleePoint) < 50) {
+				SubMission.removeEntity("patrol", (Entity) cowards.remove(i));
+			}
+		}	
 	}
-	
 }

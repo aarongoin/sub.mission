@@ -85,7 +85,7 @@ class PlayingState extends BasicGameState {
 		SubMission.player = player;
 		
 		trafficManager = new CommercialManager(SubMission.shippingLanes);
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400));
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
