@@ -39,18 +39,22 @@ public class SubMission extends StateBasedGame {
 				{400, 900, 1200, 950}
 			}
 	};
+	static public int[][] patrolZones = {
+			{580, 270},
+			{1080, 500},
+			{640, 725}
+	};
 	
 	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
 	public static final int LOADINGSTATE 	= 0;
-
 	public static final int MENUSTATE 		= 1;
-	public static Submarine player;
-	
 	public static final int PLAYINGSTATE 	= 2;
 	
+	public static Submarine player;
+	
 	public static int ScreenHeight;
-		
 	public static int ScreenWidth;
+	
 	public static HashMap<String, String> SND = new HashMap<String, String>();
 	static public TrueTypeFont subtitle;
 	
@@ -194,9 +198,10 @@ public class SubMission extends StateBasedGame {
 	}
 	
 	static public void addLayer(String layer) {
-		if (!layers.containsKey(layer))
+		if (!layers.containsKey(layer)) {
 			layers.put(layer, entities.size() + 1);
 			entities.add( new ArrayList<Entity>() );
+		}
 	}
 	
 	public ArrayList<Integer> getVisibleLayers() {
@@ -238,7 +243,14 @@ public class SubMission extends StateBasedGame {
 	static public void removeLayer(String layer) {
 		if (layers.containsKey(layer)) {
 			entities.remove( Math.abs(layers.get(layer)) - 1 );
-			layers.remove(layer);
+			int removed = layers.remove(layer);
+			int k;
+			for (String key : layers.keySet()) {
+				k = layers.get(key);
+				if (k > removed) {
+					layers.put(key, k - 1);
+				}
+			}
 		}
 	}
 	

@@ -77,7 +77,7 @@ public class Vessel extends Entity {
 	
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
-		debug = true;
+		//debug = true;
 		
 		id = Vessel.getID();
 		
@@ -332,7 +332,7 @@ public class Vessel extends Entity {
 		
 		for (int[] land : SubMission.landMasses) {
 			line = getPosition().subtract(new Vector(land[0], land[1]));
-			target = target.add( line.scale(10 / line.length()) );
+			target = target.add( line.scale(1/2) );
 		}
 		
 		for (String layer : layers) {

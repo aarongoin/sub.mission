@@ -5,7 +5,9 @@ import java.util.HashMap;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
+import core.PatrolManager;
 import core.SubMission;
+import jig.Entity;
 import jig.Vector;
 
 public class PatrolBoat extends MilitaryVessel {
@@ -16,11 +18,16 @@ public class PatrolBoat extends MilitaryVessel {
 	
 	float safeDistance = 150f;
 	
+	public final Vector assignment;
+	PatrolManager HQ;
+	
 	float shouldUpdate;
 
-	public PatrolBoat(Vector p, float bearing) {
-		super("patrol", p, 10, 2.5f, bearing, 35, 10, 10);
+	public PatrolBoat(Vector p, float bearing, Vector assignment, PatrolManager hq) {
+		super("patrol", p, 10, 2.5f, bearing, 1, 10, 10);
 		movedFor = new HashMap<Vessel, Float>();
+		
+		targetSpeed = 35;
 		
 		towedSonar = null;
 		towedDecoy = null;
@@ -34,6 +41,9 @@ public class PatrolBoat extends MilitaryVessel {
 		torpedoType = "enemy_torpedo";
 		
 		patrolTimer = 0;
+		
+		this.assignment = assignment;
+		HQ = hq;
 	}
 	
 	@Override
@@ -69,7 +79,8 @@ public class PatrolBoat extends MilitaryVessel {
 			if (detect(SubMission.player) > 2) {
 				destination = SubMission.player.getAsTarget();
 			} else if (patrolTimer == 0) {
-				setDestination( Vector.getRandomXY(SubMission.ScreenHeight - 200, SubMission.ScreenWidth - 200, 200, 200) );
+				//setDestination( Vector.getRandomXY(SubMission.ScreenHeight - 200, SubMission.ScreenWidth - 200, 200, 200) );
+				setDestination(assignment);
 				patrolTimer = rand.nextFloat() * 60f;
 			}
 			/*float d = getPosition().distance(destination);
@@ -87,6 +98,12 @@ public class PatrolBoat extends MilitaryVessel {
 		super.update(dt, ambient);
 		
 		//navigate(collideWith);
+	}
+	
+	@Override
+	public void sink() {
+		HQ.onSink(this);
+		super.sink();
 	}
 
 }

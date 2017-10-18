@@ -37,7 +37,7 @@ public class Submarine extends MilitaryVessel {
 
 	public Submarine(float depth, float dive) {
 		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 6, 180, 10, 20, 2);
-		debug = true;
+		//debug = true;
 		lookahead = 0f;
 
 		hoverBearing = targetBearing;
@@ -122,7 +122,7 @@ public class Submarine extends MilitaryVessel {
 			noise = super.getNoise() * (1 + (1 * (400 - currentDepth) / 100));
 		
 		noise *= (currentSpeed > 20 ? 1f : 0.5f);
-		System.out.println("Sub noise: " + noise);
+		//System.out.println("Sub noise: " + noise);
 		return noise;
 	}
 	
