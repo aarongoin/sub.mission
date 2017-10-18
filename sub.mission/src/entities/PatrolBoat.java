@@ -76,8 +76,15 @@ public class PatrolBoat extends MilitaryVessel {
 			int detection = detect((Vessel) SubMission.player);
 			//System.out.println("Detection: " + detection);
 		
-			if (detect(SubMission.player) > 2) {
-				destination = SubMission.player.getAsTarget();
+			if (detection > 2) {
+				Vector subPosition = SubMission.player.getAsTarget().add(Vector.getRandomXY(-50, 50, -50, 50));
+				if (HQ.shouldPursueSubmarineAt(assignment, subPosition)) {
+					destination = subPosition;
+					
+					// adding some randomness to whether or not the boat will fire
+					if (detection == 3 && torpedoes > 0 && rand.nextInt(10) == 0)
+						SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
+				}
 			} else if (patrolTimer == 0) {
 				//setDestination( Vector.getRandomXY(SubMission.ScreenHeight - 200, SubMission.ScreenWidth - 200, 200, 200) );
 				setDestination(assignment);
@@ -87,9 +94,6 @@ public class PatrolBoat extends MilitaryVessel {
 			if (d < safeDistance) {
 				setWaypoint( getPosition().add( getPosition().subtract(destination).clampLength(safeDistance - d, safeDistance - d).rotate(rand.nextInt(90) - 90) ) );
 			}*/
-			
-			if (detection == 3 && torpedoes > 0)
-				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
 			
 			fieldNav(collideWith);
 			//navigate(collideWith);

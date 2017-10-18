@@ -54,6 +54,27 @@ public class PatrolManager {
 		SubMission.removeEntity("patrol", farthest);
 	}
 	
+	public boolean shouldPursueSubmarineAt(Vector assignment, Vector subLocation) {
+		Vector zone = null;
+		float zd = 1200;
+		float d;
+		// get zone closest to player
+		for (Vector v : zones) {
+			if (zone == null) {
+				zone = v;
+				zd = v.distance(subLocation);
+			} else {
+				d = v.distance(subLocation);
+				if (d < zd) {
+					zone = v;
+					zd = d;
+				}
+			}
+		}
+		
+		return (zone.distance(assignment) < 100);
+	}
+	
 	public Vector randomPositionIn(int bounds[]) {
 		float x = 0;
 		float y = 0;
