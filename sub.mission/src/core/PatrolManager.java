@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import org.newdawn.slick.Graphics;
+
+import entities.Airplane;
 import entities.PatrolBoat;
 import jig.Entity;
 import jig.Vector;
@@ -20,13 +23,14 @@ public class PatrolManager {
 	Vector spawnPoint;
 	Vector fleePoint;
 	int onPatrol;
+	Airplane airSupport;
 	
 	// zones are defined as points on the map where Patrol Boats can be assigned to patrol
 	// zones = {
 	//				{x, y},
 	//				...
 	//			}
-	public PatrolManager(Vector zones[], Vector spawn, Vector flee) {
+	public PatrolManager(Vector zones[], Vector spawn, Vector flee, Airplane airSupport) {
 		SubMission.addLayer("patrol");
 		this.zones = zones;
 		rand = new Random(System.currentTimeMillis());
@@ -35,6 +39,7 @@ public class PatrolManager {
 		needsAssigned = new Stack<Vector>();
 		cowards = new ArrayList<PatrolBoat>();
 		fleePoint = flee;
+		this.airSupport = airSupport;
 	}
 	
 	public Vector getFleePoint() {
@@ -139,7 +144,9 @@ public class PatrolManager {
 		pb.assignment = fleePoint;
 	}
 
-	public void update() {
+	public void update(float dt) {
+		
+		airSupport.update(dt);
 
 		while (needsAssigned.size() > 0) {
 			addShip(needsAssigned.pop(), fleePoint);
@@ -150,5 +157,12 @@ public class PatrolManager {
 				SubMission.removeEntity("patrol", (Entity) cowards.remove(i));
 			}
 		}	
+	}
+	
+	public void render(Graphics g) {
+		airSupport.render(g);
+		
+		for (Entity e : SubMission.getLayer("patrol"))
+			((PatrolBoat) e).render(g);
 	}
 }

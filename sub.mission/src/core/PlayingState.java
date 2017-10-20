@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import entities.Airplane;
 import entities.CommercialVessel;
 import entities.MissionTarget;
 import entities.PatrolBoat;
@@ -32,6 +33,8 @@ class PlayingState extends BasicGameState {
 	SpeedMeter speed;
 
 	int state;
+	
+	Airplane airSupport;
 	
 	CommercialManager trafficManager;
 	PatrolManager patrolManager;
@@ -85,7 +88,11 @@ class PlayingState extends BasicGameState {
 		SubMission.player = player;
 		
 		trafficManager = new CommercialManager(SubMission.shippingLanes);
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
+		
+		airSupport = new Airplane(60, 30);
+		//airSupport.deployAt(new Vector(700, 425), new Vector(-1f, -0.25f));
+		
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50), airSupport);
 		
 		state = 0;
 		stage(G);
@@ -137,8 +144,7 @@ class PlayingState extends BasicGameState {
 		for (Entity e : SubMission.getLayer("traffic"))
 			((CommercialVessel) e).render(g);
 		
-		for (Entity e : SubMission.getLayer("patrol"))
-			((PatrolBoat) e).render(g);
+		patrolManager.render(g);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).render(g);
@@ -287,7 +293,7 @@ class PlayingState extends BasicGameState {
 		if (sonarCountdown <= 0) {
 			sonarCountdown = 1;
 		}
-		patrolManager.update();
+		patrolManager.update(dt);
 		G.update();
 	}
 
