@@ -41,8 +41,8 @@ public class Submarine extends MilitaryVessel {
 		lookahead = 0f;
 
 		hoverBearing = targetBearing;
-		currentDepth = 100;
-		targetDepth = 100;
+		currentDepth = 75;
+		targetDepth = 75;
 		diveSpeed = dive;
 		maxSpeed = 45;
 
