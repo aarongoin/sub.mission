@@ -20,7 +20,7 @@ public class Torpedo extends Vessel {
 	Vessel target;
 
 	public Torpedo(String image, Vector p, float bearing, float speed, float f, Vector dest, Vessel t) {
-		super(image, p, 20, bearing, 10, 20, 20);
+		super(image, p, 20, bearing, 10, 30, 20);
 		
 		maxSpeed = speed;
 		line = new ArrayList<Vector>();

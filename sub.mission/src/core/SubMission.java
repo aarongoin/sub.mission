@@ -158,6 +158,7 @@ public class SubMission extends StateBasedGame {
 		
 		IMG.put("patrol", "resource/img/vessel/patrol.png");
 		IMG.put("destroyer", "resource/img/vessel/destroyer.png");
+		IMG.put("airplane", "resource/img/vessel/airplane.png");
 		
 		IMG.put("ship1", "resource/img/vessel/feeder.png");
 		IMG.put("ship2", "resource/img/vessel/panamax.png");
@@ -189,6 +190,9 @@ public class SubMission extends StateBasedGame {
 		IMG.put("sonar_waves", "resource/img/items/sonar_waves.png");
 		IMG.put("sub_torpedo", "resource/img/items/sub_torpedo.png");
 		IMG.put("enemy_torpedo", "resource/img/items/enemy_torpedo.png");
+		IMG.put("sonobuoy_above", "resource/img/items/sonobuoy_above.png");
+		IMG.put("sonobuoy_even", "resource/img/items/sonobuoy_even.png");
+		IMG.put("sonobuoy_below", "resource/img/items/sonobuoy_below.png");
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 		SND.put("fire_torpedo", "resource/sound/35530__jobro__torpedo-launch-underwater.wav");
