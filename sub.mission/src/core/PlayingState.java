@@ -51,24 +51,6 @@ class PlayingState extends BasicGameState {
 			return false;
 		}
 	}
-
-	boolean DetectWithSonar(Vessel e) {
-		switch (player.detect(e)) {
-		case 0:
-			e.drawAlpha = 0f;
-			break;
-		case 1:
-			e.drawAlpha = 0.33f;
-			break;
-		case 2:
-			e.drawAlpha = 0.6f;
-			break;
-		case 3:
-			e.drawAlpha = 1f;
-			return true;
-		}
-		return false;
-	}
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
@@ -262,7 +244,7 @@ class PlayingState extends BasicGameState {
 			v = (Vessel) e;
 			if (v.didRunAground(G.map))
 				SubMission.removeEntity("traffic", e);
-			else if (DetectWithSonar(v)
+			else if (v.isDetected()
 					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
 					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
 				
@@ -270,18 +252,7 @@ class PlayingState extends BasicGameState {
 			}
 				
 		}
-		for (Entity e : SubMission.getLayer("patrol")) {
-			v = (Vessel) e;
-			((PatrolBoat) e).update(dt, ambientNoise);
-			if (((Vessel) e).didRunAground(G.map))
-				((PatrolBoat) e).sink();
-			else if (DetectWithSonar(v)
-					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-				
-				player.getLock(v);
-			}
-		}
+		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
 			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
@@ -293,7 +264,7 @@ class PlayingState extends BasicGameState {
 		if (sonarCountdown <= 0) {
 			sonarCountdown = 1;
 		}
-		patrolManager.update(dt);
+		patrolManager.update(dt, input, ambientNoise);
 		G.update();
 	}
 
