@@ -33,19 +33,28 @@ public class SubMission extends StateBasedGame {
 			{80, 660, 250},
 			{945, 76, 69}
 	};
-	
+	static public int[][][] shippingLanes = {
+			{
+				{100, -50, 850, -100},
+				{400, 900, 1200, 950}
+			}
+	};
+	static public Vector[] patrolZones = {
+			new Vector(580, 270),
+			new Vector(1080, 500),
+			new Vector(640, 725)
+	};
 	
 	static HashMap<String, Integer> layers = new HashMap<String, Integer>();
 	public static final int LOADINGSTATE 	= 0;
-
 	public static final int MENUSTATE 		= 1;
-	public static Submarine player;
-	
 	public static final int PLAYINGSTATE 	= 2;
 	
+	public static Submarine player;
+	
 	public static int ScreenHeight;
-		
 	public static int ScreenWidth;
+	
 	public static HashMap<String, String> SND = new HashMap<String, String>();
 	static public TrueTypeFont subtitle;
 	
@@ -110,7 +119,7 @@ public class SubMission extends StateBasedGame {
 	
 	public Image depth;
 	
-	public Image map;
+	static public Image map;
 	
 	public int missionFailed;
 	
@@ -149,6 +158,7 @@ public class SubMission extends StateBasedGame {
 		
 		IMG.put("patrol", "resource/img/vessel/patrol.png");
 		IMG.put("destroyer", "resource/img/vessel/destroyer.png");
+		IMG.put("airplane", "resource/img/vessel/airplane.png");
 		
 		IMG.put("ship1", "resource/img/vessel/feeder.png");
 		IMG.put("ship2", "resource/img/vessel/panamax.png");
@@ -180,6 +190,9 @@ public class SubMission extends StateBasedGame {
 		IMG.put("sonar_waves", "resource/img/items/sonar_waves.png");
 		IMG.put("sub_torpedo", "resource/img/items/sub_torpedo.png");
 		IMG.put("enemy_torpedo", "resource/img/items/enemy_torpedo.png");
+		IMG.put("sonobuoy_above", "resource/img/items/sonobuoy_above.png");
+		IMG.put("sonobuoy_even", "resource/img/items/sonobuoy_even.png");
+		IMG.put("sonobuoy_below", "resource/img/items/sonobuoy_below.png");
 		
 		SND.put("bg", "resource/sound/115609__scratchikken__underwaterloop1.wav");
 		SND.put("fire_torpedo", "resource/sound/35530__jobro__torpedo-launch-underwater.wav");
@@ -188,10 +201,11 @@ public class SubMission extends StateBasedGame {
 		SND.put("explosion_b", "resource/sound/94185__nbs-dark__explosion.wav");
 	}
 	
-	public void addLayer(String layer) {
-		if (!layers.containsKey(layer))
+	static public void addLayer(String layer) {
+		if (!layers.containsKey(layer)) {
 			layers.put(layer, entities.size() + 1);
 			entities.add( new ArrayList<Entity>() );
+		}
 	}
 	
 	public ArrayList<Integer> getVisibleLayers() {
@@ -230,10 +244,17 @@ public class SubMission extends StateBasedGame {
 		}
 	}
 	
-	public void removeLayer(String layer) {
+	static public void removeLayer(String layer) {
 		if (layers.containsKey(layer)) {
 			entities.remove( Math.abs(layers.get(layer)) - 1 );
-			layers.remove(layer);
+			int removed = layers.remove(layer);
+			int k;
+			for (String key : layers.keySet()) {
+				k = layers.get(key);
+				if (k > removed) {
+					layers.put(key, k - 1);
+				}
+			}
 		}
 	}
 	

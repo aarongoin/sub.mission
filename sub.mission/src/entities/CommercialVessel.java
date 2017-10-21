@@ -13,7 +13,7 @@ public class CommercialVessel extends Vessel {
 	float shouldUpdate;
 	
 	public CommercialVessel(String image, Vector p, float noise, float bearing) {
-		super(image, p, noise, bearing, 4, 2, 10);
+		super(image, p, noise, bearing, 10, 5, 10);
 		maxSpeed = 10;
 		lookahead = 10;
 		movedFor = new HashMap<Vessel, Float>();

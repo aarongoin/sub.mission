@@ -161,7 +161,7 @@ public class Vessel extends Entity {
 		
 		clampBearing();
 	}
-	
+
 	public void adjustSpeed(float dt) {
 		if (currentSpeed < targetSpeed) {
 			currentSpeed += acceleration*dt;
@@ -244,6 +244,24 @@ public class Vessel extends Entity {
 		default:
 			return false;
 		}
+	}
+	
+	public boolean isDetected() {
+		switch (SubMission.player.detect(this)) {
+		case 0:
+			drawAlpha = 0f;
+			break;
+		case 1:
+			drawAlpha = 0.33f;
+			break;
+		case 2:
+			drawAlpha = 0.6f;
+			break;
+		case 3:
+			drawAlpha = 1f;
+			return true;
+		}
+		return false;
 	}
 	
 	public Vector getAsTarget() {
@@ -332,7 +350,7 @@ public class Vessel extends Entity {
 		
 		for (int[] land : SubMission.landMasses) {
 			line = getPosition().subtract(new Vector(land[0], land[1]));
-			target = target.add( line.scale(10 / line.length()) );
+			target = target.add( line.scale(1/2) );
 		}
 		
 		for (String layer : layers) {
@@ -406,10 +424,6 @@ public class Vessel extends Entity {
 			g.setColor(Color.green);
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
-			g.setColor(Color.white);
-			Vector fp = getPosition();
-			g.drawOval(fp.getX() - r, fp.getY() - r, r*2, r*2);
-			
 			g.setColor(new Color(0.5f, 0.5f, 0.5f));
 			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());
 			g.setColor(new Color(1f, 1f, 1f));
@@ -473,6 +487,6 @@ public class Vessel extends Entity {
 	}
 	
 	public boolean wasClicked(float x, float y) {
-		return new Vector(x, y).distance(getPosition()) < getRadius();
+		return new Vector(x, y).distance(getPosition()) < 50;
 	}
 }
