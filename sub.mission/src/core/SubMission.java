@@ -119,7 +119,7 @@ public class SubMission extends StateBasedGame {
 	
 	public Image depth;
 	
-	public Image map;
+	static public Image map;
 	
 	public int missionFailed;
 	

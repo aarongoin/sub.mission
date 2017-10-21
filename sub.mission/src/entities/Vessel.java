@@ -246,6 +246,24 @@ public class Vessel extends Entity {
 		}
 	}
 	
+	public boolean isDetected() {
+		switch (SubMission.player.detect(this)) {
+		case 0:
+			drawAlpha = 0f;
+			break;
+		case 1:
+			drawAlpha = 0.33f;
+			break;
+		case 2:
+			drawAlpha = 0.6f;
+			break;
+		case 3:
+			drawAlpha = 1f;
+			return true;
+		}
+		return false;
+	}
+	
 	public Vector getAsTarget() {
 		return getPosition();
 	}
@@ -469,6 +487,6 @@ public class Vessel extends Entity {
 	}
 	
 	public boolean wasClicked(float x, float y) {
-		return new Vector(x, y).distance(getPosition()) < getRadius();
+		return new Vector(x, y).distance(getPosition()) < 50;
 	}
 }

@@ -18,12 +18,14 @@ public class PatrolBoat extends MilitaryVessel {
 	
 	float safeDistance = 150f;
 	
+	public int zone;
 	public Vector assignment;
+	Vector playerAt;
 	PatrolManager HQ;
 	
 	float shouldUpdate;
 
-	public PatrolBoat(Vector p, float bearing, Vector assignment, PatrolManager hq) {
+	public PatrolBoat(Vector p, float bearing, PatrolManager hq) {
 		super("patrol", p, 10, 2.5f, bearing, 1, 10, 10);
 		movedFor = new HashMap<Vessel, Float>();
 		//debug = true;
@@ -41,7 +43,6 @@ public class PatrolBoat extends MilitaryVessel {
 		torpedoType = "enemy_torpedo";
 		
 		flee = false;
-		this.assignment = assignment;
 		HQ = hq;
 	}
 	
@@ -49,6 +50,10 @@ public class PatrolBoat extends MilitaryVessel {
 	public float getSonar() {
 		//System.out.println("Base: " + (175 * baseSonar) + " Ambient: " + ambient + " Speed: " + (currentSpeed * 2));
 		return (175 * baseSonar - ambient - currentSpeed * 2);
+	}
+	
+	public void pursuePlayer(Vector player) {
+		playerAt = player;
 	}
 	
 	@Override
@@ -67,33 +72,35 @@ public class PatrolBoat extends MilitaryVessel {
 		if (shouldUpdate > 1) {
 			shouldUpdate = 0;
 			
-			int detection = detect((Vessel) SubMission.player);
-			//System.out.println("Detection: " + detection);
-		
-			if (detection > 2 && !flee) {
-				Vector subPosition = SubMission.player.getAsTarget().add(Vector.getRandomXY(-50, 50, -50, 50));
-				if (HQ.shouldPursueSubmarineAt(assignment, subPosition)) {
-					setDestination(assignment);
-					
-					// adding some randomness to whether or not the boat will fire
-					if (detection == 3 && torpedoes > 0 && rand.nextInt(10) == 0)
-						SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
-				}
-			} else {
-				setDestination(assignment);
-			}
-			/*float d = getPosition().distance(destination);
-			if (d < safeDistance) {
-				setWaypoint( getPosition().add( getPosition().subtract(destination).clampLength(safeDistance - d, safeDistance - d).rotate(rand.nextInt(90) - 90) ) );
-			}*/
-			
 			fieldNav(collideWith);
-			//navigate(collideWith);
+		}
+		
+		int detection = detect((Vessel) SubMission.player);
+		//System.out.println("Detection: " + detection);
+	
+		if (detection > 2) {
+			int fudge = 100 / detection;
+			Vector subPosition = SubMission.player.getAsTarget().add(Vector.getRandomXY(-fudge, fudge, -fudge, fudge));
+			HQ.detectedSubmarineAt(subPosition);
+		}
+		
+		if (playerAt != null && !flee) {
+			setDestination(playerAt);
+			// adding some randomness to whether or not the boat will fire
+			if (torpedoes > 0 && rand.nextInt(20) == 0)
+				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
+		} else {
+			setDestination(assignment);
 		}
 		
 		super.update(dt, ambient);
 		
-		//navigate(collideWith);
+	}
+	
+	public void assignTo(int zone, Vector assignment) {
+		this.assignment = assignment;
+		this.zone = zone;
+		setDestination(assignment);
 	}
 	
 	@Override
@@ -106,11 +113,4 @@ public class PatrolBoat extends MilitaryVessel {
 		}
 		return super.fireTorpedo(target);
 	}
-	
-	@Override
-	public void sink() {
-		HQ.onSink(this);
-		super.sink();
-	}
-
 }
