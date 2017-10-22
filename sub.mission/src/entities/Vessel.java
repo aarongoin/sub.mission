@@ -521,6 +521,6 @@ public class Vessel extends Entity {
 	}
 	
 	public boolean wasClicked(float x, float y) {
-		return new Vector(x, y).distance(getPosition()) < 50;
+		return new Vector(x, y).distance(getPosition()) < 15;
 	}
 }

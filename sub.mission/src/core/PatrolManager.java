@@ -207,7 +207,7 @@ public class PatrolManager {
 		PatrolBoat v;
 		for (Entity e : SubMission.getLayer("patrol")) {
 			v = (PatrolBoat) e;
-			if (v.zone == closestZone) v.pursuePlayer(player);
+			if (v.zone == closestZone && v.getPosition().distance(v.assignment) < 150) v.pursuePlayer(player);
 			v.update(dt, ambientNoise);
 			if (v.didRunAground(SubMission.map)) {
 				onSink(v);

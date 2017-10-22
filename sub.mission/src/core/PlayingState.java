@@ -218,15 +218,13 @@ class PlayingState extends BasicGameState {
 			stage(G);
 		}
 		
-		float ambientNoise = SubMission.getLayer("traffic").size() * 20 + SubMission.getLayer("patrol").size() * 20;
+		float ambientNoise = SubMission.getLayer("traffic").size() + SubMission.getLayer("patrol").size() * 20;
 		//System.out.println(ambientNoise);
 		
 		// draw depth lines or land depending on submarine depth
 		int d = (int) (player.getDepth() / 100);
-		if (d > 0)
-			G.depth = SubMission.getImage("d" + d);
-		else
-			G.depth = SubMission.getImage("land");
+		if (d > 0) G.depth = SubMission.getImage("d" + d);
+		else G.depth = SubMission.getImage("land");
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
@@ -235,23 +233,9 @@ class PlayingState extends BasicGameState {
 		player.setTowState( platform.update(input, dt) );
 		
 		player.update(input, ambientNoise, dt);
-
-		// submarine sonar affects how ships are drawn
-		Vessel v;
-		sonarCountdown -= dt;
-		for (Entity e : SubMission.getLayer("traffic")) {
-			((CommercialVessel) e).update(dt);
-			v = (Vessel) e;
-			if (v.didRunAground(G.map))
-				SubMission.removeEntity("traffic", e);
-			else if (v.isDetected()
-					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-				
-				player.getLock(v);
-			}
-				
-		}
+			
+		trafficManager.update(dt, input);
+		patrolManager.update(dt, input, ambientNoise);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
@@ -259,12 +243,6 @@ class PlayingState extends BasicGameState {
 				SubMission.removeEntity("torpedo", e);
 		}
 		
-		//navigation.update(dt);
-		
-		if (sonarCountdown <= 0) {
-			sonarCountdown = 1;
-		}
-		patrolManager.update(dt, input, ambientNoise);
 		G.update();
 	}
 
