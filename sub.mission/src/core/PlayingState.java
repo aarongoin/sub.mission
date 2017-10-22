@@ -72,9 +72,8 @@ class PlayingState extends BasicGameState {
 		trafficManager = new CommercialManager(SubMission.shippingLanes);
 		
 		airSupport = new Airplane(60, 30);
-		//airSupport.deployAt(new Vector(700, 425), new Vector(-1f, -0.25f));
 		
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50), airSupport);
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
@@ -190,9 +189,10 @@ class PlayingState extends BasicGameState {
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
-			mission = new MissionTarget(new Vector(300f, 200f), 120);
+			mission = new MissionTarget(new Vector(300f, 200f), 60);
 			break;
 		case 2: // rendezvous with special forces
+			airSupport.deployAt(new Vector(700, 425), Vector.getRandomXY(-1, 1, -1, 1));
 			mission = new MissionTarget(new Vector(100f, 150f), 60);
 			break;
 		case 3: // escape
