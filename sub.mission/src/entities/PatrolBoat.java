@@ -26,7 +26,7 @@ public class PatrolBoat extends MilitaryVessel {
 	float shouldUpdate;
 
 	public PatrolBoat(Vector p, float bearing, PatrolManager hq) {
-		super("patrol", p, 10, 2.5f, bearing, 1, 10, 10);
+		super("patrol", p, 10, 2.5f, bearing, 1, 10, 4);
 		movedFor = new HashMap<Vessel, Float>();
 		//debug = true;
 		targetSpeed = 35;
@@ -37,7 +37,7 @@ public class PatrolBoat extends MilitaryVessel {
 		decoys = 0;
 		layer = "patrol";
 		shouldUpdate = 0;
-		
+		maxSpeed = 35;
 		lookahead = 2f;
 		
 		torpedoType = "enemy_torpedo";
@@ -69,10 +69,12 @@ public class PatrolBoat extends MilitaryVessel {
 	public void update(float dt, float ambient) {
 
 		shouldUpdate += dt;
-		if (shouldUpdate > 1) {
+		if (shouldUpdate > 0.25) {
 			shouldUpdate = 0;
 			
-			fieldNav(collideWith);
+			navi.update(currentBearing, getPosition());
+			betterSteering(collideWith);
+			//fieldNav(collideWith);
 		}
 		
 		int detection = detect((Vessel) SubMission.player);
@@ -87,7 +89,7 @@ public class PatrolBoat extends MilitaryVessel {
 		if (playerAt != null && !flee) {
 			setDestination(playerAt);
 			// adding some randomness to whether or not the boat will fire
-			if (torpedoes > 0 && rand.nextInt(20) == 0)
+			if (torpedoes > 0 && rand.nextInt(40) == 0)
 				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
 		} else {
 			setDestination(assignment);

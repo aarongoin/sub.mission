@@ -30,11 +30,14 @@ public class CommercialVessel extends Vessel {
 	@Override
 	public void update(float dt) {
 		shouldUpdate += dt;
-		if (shouldUpdate > 0.5) {
+		if (shouldUpdate > 0.25) {
 			shouldUpdate = 0;
+			
+			navi.update(currentBearing, getPosition());
+			betterSteering(collideWith);
 			//avoidLand();
 		}
-		fieldNav(collideWith);
+		//fieldNav(collideWith);
 		//navigate(collideWith);
 		super.update(dt);
 	}
