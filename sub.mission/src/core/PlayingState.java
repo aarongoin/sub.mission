@@ -72,9 +72,8 @@ class PlayingState extends BasicGameState {
 		trafficManager = new CommercialManager(SubMission.shippingLanes);
 		
 		airSupport = new Airplane(60, 30);
-		//airSupport.deployAt(new Vector(700, 425), new Vector(-1f, -0.25f));
 		
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50), airSupport);
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
@@ -190,9 +189,10 @@ class PlayingState extends BasicGameState {
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
-			mission = new MissionTarget(new Vector(300f, 200f), 120);
+			mission = new MissionTarget(new Vector(300f, 200f), 60);
 			break;
 		case 2: // rendezvous with special forces
+			airSupport.deployAt(new Vector(700, 425), Vector.getRandomXY(-1, 1, -1, 1));
 			mission = new MissionTarget(new Vector(100f, 150f), 60);
 			break;
 		case 3: // escape
@@ -218,15 +218,13 @@ class PlayingState extends BasicGameState {
 			stage(G);
 		}
 		
-		float ambientNoise = SubMission.getLayer("traffic").size() * 20 + SubMission.getLayer("patrol").size() * 20;
+		float ambientNoise = SubMission.getLayer("traffic").size() + SubMission.getLayer("patrol").size() * 20;
 		//System.out.println(ambientNoise);
 		
 		// draw depth lines or land depending on submarine depth
 		int d = (int) (player.getDepth() / 100);
-		if (d > 0)
-			G.depth = SubMission.getImage("d" + d);
-		else
-			G.depth = SubMission.getImage("land");
+		if (d > 0) G.depth = SubMission.getImage("d" + d);
+		else G.depth = SubMission.getImage("land");
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
@@ -235,23 +233,9 @@ class PlayingState extends BasicGameState {
 		player.setTowState( platform.update(input, dt) );
 		
 		player.update(input, ambientNoise, dt);
-
-		// submarine sonar affects how ships are drawn
-		Vessel v;
-		sonarCountdown -= dt;
-		for (Entity e : SubMission.getLayer("traffic")) {
-			((CommercialVessel) e).update(dt);
-			v = (Vessel) e;
-			if (v.didRunAground(G.map))
-				SubMission.removeEntity("traffic", e);
-			else if (v.isDetected()
-					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-				
-				player.getLock(v);
-			}
-				
-		}
+			
+		trafficManager.update(dt, input);
+		patrolManager.update(dt, input, ambientNoise);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
@@ -259,12 +243,6 @@ class PlayingState extends BasicGameState {
 				SubMission.removeEntity("torpedo", e);
 		}
 		
-		//navigation.update(dt);
-		
-		if (sonarCountdown <= 0) {
-			sonarCountdown = 1;
-		}
-		patrolManager.update(dt, input, ambientNoise);
 		G.update();
 	}
 

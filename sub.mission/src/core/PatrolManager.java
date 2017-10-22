@@ -25,10 +25,8 @@ public class PatrolManager {
 	Vector spawnPoint;
 	Vector fleePoint;
 	int onPatrol;
-	Airplane airSupport;
 	Stack<Vector> playerPosition;
 	Vector player;
-	float player_dt;
 	
 	
 	// zones are defined as points on the map where Patrol Boats can be assigned to patrol
@@ -36,7 +34,7 @@ public class PatrolManager {
 	//				{x, y},
 	//				...
 	//			}
-	public PatrolManager(Vector zones[], Vector spawn, Vector flee, Airplane airSupport) {
+	public PatrolManager(Vector zones[], Vector spawn, Vector flee) {
 		SubMission.addLayer("patrol");
 		this.zones = zones;
 		rand = new Random(System.currentTimeMillis());
@@ -45,9 +43,7 @@ public class PatrolManager {
 		needsAssigned = new Stack<Integer>();
 		cowards = new ArrayList<PatrolBoat>();
 		fleePoint = flee;
-		this.airSupport = airSupport;
 		playerPosition = new Stack<Vector>();
-		player_dt = 0;
 	}
 	
 	public Vector getFleePoint() {
@@ -174,7 +170,7 @@ public class PatrolManager {
 		needsAssigned.push(pb.zone);
 		pb.assignment = fleePoint;
 	}
-
+	
 	public void update(float dt, Input input, float ambientNoise) {
 		int closestZone = getClosestZoneTo(SubMission.player.getPosition());
 		int size = playerPosition.size();
@@ -183,16 +179,6 @@ public class PatrolManager {
 			while (playerPosition.size() > 0) {
 				player = player.add( playerPosition.pop().scale(1/size) );
 			}
-			player_dt = 0;
-		} else {
-			player_dt += dt;
-			if (player_dt > 5 && player != null) {
-				airSupport.deployAt(player, Vector.getRandomXY(-1, 1, -1, 1));
-			}
-		}
-				
-		if (airSupport.update(dt)) {
-				playerPosition.push( SubMission.player.getPosition().add(Vector.getRandomXY(-20, 20, -20, 20)) );
 		}
 
 		while (needsAssigned.size() > 0) {
@@ -207,7 +193,7 @@ public class PatrolManager {
 		PatrolBoat v;
 		for (Entity e : SubMission.getLayer("patrol")) {
 			v = (PatrolBoat) e;
-			if (v.zone == closestZone) v.pursuePlayer(player);
+			if (v.zone == closestZone && v.getPosition().distance(v.assignment) < 150) v.pursuePlayer(player);
 			v.update(dt, ambientNoise);
 			if (v.didRunAground(SubMission.map)) {
 				onSink(v);
@@ -222,7 +208,6 @@ public class PatrolManager {
 	}
 	
 	public void render(Graphics g) {
-		airSupport.render(g);
 		
 		for (Entity e : SubMission.getLayer("patrol"))
 			((PatrolBoat) e).render(g);

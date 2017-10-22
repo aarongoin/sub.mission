@@ -2,6 +2,8 @@ package core;
 
 import java.util.Random;
 
+import org.newdawn.slick.Input;
+
 import entities.CommercialVessel;
 import entities.Vessel;
 import jig.Entity;
@@ -105,14 +107,27 @@ public class CommercialManager {
 		}
 	}
 
-	public void update() {
+	public void update(float dt, Input input) {
+		int toAdd = 0;
+		CommercialVessel v;
 		for (Entity e : SubMission.getLayer("traffic")) {
-			if (((Vessel) e).getDestination().distance(e.getPosition()) < 10) {
+			v = (CommercialVessel) e;
+			
+			if (v.didRunAground(SubMission.map) || v.getDestination().distance(v.getPosition()) < 10) {
 				SubMission.removeEntity("traffic", e);
-				addShip();
+				toAdd++;
+			} else {
+				v.update(dt);
+				
+				if (v.isDetected()
+				&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
+				&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
+					System.out.println("clicked");
+					SubMission.player.getLock(v);
+				}
 			}
 		}
-		
+		while (toAdd-- > 0) addShip();
 	}
 	
 	
