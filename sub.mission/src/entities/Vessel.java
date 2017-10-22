@@ -26,6 +26,8 @@ public class Vessel extends Entity {
 	
 	private static int nextID = 0;
 	
+	String collideWith[];
+	
 	static int getID() {
 		return nextID++;
 	}
@@ -75,6 +77,8 @@ public class Vessel extends Entity {
 
 	protected Vector waypoint;
 	
+	public VesselNavigator navi;
+	
 	public Vessel(String image, Vector p, float noise, float bearing, float speed, float radius, float accel) {
 		super(p);
 		//debug = true;
@@ -111,6 +115,8 @@ public class Vessel extends Entity {
 		waypoint = null;
 		
 		setPosition(p);
+		
+		navi = new VesselNavigator(sprite.getWidth(), sprite.getHeight() * 3);
 	}
 	
 	public void adjustBearing(float dt) {
@@ -366,6 +372,33 @@ public class Vessel extends Entity {
 		setWaypoint(getPosition().add(target.scale(10)));
 	}
 	
+	public VesselNavigator getNav() {
+		return navi;
+	}
+	
+	public void betterSteering(String layers[]) {
+		Vessel other;
+		setWaypoint(destination);
+		setSpeed(maxSpeed);
+		// get closest potential collision
+			for (String layer : layers) {
+				for (Entity e : SubMission.getLayer(layer)) {
+					other = (Vessel) e;
+					if (other.id == id) continue;
+					
+					if ( navi.isBlockingLane(other.getNav()) && navi.shouldGiveWay(other.getNav()) ) {
+						float theta = navi.turnToAvoid(other.getNav());
+						if (theta == 0) setSpeed(0);
+						else {
+							setWaypoint( getPosition().add( new Vector(20, 0).setRotation(currentBearing + theta) ) );
+							setSpeed(maxSpeed);
+						}
+					}
+					
+				}
+			}
+	}
+	
 	public void navigate(String layers[]) {
 		Vector target = (destination != null) ? destination.subtract( getPosition() ) : velocity;
 		Vessel other;
@@ -416,7 +449,7 @@ public class Vessel extends Entity {
 		sprite.setAlpha(drawAlpha);
 		sprite.setRotation(currentBearing + 90);
 		if (debug) {
-			float noise = getNoise();
+			/*float noise = getNoise();
 			g.setColor(Color.red);
 			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
 			
@@ -427,7 +460,8 @@ public class Vessel extends Entity {
 			g.setColor(new Color(0.5f, 0.5f, 0.5f));
 			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());
 			g.setColor(new Color(1f, 1f, 1f));
-			if (destination != null) g.drawLine(destination.getX(), destination.getY(), getX(), getY());
+			if (destination != null) g.drawLine(destination.getX(), destination.getY(), getX(), getY());*/
+			navi.getLane().render(g);
 		}
 		super.render(g);
 	}
