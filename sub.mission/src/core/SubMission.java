@@ -171,6 +171,7 @@ public class SubMission extends StateBasedGame {
 		IMG.put("depth_target", "resource/img/ui/depth_target.png");
 		IMG.put("bearing_target", "resource/img/ui/bearing_target.png");
 		IMG.put("marker", "resource/img/ui/marker.png");
+		IMG.put("torpedo_marker", "resource/img/ui/torpedo_marker.png");
 		IMG.put("mission_target", "resource/img/ui/mission_target.png");
 		
 		IMG.put("sub_hull", "resource/img/ui/sub_hull.png");

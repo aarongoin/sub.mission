@@ -10,6 +10,7 @@ import org.newdawn.slick.Sound;
 import core.SubMission;
 import jig.Entity;
 import jig.Vector;
+import util.VectorZ;
 
 public class Torpedo extends Vessel {
 	
@@ -18,19 +19,25 @@ public class Torpedo extends Vessel {
 	List<Vector> line;
 	float maxSpeed;
 	Vessel target;
+	VectorZ velocity3d;
 
-	public Torpedo(String image, Vector p, float bearing, float speed, float f, Vector dest, Vessel t) {
+	public Torpedo(String image, Vector p, float depth, float bearing, float speed, float f, Vector dest, Vessel t) {
 		super(image, p, 20, bearing, 10, 30, 20);
 		
 		maxSpeed = speed;
 		line = new ArrayList<Vector>();
-		currentDepth = 10;
+		currentDepth = depth;
 		fuel = f;
 		target = t;
 		baseSonar = 1;
-		
+		diveSpeed = speed;
 		explosion = SubMission.getSound("torpedo_explosion");
 		layer = "torpedo";
+		targetSpeed = speed;
+		
+		velocity3d = new VectorZ(0, 0, 0);
+		velocity3d.pointTo(target.getAsTargetZ(), currentSpeed);
+		targetDepth = target.getDepth();
 		
 		setDestination(dest);
 	}
@@ -70,29 +77,36 @@ public class Torpedo extends Vessel {
 	
 	@Override
 	public void update(float dt) {
-		
+
 		fuel -= dt;
+		
+		// Use sonar to try and update target position
 		if (detect(target) > 2) {
 			//System.out.println("Detected target at " + target.getAsTarget().distance(getPosition()));
-			if ( target.getAsTarget().distance(getPosition()) < 10 || collides(target) != null )
+			if ( target.getAsTargetZ().distance(getAsTargetZ()) < 10 )
 				explode();
 			else {
 				setDestination(target.getAsTarget());
-				
+				targetDepth = target.getDepth();
 			}
 		}
 		
+		// update trail
 		line.add(getVelocity().scale(-dt));
 		if (line.size() > 50)
 			line.remove(0);
 		
-		if (getSpeed() < maxSpeed) {
-			setSpeed(getSpeed() * 1.5f);
-		}
-
-		if (getSpeed() > maxSpeed)
-			setSpeed(maxSpeed);
+		adjustSpeed(dt);
+		adjustBearing(dt);
 		
-		super.update(dt);
+		// calculate new 3d velocity
+		velocity3d.pointTo(new VectorZ(new Vector(currentSpeed, 0).rotate(currentBearing), targetDepth - currentDepth), currentSpeed);
+		
+		//System.out.println("Torpeod v3d: <" + velocity3d.getX() + ", " + velocity3d.getY() + ", " + velocity3d.getZ() + ">");
+		
+		velocity = velocity3d.getVectorXY();
+		setPosition( getFuture(dt) );
+		currentDepth += velocity3d.getZ() * dt;
+		//System.out.println("Torpedo target depth: " + targetDepth + " Current depth: " + currentDepth);
 	}
 }

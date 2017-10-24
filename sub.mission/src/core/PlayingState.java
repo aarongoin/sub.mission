@@ -58,7 +58,7 @@ class PlayingState extends BasicGameState {
 		sonarCountdown = 0;
 		
 		// insert submarine
-		player = new Submarine(100, 10);
+		player = new Submarine(75, 10);
 		//player.debug(true);
 		
 		// generate UI
