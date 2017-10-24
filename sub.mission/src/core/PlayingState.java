@@ -12,7 +12,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import entities.Airplane;
 import entities.CommercialVessel;
 import entities.MissionTarget;
-import entities.PatrolBoat;
 import entities.Submarine;
 import entities.Torpedo;
 import entities.Vessel;
@@ -94,7 +93,7 @@ class PlayingState extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		SubMission G = (SubMission) game;
+		//SubMission G = (SubMission) game;
 	}
 	
 	@Override
@@ -119,12 +118,10 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		SubMission G = (SubMission) game;
-		g.drawImage(G.map, 0, 0);
+		g.drawImage(SubMission.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		for (Entity e : SubMission.getLayer("traffic"))
-			((CommercialVessel) e).render(g);
-		
+		trafficManager.render(g);
 		patrolManager.render(g);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
@@ -239,7 +236,7 @@ class PlayingState extends BasicGameState {
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
-			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
+			if (((Vessel) e).didRunAground(SubMission.map) || !((Torpedo) e).haveFuel())
 				SubMission.removeEntity("torpedo", e);
 		}
 		
@@ -250,7 +247,7 @@ class PlayingState extends BasicGameState {
 		
 		boolean shouldEnd = false;
 		
-		if (player.didRunAground(G.map)) {
+		if (player.didRunAground(SubMission.map)) {
 			G.missionFailed = 10;
 			shouldEnd = true;
 		} else if (player.isSunk) {

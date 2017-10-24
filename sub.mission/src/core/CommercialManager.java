@@ -2,6 +2,7 @@ package core;
 
 import java.util.Random;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 import entities.CommercialVessel;
@@ -128,6 +129,12 @@ public class CommercialManager {
 			}
 		}
 		while (toAdd-- > 0) addShip();
+	}
+
+	public void render(Graphics g) {
+		for (Entity e : SubMission.getLayer("traffic"))
+			((CommercialVessel) e).render(g);
+		
 	}
 	
 	
