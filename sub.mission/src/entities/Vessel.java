@@ -280,7 +280,7 @@ public class Vessel extends Entity {
 			break;
 		case 2:
 			drawAlpha = 0.6f;
-			break;
+			return true;
 		case 3:
 			drawAlpha = 1f;
 			return true;
