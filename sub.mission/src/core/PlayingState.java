@@ -12,7 +12,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import entities.Airplane;
 import entities.CommercialVessel;
 import entities.MissionTarget;
-import entities.PatrolBoat;
 import entities.Submarine;
 import entities.Torpedo;
 import entities.Vessel;
@@ -59,7 +58,7 @@ class PlayingState extends BasicGameState {
 		sonarCountdown = 0;
 		
 		// insert submarine
-		player = new Submarine(100, 10);
+		player = new Submarine(75, 10);
 		//player.debug(true);
 		
 		// generate UI
@@ -72,9 +71,8 @@ class PlayingState extends BasicGameState {
 		trafficManager = new CommercialManager(SubMission.shippingLanes);
 		
 		airSupport = new Airplane(60, 30);
-		//airSupport.deployAt(new Vector(700, 425), new Vector(-1f, -0.25f));
 		
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50), airSupport);
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
@@ -95,7 +93,7 @@ class PlayingState extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		SubMission G = (SubMission) game;
+		//SubMission G = (SubMission) game;
 	}
 	
 	@Override
@@ -120,12 +118,10 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		SubMission G = (SubMission) game;
-		g.drawImage(G.map, 0, 0);
+		g.drawImage(SubMission.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		for (Entity e : SubMission.getLayer("traffic"))
-			((CommercialVessel) e).render(g);
-		
+		trafficManager.render(g);
 		patrolManager.render(g);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
@@ -190,9 +186,10 @@ class PlayingState extends BasicGameState {
 			break;
 			
 		case 1: // deploy special forces & surge of enemies
-			mission = new MissionTarget(new Vector(300f, 200f), 120);
+			mission = new MissionTarget(new Vector(300f, 200f), 60);
 			break;
 		case 2: // rendezvous with special forces
+			airSupport.deployAt(new Vector(700, 425), Vector.getRandomXY(-1, 1, -1, 1));
 			mission = new MissionTarget(new Vector(100f, 150f), 60);
 			break;
 		case 3: // escape
@@ -218,15 +215,13 @@ class PlayingState extends BasicGameState {
 			stage(G);
 		}
 		
-		float ambientNoise = SubMission.getLayer("traffic").size() * 20 + SubMission.getLayer("patrol").size() * 20;
+		float ambientNoise = SubMission.getLayer("traffic").size() + SubMission.getLayer("patrol").size() * 20;
 		//System.out.println(ambientNoise);
 		
 		// draw depth lines or land depending on submarine depth
 		int d = (int) (player.getDepth() / 100);
-		if (d > 0)
-			G.depth = SubMission.getImage("d" + d);
-		else
-			G.depth = SubMission.getImage("land");
+		if (d > 0) G.depth = SubMission.getImage("d" + d);
+		else G.depth = SubMission.getImage("land");
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
@@ -235,36 +230,16 @@ class PlayingState extends BasicGameState {
 		player.setTowState( platform.update(input, dt) );
 		
 		player.update(input, ambientNoise, dt);
-
-		// submarine sonar affects how ships are drawn
-		Vessel v;
-		sonarCountdown -= dt;
-		for (Entity e : SubMission.getLayer("traffic")) {
-			((CommercialVessel) e).update(dt);
-			v = (Vessel) e;
-			if (v.didRunAground(G.map))
-				SubMission.removeEntity("traffic", e);
-			else if (v.isDetected()
-					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-				
-				player.getLock(v);
-			}
-				
-		}
+			
+		trafficManager.update(dt, input);
+		patrolManager.update(dt, input, ambientNoise);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
-			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
+			if (((Vessel) e).didRunAground(SubMission.map) || !((Torpedo) e).haveFuel())
 				SubMission.removeEntity("torpedo", e);
 		}
 		
-		//navigation.update(dt);
-		
-		if (sonarCountdown <= 0) {
-			sonarCountdown = 1;
-		}
-		patrolManager.update(dt, input, ambientNoise);
 		G.update();
 	}
 
@@ -272,7 +247,7 @@ class PlayingState extends BasicGameState {
 		
 		boolean shouldEnd = false;
 		
-		if (player.didRunAground(G.map)) {
+		if (player.didRunAground(SubMission.map)) {
 			G.missionFailed = 10;
 			shouldEnd = true;
 		} else if (player.isSunk) {

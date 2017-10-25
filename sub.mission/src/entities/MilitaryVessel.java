@@ -9,13 +9,14 @@ import java.util.Random;
 
 import jig.Entity;
 import jig.Vector;
+import util.VectorZ;
 
 public class MilitaryVessel extends Vessel {
 
 	protected int decoys;
 
 	protected int torpedoes;
-	float torpedoSpeed = 50;
+	float torpedoSpeed = 45;
 
 	protected String torpedoType;
 	protected Towable towedDecoy;
@@ -90,7 +91,7 @@ public class MilitaryVessel extends Vessel {
 			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed * 0.5144f);
 			Vector target = v.getPosition();// .add(v.getFuturePosition(timeToTarget));
 			torpedoes -= 1;
-			return new Torpedo(torpedoType, getPosition(),
+			return new Torpedo(this.id, torpedoType, getPosition(), currentDepth,
 					(float) v.getPosition().subtract(getPosition()).getRotation(), torpedoSpeed, torpedoSpeed, target,
 					v);
 		} else
@@ -103,6 +104,15 @@ public class MilitaryVessel extends Vessel {
 			return towedDecoy.sprite.getPosition();
 		} else {
 			return getPosition();
+		}
+	}
+	
+	@Override
+	public VectorZ getAsTargetZ() {
+		if (towedDecoy != null && towedDecoy.getState() == 1) {
+			return new VectorZ(towedDecoy.sprite.getPosition(), currentDepth);
+		} else {
+			return new VectorZ( getPosition(), currentDepth);
 		}
 	}
 
