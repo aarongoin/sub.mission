@@ -12,6 +12,7 @@ import core.SubMission;
 import jig.Entity;
 import jig.Vector;
 import util.VectorUtil;
+import util.VectorZ;
 
 public class Vessel extends Entity {
 	
@@ -29,7 +30,7 @@ public class Vessel extends Entity {
 	String collideWith[];
 	
 	static int getID() {
-		return nextID++;
+		return ++nextID;
 	}
 	protected float acceleration;
 	float actionNoise;
@@ -43,6 +44,8 @@ public class Vessel extends Entity {
 	
 	protected float currentDepth;
 	protected float currentSpeed;
+	
+	protected float diveSpeed;
 	
 	public boolean debug;
 	
@@ -67,7 +70,7 @@ public class Vessel extends Entity {
 	
 	protected Vector tail;
 	protected float targetBearing;
-	
+	protected float targetDepth;
 	protected float targetSpeed;
 	
 	protected float turnRadius;
@@ -99,11 +102,14 @@ public class Vessel extends Entity {
 		rand = new Random(System.currentTimeMillis());
 		
 		currentDepth = 0;
+		targetDepth = 0;
 		currentBearing = bearing;
 		targetBearing = bearing;
 		currentSpeed = speed;
 		targetSpeed = speed;
 		
+		
+		diveSpeed = 1;
 		acceleration = accel;
 		turnRadius = radius;
 		
@@ -166,6 +172,18 @@ public class Vessel extends Entity {
 		}
 		
 		clampBearing();
+	}
+	
+	protected void adjustDepth(float dt) {
+		if (currentDepth < targetDepth) {
+			currentDepth += diveSpeed * dt;
+			if (currentDepth > targetDepth)
+				currentDepth = targetDepth;
+		} else if (currentDepth > targetDepth) {
+			currentDepth -= diveSpeed * dt;
+			if (currentDepth < targetDepth)
+				currentDepth = targetDepth;
+		}
 	}
 
 	public void adjustSpeed(float dt) {
@@ -274,8 +292,16 @@ public class Vessel extends Entity {
 		return getPosition();
 	}
 	
+	public VectorZ getAsTargetZ() {
+		return new VectorZ( getX(), getY(), currentDepth);
+	}
+	
 	public float getBearing() {
 		return currentBearing;
+	}
+	
+	public float getDepth() {
+		return currentDepth;
 	}
 	
 	public Vector getDestination() {

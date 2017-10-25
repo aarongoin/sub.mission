@@ -4,6 +4,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
+import entities.Torpedo;
+import entities.Vessel;
+import jig.Entity;
 import jig.Vector;
 
 public class DepthMeter {
@@ -13,12 +16,17 @@ public class DepthMeter {
 	int mark;
 	Vector position;
 	int target;
+	
+	Image torpedo;
+	Image sub_torpedo;
 
 	public DepthMeter(int value, Vector pos) {
 		position = pos;
 		hover = value;
 		mark = value;
 		target = value;
+		torpedo = SubMission.getImage("torpedo_marker");
+		sub_torpedo = SubMission.getImage("sub_torpedo_marker");
 	}
 	
 	
@@ -34,6 +42,14 @@ public class DepthMeter {
 			g.drawString(Integer.toString(hover), position.getX() - 32, hover + 1);
 		else
 			g.drawString(Integer.toString(hover), position.getX() - 22, hover + 1);
+		
+		for (Entity e : SubMission.getLayer("torpedo")) {
+			if (((Torpedo) e).owner != SubMission.player.id) {
+				g.drawImage(torpedo, position.getX() + 4, ((Vessel) e).getDepth() + 8);
+			} else {
+				g.drawImage(sub_torpedo, position.getX() + 4, ((Vessel) e).getDepth() + 8);
+			}
+		}
 	}
 	
 	// returns target depth
@@ -49,7 +65,7 @@ public class DepthMeter {
 			hover = y - (int) position.getY();
 			if (hover > 795) hover = 795;
 			else if (hover < 5) hover = 5;
-			if (input.isMousePressed(input.MOUSE_LEFT_BUTTON))
+			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
 				target = hover;
 		} else {
 			hover = target;
