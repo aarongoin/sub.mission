@@ -91,7 +91,7 @@ public class MilitaryVessel extends Vessel {
 			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed * 0.5144f);
 			Vector target = v.getPosition();// .add(v.getFuturePosition(timeToTarget));
 			torpedoes -= 1;
-			return new Torpedo(torpedoType, getPosition(), currentDepth,
+			return new Torpedo(this.id, torpedoType, getPosition(), currentDepth,
 					(float) v.getPosition().subtract(getPosition()).getRotation(), torpedoSpeed, torpedoSpeed, target,
 					v);
 		} else

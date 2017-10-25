@@ -30,7 +30,7 @@ public class Vessel extends Entity {
 	String collideWith[];
 	
 	static int getID() {
-		return nextID++;
+		return ++nextID;
 	}
 	protected float acceleration;
 	float actionNoise;

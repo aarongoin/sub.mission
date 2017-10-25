@@ -14,6 +14,7 @@ import util.VectorZ;
 
 public class Torpedo extends Vessel {
 	
+	public int owner;
 	Sound explosion;
 	float fuel;
 	List<Vector> line;
@@ -21,7 +22,7 @@ public class Torpedo extends Vessel {
 	Vessel target;
 	VectorZ velocity3d;
 
-	public Torpedo(String image, Vector p, float depth, float bearing, float speed, float f, Vector dest, Vessel t) {
+	public Torpedo(int id, String image, Vector p, float depth, float bearing, float speed, float f, Vector dest, Vessel t) {
 		super(image, p, 20, bearing, 10, 30, 20);
 		
 		maxSpeed = speed;
@@ -83,7 +84,7 @@ public class Torpedo extends Vessel {
 		// Use sonar to try and update target position
 		if (detect(target) > 2) {
 			//System.out.println("Detected target at " + target.getAsTarget().distance(getPosition()));
-			if ( target.getAsTargetZ().distance(getAsTargetZ()) < 10 )
+			if ( target.getAsTargetZ().distance(getAsTargetZ()) < 15 )
 				explode();
 			else {
 				setDestination(target.getAsTarget());

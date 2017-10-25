@@ -18,6 +18,7 @@ public class DepthMeter {
 	int target;
 	
 	Image torpedo;
+	Image sub_torpedo;
 
 	public DepthMeter(int value, Vector pos) {
 		position = pos;
@@ -25,6 +26,7 @@ public class DepthMeter {
 		mark = value;
 		target = value;
 		torpedo = SubMission.getImage("torpedo_marker");
+		sub_torpedo = SubMission.getImage("sub_torpedo_marker");
 	}
 	
 	
@@ -42,7 +44,11 @@ public class DepthMeter {
 			g.drawString(Integer.toString(hover), position.getX() - 22, hover + 1);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
-			g.drawImage(torpedo, position.getX() + 3, ((Vessel) e).getDepth() + 8);
+			if (((Torpedo) e).owner != SubMission.player.id) {
+				g.drawImage(torpedo, position.getX() + 4, ((Vessel) e).getDepth() + 8);
+			} else {
+				g.drawImage(sub_torpedo, position.getX() + 4, ((Vessel) e).getDepth() + 8);
+			}
 		}
 	}
 	
