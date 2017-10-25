@@ -37,6 +37,7 @@ class PlayingState extends BasicGameState {
 	
 	CommercialManager trafficManager;
 	PatrolManager patrolManager;
+	SoundManager soundManager;
 	
 	boolean advance() {
 		switch (state) {
@@ -73,6 +74,8 @@ class PlayingState extends BasicGameState {
 		airSupport = new Airplane(60, 30);
 		
 		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
+		soundManager = new SoundManager();
+		
 		
 		state = 0;
 		stage(G);
@@ -241,6 +244,7 @@ class PlayingState extends BasicGameState {
 		}
 		
 		G.update();
+		soundManager.update();
 	}
 
 	boolean WinOrLose(SubMission G) {
