@@ -45,14 +45,16 @@ class MenuState extends BasicGameState {
 		d = 0;
 		dir = 1;
 		
-		back = new Button(container, G.text, "Back", G.ScreenWidth / 2 - 200, G.ScreenHeight - 100, 8);
-		next = new Button(container, G.text, "Next", G.ScreenWidth / 2 + 200, G.ScreenHeight - 100, 8);
+		back = new Button(container, SubMission.text, "Back", SubMission.ScreenWidth / 2 - 200, SubMission.ScreenHeight - 100, 8);
+		next = new Button(container, SubMission.text, "Next", SubMission.ScreenWidth / 2 + 200, SubMission.ScreenHeight - 100, 8);
 		
-		start = new Button(container, G.text, "Start", G.ScreenWidth / 2, G.ScreenHeight / 2, 8);
-		help = new Button(container, G.text, "Instructions", G.ScreenWidth / 2, G.ScreenHeight / 2 + 60, 8);
-		quit = new Button(container, G.text, "Quit", G.ScreenWidth / 2, G.ScreenHeight / 2 + 120, 8);
+		start = new Button(container, SubMission.text, "Start", SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2, 8);
+		help = new Button(container, SubMission.text, "Instructions", SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2 + 60, 8);
+		quit = new Button(container, SubMission.text, "Quit", SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2 + 120, 8);
 		
 		substate = 0;
+		
+		SubMission.missionManager = new SealTeamMission();
 	}
 	
 	@Override
@@ -68,39 +70,39 @@ class MenuState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		SubMission G = (SubMission) game;
 		
-		g.drawImage(G.map, 0, 0);
+		g.drawImage(SubMission.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
 		switch(substate) {
 		case 0:
-			g.setFont(G.title);
-			g.drawString("sub.mission", G.ScreenWidth / 2 - 120, G.ScreenHeight / 5 - 12);
+			g.setFont(SubMission.title);
+			g.drawString("sub.mission", SubMission.ScreenWidth / 2 - 120, SubMission.ScreenHeight / 5 - 12);
 			
-			g.setFont(G.text);
-			g.drawString("by: Aaron Goin", G.ScreenWidth / 2 - 50, G.ScreenHeight / 5 + 40);
+			g.setFont(SubMission.text);
+			g.drawString("by: Aaron Goin", SubMission.ScreenWidth / 2 - 50, SubMission.ScreenHeight / 5 + 40);
 			
 			start.render(g);
 			help.render(g);
 			quit.render(g);
 			break;
 		case 1:
-			g.setFont(G.text);
-			g.drawString("Captain,", 300, G.ScreenHeight / 5);
+			g.setFont(SubMission.text);
+			g.drawString("Captain,", 300, SubMission.ScreenHeight / 5);
 			
-			g.drawString("The enemy is holding a valuable asset captive in their base. You must navigate to the mission", 300, G.ScreenHeight / 5 + 60);
-			g.drawString("coordinates, and deploy your special forces team to retrieve him. Stay in the area until you", 300, G.ScreenHeight / 5 + 90);
-			g.drawString("can rendezvous at their extraction point. After you rendezvous with your team: escape into", 300, G.ScreenHeight / 5 + 120);
-			g.drawString("open waters to successfully complete this mission.", 300, G.ScreenHeight / 5 + 150);
+			g.drawString("The enemy is holding a valuable asset captive in their base. You must navigate to the mission", 300, SubMission.ScreenHeight / 5 + 60);
+			g.drawString("coordinates, and deploy your special forces team to retrieve him. Stay in the area until you", 300, SubMission.ScreenHeight / 5 + 90);
+			g.drawString("can rendezvous at their extraction point. After you rendezvous with your team: escape into", 300, SubMission.ScreenHeight / 5 + 120);
+			g.drawString("open waters to successfully complete this mission.", 300, SubMission.ScreenHeight / 5 + 150);
 			
-			g.drawString("Do not engage until your special forces are deployed.", 300, G.ScreenHeight / 5 + 210);
+			g.drawString("Do not engage until your special forces are deployed.", 300, SubMission.ScreenHeight / 5 + 210);
 			
-			g.drawString("Good luck.", 300, G.ScreenHeight / 5 + 270);
+			g.drawString("Good luck.", 300, SubMission.ScreenHeight / 5 + 270);
 			
 			back.render(g);
 			next.render(g);
 			break;
 		case 2:
-			g.setFont(G.text);
+			g.setFont(SubMission.text);
 			g.drawString("sub.mission is a 2D naval warfare game that puts the you in control of a nuclear submarine.", 300, 100);
 			g.drawString("You must navigate an underwater landscape, use stealth to slip past enemy vessels hunting", 300, 130);
 			g.drawString("you, or use the element of surprise to sink unwary surface ships. Enemy vessels and aircraft", 300, 160);
@@ -116,7 +118,7 @@ class MenuState extends BasicGameState {
 			next.render(g);
 			break;
 		case 3:
-			g.setFont(G.text);
+			g.setFont(SubMission.text);
 			g.drawString("The blue on the map is water, the grey (or red) areas are land. You move below the surface of", 300, 100);
 			g.drawString("the water, ships move at the surface, and aircraft fly at various levels above the map.", 300, 130);
 			g.drawString("Land will appear red when you are at depth less than 100 meters. You are most easily detected", 300, 160);
@@ -141,7 +143,7 @@ class MenuState extends BasicGameState {
 			next.render(g);
 			break;
 		case 4:
-			g.setFont(G.text);
+			g.setFont(SubMission.text);
 			g.drawString("When an enemy vessels thinks they have a lock on your submarine, they will fire torpedoes at", 300, 100);
 			g.drawString("you. If you cannot outrun, or outmaneuver incoming torpedoes, you may deploy a towable decoy.", 300, 130);
 			g.drawString("Decoys present a more attractive target to incoming torpedoes, and thus diverts their path.", 300, 160);

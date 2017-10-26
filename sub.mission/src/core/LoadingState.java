@@ -80,7 +80,7 @@ class LoadingState extends BasicGameState {
 			
 		case 3:
 			G.bg = SubMission.getSound("bg");
-			G.map = SubMission.getImage("map");
+			SubMission.map = SubMission.getImage("map");
 			G.depth = SubMission.getImage("land");
 			G.enterState(SubMission.MENUSTATE);
 			break;
