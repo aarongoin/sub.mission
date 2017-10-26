@@ -60,15 +60,15 @@ public class SealTeamMission extends MissionManager {
 		boolean check = false;
 		switch (state) {
 		case 0:
-			check = mission.getPercent() < 0f;
+			check = mission.getPercent() <= 0f;
 			if (check) endMessage = "You need to deploy your team before the window closes!";
 			break;
 		case 2:
-			check = mission.getPercent() < 0f;
+			check = mission.getPercent() <= 0f;
 			if (check) endMessage = "You missed the rendezvous window! The enemy has captured your team.";
 			break;
 		case 3:
-			check = mission.getPercent() < 0f;
+			check = mission.getPercent() <= 0f;
 			if (check) endMessage = "You failed to escape enemy waters in time!";
 			break;
 		}
