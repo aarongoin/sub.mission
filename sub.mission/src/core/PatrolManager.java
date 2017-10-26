@@ -7,12 +7,9 @@ import java.util.Stack;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
-import entities.Airplane;
 import entities.PatrolBoat;
-import entities.Vessel;
 import jig.Entity;
 import jig.Vector;
-import util.VectorUtil;
 
 
 public class PatrolManager {

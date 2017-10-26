@@ -373,7 +373,6 @@ public class Vessel extends Entity {
 		Vessel other;
 		Vector line;
 		float distance;
-		float theta;
 		float perimeter = radius * currentSpeed;
 		
 		target = target.scale(2);
@@ -480,13 +479,13 @@ public class Vessel extends Entity {
 	
 	@Override
 	public void render(Graphics g) {
-		float r = currentSpeed * radius;
 		sprite.setAlpha(drawAlpha);
 		sprite.setRotation(currentBearing + 90);
 		if (debug) {
 			float noise = getNoise();
 			g.setColor(Color.red);
-			g.drawOval(getX() - 15, getY() - 15, 30, 30);
+			g.setColor(Color.green);
+			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
 			
 			float sonar = getSonar();
 			g.setColor(Color.green);

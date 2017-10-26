@@ -18,7 +18,6 @@ import entities.Airplane;
 import entities.Submarine;
 import jig.ResourceManager;
 import jig.Vector;
-import util.VectorUtil;
 import jig.Entity;
 
 

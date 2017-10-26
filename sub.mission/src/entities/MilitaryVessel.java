@@ -1,13 +1,7 @@
 package entities;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Sound;
 
-import core.SubMission;
-
-import java.util.Random;
-
-import jig.Entity;
 import jig.Vector;
 import util.VectorZ;
 
@@ -88,7 +82,6 @@ public class MilitaryVessel extends Vessel {
 	public Torpedo fireTorpedo(Vessel v) {
 		if (torpedoes > 0) {
 			actionNoise += 100;
-			float timeToTarget = getPosition().distance(v.getPosition()) / (torpedoSpeed * 0.5144f);
 			Vector target = v.getPosition();// .add(v.getFuturePosition(timeToTarget));
 			torpedoes -= 1;
 			return new Torpedo(this.id, torpedoType, getPosition(), currentDepth,

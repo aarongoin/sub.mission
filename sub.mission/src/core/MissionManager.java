@@ -49,6 +49,7 @@ public abstract class MissionManager {
 	public void render(Graphics g) {
 		SubMission.trafficManager.render(g);
 		SubMission.patrolManager.render(g);
+		SubMission.airSupport.render(g);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).render(g);
@@ -76,6 +77,7 @@ public abstract class MissionManager {
 		
 		SubMission.trafficManager.update(dt, input, mouse);
 		SubMission.patrolManager.update(dt, input, ambientNoise, mouse);
+		SubMission.airSupport.update(dt);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);

@@ -1,13 +1,9 @@
 package core;
 
-import jig.ResourceManager;
-import jig.Vector;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -168,8 +164,7 @@ class MenuState extends BasicGameState {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		SubMission G = (SubMission) game;
-		float dt = delta / 1000f;
+		//float dt = delta / 1000f;
 		
 		Input input = container.getInput();
 		if (substate == 0) {

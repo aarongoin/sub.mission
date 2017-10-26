@@ -1,7 +1,6 @@
 package core;
 
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import jig.Vector;

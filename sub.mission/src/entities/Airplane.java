@@ -7,7 +7,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import core.SubMission;
-import jig.Entity;
 import jig.Vector;
 import util.VectorUtil;
 

@@ -9,14 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import entities.Airplane;
-import entities.CommercialVessel;
-import entities.MissionTarget;
-import entities.Submarine;
-import entities.Torpedo;
-import entities.Vessel;
 import jig.Vector;
-import jig.Entity;
 
 
 class PlayingState extends BasicGameState {
@@ -27,7 +20,6 @@ class PlayingState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		SubMission G = (SubMission) game;
 		
 		// generate UI
 		depth = new DepthMeter((int) SubMission.player.getDepth(), new Vector(SubMission.ScreenWidth - 24, 12));

@@ -1,7 +1,6 @@
 package entities;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.newdawn.slick.Color;

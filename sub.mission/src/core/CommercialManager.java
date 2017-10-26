@@ -6,7 +6,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 import entities.CommercialVessel;
-import entities.Vessel;
 import jig.Entity;
 import jig.Vector;
 

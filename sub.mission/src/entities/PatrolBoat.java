@@ -7,7 +7,6 @@ import org.newdawn.slick.Graphics;
 
 import core.PatrolManager;
 import core.SubMission;
-import jig.Entity;
 import jig.Vector;
 
 public class PatrolBoat extends MilitaryVessel {
