@@ -35,12 +35,13 @@ public class Torpedo extends Vessel {
 		explosion = SubMission.getSound("torpedo_explosion");
 		layer = "torpedo";
 		targetSpeed = speed;
-		
+		owner = id;
 		velocity3d = new VectorZ(0, 0, 0);
 		velocity3d.pointTo(target.getAsTargetZ(), currentSpeed);
 		targetDepth = target.getDepth();
 		
 		setDestination(dest);
+		
 	}
 
 	void explode() {

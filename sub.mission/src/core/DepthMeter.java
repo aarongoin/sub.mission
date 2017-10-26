@@ -53,7 +53,7 @@ public class DepthMeter {
 	}
 	
 	// returns target depth
-	public int update(Input input, int current) {
+	public int update(Input input, int current, boolean mouse) {
 		
 		mark = current;
 		
@@ -65,7 +65,7 @@ public class DepthMeter {
 			hover = y - (int) position.getY();
 			if (hover > 795) hover = 795;
 			else if (hover < 5) hover = 5;
-			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+			if (mouse)
 				target = hover;
 		} else {
 			hover = target;
