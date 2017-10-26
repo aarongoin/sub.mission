@@ -44,7 +44,7 @@ public class SpeedMeter {
 	}
 	
 	// returns target speed
-	public int update(Input input, int current) {
+	public int update(Input input, int current, boolean mouse) {
 		
 		mark = markFromSpeed(current);
 		
@@ -58,7 +58,7 @@ public class SpeedMeter {
 			else if (hover < 0) hover = 0;
 			speed = speedFromMark(hover);
 			hover = markFromSpeed(speed);
-			if (input.isMousePressed(input.MOUSE_LEFT_BUTTON))
+			if (mouse)
 				target = hover;
 		} else {
 			hover = target;

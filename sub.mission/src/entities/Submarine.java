@@ -20,7 +20,6 @@ public class Submarine extends MilitaryVessel {
 	float dangerDepth = 600;
 	
 	float dangerSpeed = 35;
-	float diveSpeed;
 
 	Sound explosionA;
 	Sound explosionB;
@@ -30,9 +29,7 @@ public class Submarine extends MilitaryVessel {
 	public boolean isSunk;
 	
 	Vessel target;
-	
-	float targetDepth;
-	
+		
 	Image targetLock;
 
 	public Submarine(float depth, float dive) {
@@ -41,8 +38,8 @@ public class Submarine extends MilitaryVessel {
 		lookahead = 0f;
 
 		hoverBearing = targetBearing;
-		currentDepth = 75;
-		targetDepth = 75;
+		currentDepth = depth;
+		targetDepth = depth;
 		diveSpeed = dive;
 		maxSpeed = 45;
 
@@ -194,7 +191,7 @@ public class Submarine extends MilitaryVessel {
 		}
 	}
 
-	public void update(Input input, float ambient, float dt) {
+	public void update(Input input, float ambient, float dt, boolean pressed) {
 
 		Vector mouse = new Vector(input.getMouseX(), input.getMouseY()).subtract(getPosition());
 
@@ -209,7 +206,7 @@ public class Submarine extends MilitaryVessel {
 				hoverBearing += 360;
 			// if (hoverBearing < 0)
 			// hoverBearing = 360 + hoverBearing;
-			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+			if (pressed)
 				targetBearing = hoverBearing;
 		} else {
 			hoverBearing = targetBearing;
@@ -219,15 +216,7 @@ public class Submarine extends MilitaryVessel {
 		bearing.setRotation(hoverBearing - 90);
 		bearingOffset = bearingOffset.setRotation(hoverBearing);
 
-		if (currentDepth < targetDepth) {
-			currentDepth += diveSpeed * dt;
-			if (currentDepth > targetDepth)
-				currentDepth = targetDepth;
-		} else if (currentDepth > targetDepth) {
-			currentDepth -= diveSpeed * dt;
-			if (currentDepth < targetDepth)
-				currentDepth = targetDepth;
-		}
+		adjustDepth(dt);
 		
 		if  (	(currentDepth >  crushDepth && rand.nextInt(1500) == 0) 
 			 || (currentDepth > dangerDepth && rand.nextInt(2000) == 0)

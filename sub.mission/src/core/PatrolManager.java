@@ -123,10 +123,11 @@ public class PatrolManager {
 	}
 	
 	public void addShip(int zone, Vector start) {
+		int fudge = 200;
 		
 		Vector assignment = zoneAssignment(zone);
 		Vector delta = assignment.subtract(start);
-		Vector current = start.add(Vector.getRandomXY(-50, 50, -50, 50));
+		Vector current = start.add(Vector.getRandomXY(-fudge, fudge, -fudge, fudge));
 		
 		PatrolBoat pb = new PatrolBoat(current, (float) delta.getRotation(), this);
 		pb.assignTo(zone, assignment);
@@ -161,8 +162,10 @@ public class PatrolManager {
 		}
 	}
 	
-	public void onSink(PatrolBoat pb) {
-		needsAssigned.push(pb.zone);
+	public void onSink(PatrolBoat pb, int reinforce) {
+		//System.out.println("Ship sinking!");
+		while (reinforce-- > 0)
+			needsAssigned.push(pb.zone);
 	}
 	
 	public void onReturn(PatrolBoat pb) {
@@ -171,7 +174,7 @@ public class PatrolManager {
 		pb.assignment = fleePoint;
 	}
 	
-	public void update(float dt, Input input, float ambientNoise) {
+	public void update(float dt, Input input, float ambientNoise, boolean mouse) {
 		int closestZone = getClosestZoneTo(SubMission.player.getPosition());
 		int size = playerPosition.size();
 		if (size > 0) {
@@ -195,13 +198,12 @@ public class PatrolManager {
 			v = (PatrolBoat) e;
 			if (v.zone == closestZone && v.getPosition().distance(v.assignment) < 150) v.pursuePlayer(player);
 			v.update(dt, ambientNoise);
+			v.isDetected();
 			if (v.didRunAground(SubMission.map)) {
-				onSink(v);
-				v.sink();
-			} else if (v.isDetected()
-					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-				
+				onSink(v, 1);
+				SubMission.removeEntity("patrol", e);
+			} else if (mouse && v.wasClicked(input.getMouseX(), input.getMouseY()) && v.isDetected()) {
+				input.clearMousePressedRecord();
 				SubMission.player.getLock(v);
 			}
 		}

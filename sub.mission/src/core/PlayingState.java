@@ -12,7 +12,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import entities.Airplane;
 import entities.CommercialVessel;
 import entities.MissionTarget;
-import entities.PatrolBoat;
 import entities.Submarine;
 import entities.Torpedo;
 import entities.Vessel;
@@ -59,7 +58,7 @@ class PlayingState extends BasicGameState {
 		sonarCountdown = 0;
 		
 		// insert submarine
-		player = new Submarine(100, 10);
+		player = new Submarine(75, 10);
 		//player.debug(true);
 		
 		// generate UI
@@ -73,7 +72,7 @@ class PlayingState extends BasicGameState {
 		
 		airSupport = new Airplane(60, 30);
 		
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
@@ -94,7 +93,7 @@ class PlayingState extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		SubMission G = (SubMission) game;
+		//SubMission G = (SubMission) game;
 	}
 	
 	@Override
@@ -119,12 +118,10 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		SubMission G = (SubMission) game;
-		g.drawImage(G.map, 0, 0);
+		g.drawImage(SubMission.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		for (Entity e : SubMission.getLayer("traffic"))
-			((CommercialVessel) e).render(g);
-		
+		trafficManager.render(g);
 		patrolManager.render(g);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
@@ -228,18 +225,19 @@ class PlayingState extends BasicGameState {
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
-		player.setDepth( depth.update(input, (int) player.getDepth()) );
-		player.setSpeed( speed.update(input, (int) player.getSpeed()) );
-		player.setTowState( platform.update(input, dt) );
+		boolean mouse = input.isMousePressed(Input.MOUSE_LEFT_BUTTON);
+		player.setDepth( depth.update(input, (int) player.getDepth(), mouse) );
+		player.setSpeed( speed.update(input, (int) player.getSpeed(), mouse) );
+		player.setTowState( platform.update(input, dt, mouse) );
 		
-		player.update(input, ambientNoise, dt);
+		player.update(input, ambientNoise, dt, mouse);
 			
-		trafficManager.update(dt, input);
-		patrolManager.update(dt, input, ambientNoise);
+		trafficManager.update(dt, input, mouse);
+		patrolManager.update(dt, input, ambientNoise, mouse);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);
-			if (((Vessel) e).didRunAground(G.map) || !((Torpedo) e).haveFuel())
+			if (((Vessel) e).didRunAground(SubMission.map) || !((Torpedo) e).haveFuel())
 				SubMission.removeEntity("torpedo", e);
 		}
 		
@@ -250,7 +248,7 @@ class PlayingState extends BasicGameState {
 		
 		boolean shouldEnd = false;
 		
-		if (player.didRunAground(G.map)) {
+		if (player.didRunAground(SubMission.map)) {
 			G.missionFailed = 10;
 			shouldEnd = true;
 		} else if (player.isSunk) {

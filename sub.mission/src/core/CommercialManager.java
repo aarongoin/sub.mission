@@ -2,6 +2,7 @@ package core;
 
 import java.util.Random;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 import entities.CommercialVessel;
@@ -106,28 +107,44 @@ public class CommercialManager {
 			trafficLevel--;
 		}
 	}
+	
+	public boolean colliding(CommercialVessel cv) {
+		CommercialVessel other;
+		for (Entity e : SubMission.getLayer("traffic")) {
+			other = (CommercialVessel) e;
+			if (other.id == cv.id) continue;
+			else if (other.getPosition().distance(cv.getPosition()) < 50) return true;
+		}
+		return false;
+	}
 
-	public void update(float dt, Input input) {
+	public void update(float dt, Input input, boolean mouse) {
 		int toAdd = 0;
 		CommercialVessel v;
 		for (Entity e : SubMission.getLayer("traffic")) {
 			v = (CommercialVessel) e;
 			
-			if (v.didRunAground(SubMission.map) || v.getDestination().distance(v.getPosition()) < 10) {
+			if (v.didRunAground(SubMission.map)
+			|| v.getDestination().distance(v.getPosition()) < 10
+			|| colliding(v)) {
 				SubMission.removeEntity("traffic", e);
 				toAdd++;
 			} else {
 				v.update(dt);
-				
-				if (v.isDetected()
-				&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-				&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-					System.out.println("clicked");
+				v.isDetected();
+				if (mouse && v.wasClicked(input.getMouseX(), input.getMouseY()) && v.isDetected()) {
+					input.clearMousePressedRecord();
 					SubMission.player.getLock(v);
 				}
 			}
 		}
 		while (toAdd-- > 0) addShip();
+	}
+
+	public void render(Graphics g) {
+		for (Entity e : SubMission.getLayer("traffic"))
+			((CommercialVessel) e).render(g);
+		
 	}
 	
 	

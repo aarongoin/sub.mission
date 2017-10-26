@@ -1,11 +1,9 @@
 package entities;
 
 
-import org.newdawn.slick.Graphics;
 
 import jig.ConvexPolygon;
 import jig.Entity;
-import jig.Shape;
 import jig.Vector;
 import util.VectorUtil;
 
@@ -20,9 +18,9 @@ public class VesselNavigator {
 	float toStarboard = 30;
 	float hardToStarboard = 60;
 	
-	public VesselNavigator(float lane_width, float lane_height) {
+	public VesselNavigator(float lane_width, float lane_height, float offset) {
 		lane = new Entity();
-		lane.addShape(new ConvexPolygon(lane_width, lane_height), new Vector(0, 3*lane_height / 4));
+		lane.addShape(new ConvexPolygon(lane_width, lane_height), new Vector(0, offset));
 		//Entity.setDebug(true);
 	}
 	
@@ -46,37 +44,46 @@ public class VesselNavigator {
 	
 	public float turnToAvoid(VesselNavigator other) {
 		Entity l = other.getLane();
-		lane.setRotation(bearing + toPort);
-		if (lane.collides(l) == null) {
-			return toPort;
-		}
-		
+
 		lane.setRotation(bearing + toStarboard);
 		if (lane.collides(l) == null) {
+			lane.setRotation(bearing);
 			return toStarboard;
 		}
 		
 		lane.setRotation(bearing + hardToStarboard);
 		if (lane.collides(l) == null) {
+			lane.setRotation(bearing);
 			return hardToStarboard;
+		}
+		
+		lane.setRotation(bearing + toPort);
+		if (lane.collides(l) == null) {
+			lane.setRotation(bearing);
+			return toPort;
 		}
 		
 		lane.setRotation(bearing + hardToPort);
 		if (lane.collides(l) == null) {
+			lane.setRotation(bearing);
 			return hardToPort;
 		}
 		lane.setRotation(bearing);
+		
 		return 0; // should slowDown instead
 	}
 	
 	public boolean isApproaching(VesselNavigator other) {
 		Vector p = other.getLane().getPosition();
-		return (lane.getPosition().distance(p) < lane.getPosition().add(new Vector(1, 0).setRotation(bearing)).distance(p));
+		return (lane.getPosition().distance(p) > lane.getPosition().add(new Vector(1, 0).setRotation(bearing)).distance(p));
 	}
 	
 	public boolean shouldGiveWay(VesselNavigator other) {
-		float theta = VectorUtil.getAngleBetween(getDirection(), other.getDirection());
-		return (theta < 0 || theta > 135);
+		Vector direction = getDirection();
+		Vector otherDirection = other.getDirection();
+		Vector delta = other.getLane().getPosition().subtract(lane.getPosition());
+		float theta = VectorUtil.getAngleBetween(direction, otherDirection);
+		return ((Math.abs(VectorUtil.getAngleBetween(direction, delta)) < 90) && (theta < 0 || theta > 135));
 	}
 	
 }

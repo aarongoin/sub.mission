@@ -12,6 +12,7 @@ import core.SubMission;
 import jig.Entity;
 import jig.Vector;
 import util.VectorUtil;
+import util.VectorZ;
 
 public class Vessel extends Entity {
 	
@@ -29,7 +30,7 @@ public class Vessel extends Entity {
 	String collideWith[];
 	
 	static int getID() {
-		return nextID++;
+		return ++nextID;
 	}
 	protected float acceleration;
 	float actionNoise;
@@ -43,6 +44,8 @@ public class Vessel extends Entity {
 	
 	protected float currentDepth;
 	protected float currentSpeed;
+	
+	protected float diveSpeed;
 	
 	public boolean debug;
 	
@@ -67,7 +70,7 @@ public class Vessel extends Entity {
 	
 	protected Vector tail;
 	protected float targetBearing;
-	
+	protected float targetDepth;
 	protected float targetSpeed;
 	
 	protected float turnRadius;
@@ -99,11 +102,14 @@ public class Vessel extends Entity {
 		rand = new Random(System.currentTimeMillis());
 		
 		currentDepth = 0;
+		targetDepth = 0;
 		currentBearing = bearing;
 		targetBearing = bearing;
 		currentSpeed = speed;
 		targetSpeed = speed;
 		
+		
+		diveSpeed = 1;
 		acceleration = accel;
 		turnRadius = radius;
 		
@@ -115,8 +121,6 @@ public class Vessel extends Entity {
 		waypoint = null;
 		
 		setPosition(p);
-		
-		navi = new VesselNavigator(sprite.getWidth(), sprite.getHeight() * 3);
 	}
 	
 	public void adjustBearing(float dt) {
@@ -166,6 +170,18 @@ public class Vessel extends Entity {
 		}
 		
 		clampBearing();
+	}
+	
+	protected void adjustDepth(float dt) {
+		if (currentDepth < targetDepth) {
+			currentDepth += diveSpeed * dt;
+			if (currentDepth > targetDepth)
+				currentDepth = targetDepth;
+		} else if (currentDepth > targetDepth) {
+			currentDepth -= diveSpeed * dt;
+			if (currentDepth < targetDepth)
+				currentDepth = targetDepth;
+		}
 	}
 
 	public void adjustSpeed(float dt) {
@@ -274,8 +290,16 @@ public class Vessel extends Entity {
 		return getPosition();
 	}
 	
+	public VectorZ getAsTargetZ() {
+		return new VectorZ( getX(), getY(), currentDepth);
+	}
+	
 	public float getBearing() {
 		return currentBearing;
+	}
+	
+	public float getDepth() {
+		return currentDepth;
 	}
 	
 	public Vector getDestination() {
@@ -378,25 +402,36 @@ public class Vessel extends Entity {
 	
 	public void betterSteering(String layers[]) {
 		Vessel other;
+		float distance;
+		Vessel toAvoid = null;
+		float avoidDist = 10000;
 		setWaypoint(destination);
 		setSpeed(maxSpeed);
 		// get closest potential collision
-			for (String layer : layers) {
-				for (Entity e : SubMission.getLayer(layer)) {
-					other = (Vessel) e;
-					if (other.id == id) continue;
-					
-					if ( navi.isBlockingLane(other.getNav()) && navi.shouldGiveWay(other.getNav()) ) {
-						float theta = navi.turnToAvoid(other.getNav());
-						if (theta == 0) setSpeed(0);
-						else {
-							setWaypoint( getPosition().add( new Vector(20, 0).setRotation(currentBearing + theta) ) );
-							setSpeed(maxSpeed);
-						}
+		for (String layer : layers) {
+			for (Entity e : SubMission.getLayer(layer)) {
+				other = (Vessel) e;
+				if (other.id == id) continue;
+				distance = other.getPosition().distance(getPosition());
+				if ( navi.isBlockingLane(other.getNav()) && navi.shouldGiveWay(other.getNav()) ) {
+					if (distance < avoidDist) {
+						toAvoid = other;
+						avoidDist = distance;
 					}
-					
 				}
+				
 			}
+		}
+		if (toAvoid != null) {
+			float theta = navi.turnToAvoid(toAvoid.getNav());
+			if (theta == 0) {
+				setSpeed(Math.max(currentSpeed - 10, 0) );
+				//theta = 60;
+			} else {
+				setSpeed(maxSpeed);
+			}
+			setWaypoint( getPosition().add( new Vector(100, 0).setRotation(currentBearing + theta) ) );
+		}
 	}
 	
 	public void navigate(String layers[]) {
@@ -449,19 +484,19 @@ public class Vessel extends Entity {
 		sprite.setAlpha(drawAlpha);
 		sprite.setRotation(currentBearing + 90);
 		if (debug) {
-			/*float noise = getNoise();
+			float noise = getNoise();
 			g.setColor(Color.red);
-			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
+			g.drawOval(getX() - 15, getY() - 15, 30, 30);
 			
 			float sonar = getSonar();
 			g.setColor(Color.green);
 			g.drawOval(getPosition().getX() - sonar, getPosition().getY() - sonar, sonar * 2, sonar * 2);
 			
-			g.setColor(new Color(0.5f, 0.5f, 0.5f));
-			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());
 			g.setColor(new Color(1f, 1f, 1f));
-			if (destination != null) g.drawLine(destination.getX(), destination.getY(), getX(), getY());*/
-			navi.getLane().render(g);
+			if (destination != null) g.drawLine(destination.getX(), destination.getY(), getX(), getY());
+			g.setColor(Color.pink);
+			if (waypoint != null) g.drawLine(waypoint.getX(), waypoint.getY(), getX(), getY());
+			if (navi != null) navi.getLane().render(g);
 		}
 		super.render(g);
 	}
@@ -521,6 +556,11 @@ public class Vessel extends Entity {
 	}
 	
 	public boolean wasClicked(float x, float y) {
-		return new Vector(x, y).distance(getPosition()) < 15;
+		//System.out.println("mouse: <" + x + "," + y + ">");
+		
+		//System.out.println("position: " + getPosition());
+		//System.out.println("distance: " + (new Vector(x, y)).distance(getPosition()));
+		
+		return (new Vector(x, y)).distance(getPosition()) < 15;
 	}
 }

@@ -20,6 +20,7 @@ public class CommercialVessel extends Vessel {
 		layer = "traffic";
 		armor = 1;
 		//debug = false;
+		navi = new VesselNavigator(sprite.getWidth(), sprite.getHeight() * 1.5f, sprite.getHeight() / 4);
 	}
 	
 	public void render(Graphics g) {
@@ -30,7 +31,7 @@ public class CommercialVessel extends Vessel {
 	@Override
 	public void update(float dt) {
 		shouldUpdate += dt;
-		if (shouldUpdate > 0.25) {
+		if (shouldUpdate > 1) {
 			shouldUpdate = 0;
 			
 			navi.update(currentBearing, getPosition());

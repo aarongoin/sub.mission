@@ -81,7 +81,7 @@ public class SubPlatform {
 		}
 	}
 	
-	public int update(Input input, float dt) {
+	public int update(Input input, float dt, boolean mouse) {
 		Vector m = new Vector(input.getMouseX(), input.getMouseY());
 		Vector b;
 		
@@ -112,7 +112,7 @@ public class SubPlatform {
 			b = new Vector(45.5f, SubMission.ScreenHeight - 80.5f);
 			if (m.distance(b) < 17) {
 				sonarBtn.setAlpha(1);
-				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				if (mouse) {
 					setState(1);
 					return 2;
 				}
@@ -124,7 +124,7 @@ public class SubPlatform {
 			b = new Vector(85.5f, SubMission.ScreenHeight - 80.5f);
 			if (m.distance(b) < 17) {
 				retractBtn.setAlpha(1);
-				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				if (mouse) {
 					setState(0);
 					return 1;
 				}
@@ -136,7 +136,7 @@ public class SubPlatform {
 			b = new Vector(125.5f, SubMission.ScreenHeight - 80.5f);
 			if (m.distance(b) < 17) {
 				decoyBtn.setAlpha(1);
-				if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+				if (mouse) {
 					setState(2);
 					return 3;
 				}
