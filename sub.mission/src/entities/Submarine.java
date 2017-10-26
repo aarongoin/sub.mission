@@ -100,6 +100,7 @@ public class Submarine extends MilitaryVessel {
 	}
 
 	public void getLock(Vessel v) {
+		if (target != null) return;
 		target = v;
 		targetLock.rotate(3);
 	}
