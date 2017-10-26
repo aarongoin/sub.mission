@@ -34,7 +34,7 @@ public class Submarine extends MilitaryVessel {
 
 	public Submarine(float depth, float dive) {
 		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 6, 180, 10, 20, 2);
-		debug = true;
+		//debug = true;
 		lookahead = 0f;
 
 		hoverBearing = targetBearing;

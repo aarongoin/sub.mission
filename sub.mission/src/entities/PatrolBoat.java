@@ -117,4 +117,10 @@ public class PatrolBoat extends MilitaryVessel {
 		}
 		return super.fireTorpedo(target);
 	}
+		
+	@Override
+	public void sink() {
+		HQ.onSink(this, 2);
+		super.sink();
+	}
 }

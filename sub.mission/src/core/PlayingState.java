@@ -72,7 +72,7 @@ class PlayingState extends BasicGameState {
 		
 		airSupport = new Airplane(60, 30);
 		
-		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(400, 400), new Vector(175, -50));
+		patrolManager = new PatrolManager(SubMission.patrolZones, new Vector(SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2), new Vector(175, -50));
 		
 		state = 0;
 		stage(G);
