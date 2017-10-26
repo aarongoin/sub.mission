@@ -26,7 +26,7 @@ public class PatrolBoat extends MilitaryVessel {
 	float shouldUpdate;
 
 	public PatrolBoat(Vector p, float bearing, PatrolManager hq) {
-		super("patrol", p, 10, 2.5f, bearing, 1, 10, 4);
+		super("patrol", p, 10, 2.5f, bearing, 10, 10, 4);
 		movedFor = new HashMap<Vessel, Float>();
 		//debug = true;
 		targetSpeed = 35;
@@ -44,6 +44,8 @@ public class PatrolBoat extends MilitaryVessel {
 		
 		flee = false;
 		HQ = hq;
+		
+		navi = new VesselNavigator(sprite.getWidth(), sprite.getHeight() * 4, sprite.getHeight() * 1.5f);
 	}
 	
 	@Override
@@ -69,7 +71,7 @@ public class PatrolBoat extends MilitaryVessel {
 	public void update(float dt, float ambient) {
 
 		shouldUpdate += dt;
-		if (shouldUpdate > 0.25) {
+		if (shouldUpdate > 0.5) {
 			shouldUpdate = 0;
 			
 			navi.update(currentBearing, getPosition());

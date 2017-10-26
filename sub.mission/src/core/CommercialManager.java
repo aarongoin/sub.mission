@@ -108,7 +108,7 @@ public class CommercialManager {
 		}
 	}
 
-	public void update(float dt, Input input) {
+	public void update(float dt, Input input, boolean mouse) {
 		int toAdd = 0;
 		CommercialVessel v;
 		for (Entity e : SubMission.getLayer("traffic")) {
@@ -119,11 +119,9 @@ public class CommercialManager {
 				toAdd++;
 			} else {
 				v.update(dt);
-				
-				if (v.isDetected()
-				&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-				&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-					System.out.println("clicked");
+				v.isDetected();
+				if (mouse && v.wasClicked(input.getMouseX(), input.getMouseY()) && v.isDetected()) {
+					input.clearMousePressedRecord();
 					SubMission.player.getLock(v);
 				}
 			}

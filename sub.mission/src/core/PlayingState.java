@@ -225,14 +225,15 @@ class PlayingState extends BasicGameState {
 		
 		// handle player input on depth/speed bars
 		Input input = container.getInput();
-		player.setDepth( depth.update(input, (int) player.getDepth()) );
-		player.setSpeed( speed.update(input, (int) player.getSpeed()) );
-		player.setTowState( platform.update(input, dt) );
+		boolean mouse = input.isMousePressed(Input.MOUSE_LEFT_BUTTON);
+		player.setDepth( depth.update(input, (int) player.getDepth(), mouse) );
+		player.setSpeed( speed.update(input, (int) player.getSpeed(), mouse) );
+		player.setTowState( platform.update(input, dt, mouse) );
 		
-		player.update(input, ambientNoise, dt);
+		player.update(input, ambientNoise, dt, mouse);
 			
-		trafficManager.update(dt, input);
-		patrolManager.update(dt, input, ambientNoise);
+		trafficManager.update(dt, input, mouse);
+		patrolManager.update(dt, input, ambientNoise, mouse);
 		
 		for (Entity e : SubMission.getLayer("torpedo")) {
 			((Torpedo) e).update(dt);

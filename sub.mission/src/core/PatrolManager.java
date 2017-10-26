@@ -171,7 +171,7 @@ public class PatrolManager {
 		pb.assignment = fleePoint;
 	}
 	
-	public void update(float dt, Input input, float ambientNoise) {
+	public void update(float dt, Input input, float ambientNoise, boolean mouse) {
 		int closestZone = getClosestZoneTo(SubMission.player.getPosition());
 		int size = playerPosition.size();
 		if (size > 0) {
@@ -195,13 +195,12 @@ public class PatrolManager {
 			v = (PatrolBoat) e;
 			if (v.zone == closestZone && v.getPosition().distance(v.assignment) < 150) v.pursuePlayer(player);
 			v.update(dt, ambientNoise);
+			v.isDetected();
 			if (v.didRunAground(SubMission.map)) {
 				onSink(v);
 				v.sink();
-			} else if (v.isDetected()
-					&& input.isMousePressed(Input.MOUSE_LEFT_BUTTON)
-					&& v.wasClicked(input.getMouseX(), input.getMouseY())) {
-				
+			} else if (mouse && v.wasClicked(input.getMouseX(), input.getMouseY()) && v.isDetected()) {
+				input.clearMousePressedRecord();
 				SubMission.player.getLock(v);
 			}
 		}

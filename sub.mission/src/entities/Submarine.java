@@ -34,7 +34,7 @@ public class Submarine extends MilitaryVessel {
 
 	public Submarine(float depth, float dive) {
 		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 6, 180, 10, 20, 2);
-		//debug = true;
+		debug = true;
 		lookahead = 0f;
 
 		hoverBearing = targetBearing;
@@ -191,7 +191,7 @@ public class Submarine extends MilitaryVessel {
 		}
 	}
 
-	public void update(Input input, float ambient, float dt) {
+	public void update(Input input, float ambient, float dt, boolean pressed) {
 
 		Vector mouse = new Vector(input.getMouseX(), input.getMouseY()).subtract(getPosition());
 
@@ -206,7 +206,7 @@ public class Submarine extends MilitaryVessel {
 				hoverBearing += 360;
 			// if (hoverBearing < 0)
 			// hoverBearing = 360 + hoverBearing;
-			if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+			if (pressed)
 				targetBearing = hoverBearing;
 		} else {
 			hoverBearing = targetBearing;
