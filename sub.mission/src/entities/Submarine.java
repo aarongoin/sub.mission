@@ -32,8 +32,8 @@ public class Submarine extends MilitaryVessel {
 		
 	Image targetLock;
 
-	public Submarine(float depth, float dive) {
-		super("sub0", new Vector(SubMission.ScreenWidth - 100f, 100f), 1.5f, 6, 180, 10, 20, 2);
+	public Submarine(float depth, float dive, float b, Vector position) {
+		super("sub0", position, 1.5f, 6, b, 10, 20, 2);
 		//debug = true;
 		lookahead = 0f;
 

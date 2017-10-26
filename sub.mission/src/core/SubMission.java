@@ -14,6 +14,7 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entities.Airplane;
 import entities.Submarine;
 import jig.ResourceManager;
 import jig.Vector;
@@ -50,8 +51,6 @@ public class SubMission extends StateBasedGame {
 	public static final int MENUSTATE 		= 1;
 	public static final int PLAYINGSTATE 	= 2;
 	
-	public static Submarine player;
-	
 	public static int ScreenHeight;
 	public static int ScreenWidth;
 	
@@ -61,6 +60,16 @@ public class SubMission extends StateBasedGame {
 	static public TrueTypeFont text;
 	static public TrueTypeFont title;
 	static HashMap<Entity, Integer> toRemove = new HashMap<Entity, Integer>();
+	
+	public static Submarine player;
+	static public Airplane airSupport;
+	static public CommercialManager trafficManager;
+	static public PatrolManager patrolManager;
+	static public MissionManager missionManager;
+	
+	static public Image map;
+	
+	static public int missionFailed;
 	
 	static public boolean addEntity(String layer, Entity e) {
 		if (e == null) return false;
@@ -118,10 +127,6 @@ public class SubMission extends StateBasedGame {
 	public Sound bg;
 	
 	public Image depth;
-	
-	static public Image map;
-	
-	public int missionFailed;
 	
 	/**
 	 * Create the BounceGame frame, saving the width and height for later use.
