@@ -13,6 +13,7 @@ public abstract class MissionManager {
 	protected MissionTarget mission;
 	protected int state;
 	protected String endMessage;
+	protected String missonState;
 	
 	public MissionManager() { 
 		state = 0;
@@ -22,18 +23,24 @@ public abstract class MissionManager {
 		return endMessage;
 	}
 	
+	public String getMissionState() {
+		return missonState;
+	}
+	
 	boolean WinOrLose() {
 		
 		boolean shouldEnd = true;
 		
 		if (SubMission.player.didRunAground(SubMission.map)) {
+			missonState = "Mission Failed!";
 			endMessage = "You ran aground!";
 		} else if (SubMission.player.isSunk) {
+			missonState = "Mission Failed!";
 			endMessage = "The ship is sinking, captain!";
 		} else if (missionFail()) {
-			SubMission.missionFailed = state + 1;
+			missonState = "Mission Failed!";
 		} else if (missionWin()) {
-			SubMission.missionFailed = 0;
+			missonState = "Mission Completed!";
 		} else shouldEnd = false;
 		
 		return shouldEnd;

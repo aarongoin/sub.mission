@@ -1,7 +1,5 @@
 package core;
 
-import jig.ResourceManager;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -25,10 +23,7 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		SubMission G = (SubMission) game;
 		timer = 1000f;
-
-		G.depth = SubMission.getImage("land");
 	}
 	
 	@Override
@@ -49,44 +44,28 @@ class GameOverState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		SubMission G = (SubMission) game;
 		
-		g.drawImage(G.map, 0, 0);
+		g.drawImage(SubMission.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
-		g.setFont(G.subtitle);
-		if (G.missionFailed > 0)
-			g.drawString("Mission Failed.", SubMission.ScreenWidth / 2 - 90, SubMission.ScreenHeight / 2 - 30);
-		else
-			g.drawString("Mission Complete!", SubMission.ScreenWidth / 2 - 110, SubMission.ScreenHeight / 2 - 30);
 		
-		g.setFont(G.text);
-		switch (G.missionFailed) {
-		case 0:
-			g.drawString("Great Job, Captain.", SubMission.ScreenWidth / 2 - 82, SubMission.ScreenHeight / 2 + 30);
-			break;
-		case 1:
-			g.drawString("You need to deploy your team before the window closes!", SubMission.ScreenWidth / 2 - 230, SubMission.ScreenHeight / 2 + 30);
-			break;
-		case 3:
-			g.drawString("Your team has been captured!", SubMission.ScreenWidth / 2 - 125, SubMission.ScreenHeight / 2 + 30);
-			break;
-		case 4:
-			g.drawString("You failed to escape enemy waters in time!", SubMission.ScreenWidth / 2 - 175, SubMission.ScreenHeight / 2 + 30);
-			break;
-		case 6:
-			g.drawString("The ship is sinking, captain!", SubMission.ScreenWidth / 2 - 130, SubMission.ScreenHeight / 2 + 30);
-			break;
-		case 10:
-			g.drawString("You ran aground!", SubMission.ScreenWidth / 2 - 72, SubMission.ScreenHeight / 2 + 30);
-			break;
-		}
-	}
-
-	public void setUserScore(int bounces) {
+		// Draw mission end-state
+		int width = SubMission.subtitle.getWidth(SubMission.missionManager.getMissionState());
+	    int height = SubMission.subtitle.getHeight(SubMission.missionManager.getMissionState());
+	    
+	    g.setFont(SubMission.subtitle);
+		g.drawString(SubMission.missionManager.getMissionState(), SubMission.ScreenWidth / 2 - width / 2, SubMission.ScreenHeight / 2 - 30 - height / 2);
+	
+		// Draw mission end-state message
+		width = SubMission.text.getWidth(SubMission.missionManager.getEndMessage());
+	    height = SubMission.text.getHeight(SubMission.missionManager.getEndMessage());
+	    
+	    g.setFont(SubMission.text);
+		g.drawString(SubMission.missionManager.getEndMessage(), SubMission.ScreenWidth / 2 - width / 2, SubMission.ScreenHeight / 2 + 30 - height / 2);
+	
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		SubMission bg = (SubMission)game;
 		float dt = delta / 16.666666666666667f;
 		
 		timer -= dt;
