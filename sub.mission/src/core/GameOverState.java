@@ -1,5 +1,6 @@
 package core;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -22,7 +23,7 @@ class GameOverState extends BasicGameState {
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		timer = 1000f;
+		timer = 100f;
 	}
 	
 	@Override
@@ -46,6 +47,9 @@ class GameOverState extends BasicGameState {
 		g.drawImage(SubMission.map, 0, 0);
 		g.drawImage(G.depth, 0, 0);
 		
+		g.setColor(new Color(0, 0, 0, 0.75f));
+		g.fillRect(0, 0, SubMission.ScreenWidth, SubMission.ScreenHeight);
+		g.setColor(Color.white);
 		
 		// Draw mission end-state
 		int width = SubMission.subtitle.getWidth(SubMission.missionManager.getMissionState());
