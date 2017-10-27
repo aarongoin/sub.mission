@@ -90,7 +90,7 @@ public class PatrolBoat extends MilitaryVessel {
 		if (playerAt != null && !flee) {
 			setDestination(playerAt);
 			// adding some randomness to whether or not the boat will fire
-			if (detection > 2 && torpedoes > 0 && rand.nextInt(40) == 0)
+			if (detection > 2 && torpedoes > 0 && rand.nextInt(1000) == 1)
 				SubMission.addEntity("torpedo", fireTorpedo(SubMission.player));
 		} else {
 			setDestination(assignment);

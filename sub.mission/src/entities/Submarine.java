@@ -106,43 +106,45 @@ public class Submarine extends MilitaryVessel {
 
 	@Override
 	public float getNoise() {
-		float noise = 0;
+		float noise = 1;
 		if (currentDepth < 100)
-			noise = super.getNoise() * (24 + (12 * (0 - currentDepth) / 100));
+			noise = super.getNoise() * (24 + ((0 - currentDepth) / 100));
 		else if (currentDepth < 200)
-			noise = super.getNoise() * (12 + (6 * (100 - currentDepth) / 100));
+			noise = super.getNoise() * (12 + ((100 - currentDepth) / 100));
 		else if (currentDepth < 300)
-			noise = super.getNoise() * (6 + (3 * (200 - currentDepth) / 100));
+			noise = super.getNoise() * (6 + ((200 - currentDepth) / 100));
 		else if (currentDepth < 400)
-			noise = super.getNoise() * (3 + (2 * (300 - currentDepth) / 100));
+			noise = super.getNoise() * (3 + ((300 - currentDepth) / 100));
 		else if (currentDepth < 500)
-			noise = super.getNoise() * (1 + (1 * (400 - currentDepth) / 100));
+			noise = super.getNoise() * (2 + ((400 - currentDepth) / 100));
+		else if (currentDepth < 600)
+			noise = super.getNoise() * (1 + ((500 - currentDepth) / 100));
 		
-		noise *= (currentSpeed > 20 ? 1f : 0.5f);
+		noise *= (currentSpeed > 20 ? 2f : 1f);
 		//System.out.println("Sub noise: " + noise);
-		return noise;
+		return Math.abs(noise);
 	}
 	
 	public float getNoise(float depth) {
 		float noise = 0;
 		if (currentDepth < 100)
-			noise = super.getNoise() * (24 + (12 * (0 - currentDepth) / 100));
+			noise = super.getNoise() * (24 + ((0 - currentDepth) / 100));
 		else if (currentDepth < 200)
-			noise = super.getNoise() * (14 + (7 * (100 - currentDepth) / 100));
+			noise = super.getNoise() * (14 + ((100 - currentDepth) / 100));
 		else if (currentDepth < 300)
-			noise = super.getNoise() * (20 + (10 * (200 - currentDepth) / 100));
+			noise = super.getNoise() * (20 + ((200 - currentDepth) / 100));
 		else if (currentDepth < 400)
-			noise = super.getNoise() * (24 + (12 * (300 - currentDepth) / 100));
+			noise = super.getNoise() * (24 + ((300 - currentDepth) / 100));
 		else if (currentDepth < 500)
-			noise = super.getNoise() * (38 + (19 * (400 - currentDepth) / 100));
+			noise = super.getNoise() * (38 + ((400 - currentDepth) / 100));
 		else if (currentDepth < 600)
-			noise = super.getNoise() * (30 + (15 * (500 - currentDepth) / 100));
+			noise = super.getNoise() * (30 + ((500 - currentDepth) / 100));
 		else if (currentDepth < 700)
-			noise = super.getNoise() * (22 + (11 * (600 - currentDepth) / 100));
+			noise = super.getNoise() * (22 + ((600 - currentDepth) / 100));
 		else
-			noise = super.getNoise() * (20 + (10 * (700 - currentDepth) / 100));
+			noise = super.getNoise() * (20 + ((700 - currentDepth) / 100));
 		
-		noise *= (currentSpeed > 20 ? 1.5f : 1);
+		noise *= (currentSpeed > 20 ? 2f : 1);
 		// System.out.println("Sub noise: " + noise);
 		return noise;
 	}
@@ -192,7 +194,7 @@ public class Submarine extends MilitaryVessel {
 	}
 
 	public void update(Input input, float ambient, float dt, boolean pressed) {
-
+		
 		Vector mouse = new Vector(input.getMouseX(), input.getMouseY()).subtract(getPosition());
 
 		if (mouse.lengthSquared() < 2000) {

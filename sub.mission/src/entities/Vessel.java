@@ -484,7 +484,6 @@ public class Vessel extends Entity {
 		if (debug) {
 			float noise = getNoise();
 			g.setColor(Color.red);
-			g.setColor(Color.green);
 			g.drawOval(getPosition().getX() - noise, getPosition().getY() - noise, noise * 2, noise * 2);
 			
 			float sonar = getSonar();
