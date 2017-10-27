@@ -23,7 +23,7 @@ public class Torpedo extends Vessel {
 	VectorZ velocity3d;
 
 	public Torpedo(int id, String image, Vector p, float depth, float bearing, float speed, float f, Vector dest, Vessel t) {
-		super(image, p, 20, bearing, 10, 30, 20);
+		super(image, p, 20, bearing, 10, 30, 30);
 		
 		maxSpeed = speed;
 		line = new ArrayList<Vector>();

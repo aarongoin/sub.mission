@@ -12,7 +12,7 @@ public class SealTeamMission extends MissionManager {
 	public SealTeamMission() {
 		super();
 		
-		SubMission.player = new Submarine(150, 10, 90, new Vector(SubMission.ScreenWidth - 200f, 50));
+		SubMission.player = new Submarine(300, 10, 90, new Vector(SubMission.ScreenWidth - 200f, 50));
 		
 		SubMission.trafficManager = new CommercialManager(SubMission.shippingLanes);
 		
@@ -105,10 +105,23 @@ public class SealTeamMission extends MissionManager {
 			mission = new MissionTarget(new Vector(100f, 150f), 60);
 			break;
 		case 3: // escape
-			mission = new MissionTarget(new Vector(SubMission.ScreenWidth - 100f, 100f), 120);
+			mission = new MissionTarget(new Vector(SubMission.ScreenWidth - 200f, 50f), 120);
 			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	void renderMission(Graphics g) {
+		g.setFont(SubMission.text);
+		g.drawString("Captain,", 300, SubMission.ScreenHeight / 5);
+		
+		g.drawString("The enemy is holding a valuable asset captive in their base. You must navigate to the mission", 300, SubMission.ScreenHeight / 5 + 60);
+		g.drawString("coordinates, and deploy your special forces team to retrieve him. Stay in the area until you", 300, SubMission.ScreenHeight / 5 + 90);
+		g.drawString("can rendezvous at their extraction point. After you rendezvous with your team: escape into", 300, SubMission.ScreenHeight / 5 + 120);
+		g.drawString("open waters to successfully complete this mission.", 300, SubMission.ScreenHeight / 5 + 150);
+				
+		g.drawString("We're counting on you.", 300, SubMission.ScreenHeight / 5 + 210);
 	}
 }

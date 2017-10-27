@@ -1,5 +1,6 @@
 package core;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
@@ -56,14 +57,15 @@ public abstract class MissionManager {
 		}
 		
 		SubMission.player.render(g);
-		mission.render(g);
+		if (mission != null) mission.render(g);
 		
 		g.setFont(SubMission.text);
+		g.setColor(Color.white);
 		renderObjective(g);
 	}
 	
 	public boolean update(float dt, Input input, boolean mouse) {
-		mission.update(dt);
+		if (mission != null) mission.update(dt);
 		
 		// check for conditions to advance mission state
 		if (advance()) {
@@ -90,6 +92,7 @@ public abstract class MissionManager {
 
 	abstract boolean advance();
 	abstract void renderObjective(Graphics g);
+	abstract void renderMission(Graphics g);
 	abstract boolean missionFail();
 	abstract boolean missionWin();
 	abstract void stage();

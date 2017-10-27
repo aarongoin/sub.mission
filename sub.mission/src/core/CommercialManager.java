@@ -15,6 +15,7 @@ public class CommercialManager {
 	
 	int trafficLevel;
 	int lanes[][][];
+	int sunkByPlayer;
 
 	// lanes are defined as a pair of off-screen boxes were ships spawn and de-spawn
 	// lanes = {
@@ -29,6 +30,7 @@ public class CommercialManager {
 		this.lanes = lanes;
 		rand = new Random(System.currentTimeMillis());
 		trafficLevel = 0;
+		sunkByPlayer = 0;
 	}
 	
 	public void removeShip() {
@@ -79,7 +81,7 @@ public class CommercialManager {
 		Vector delta = end.subtract(start);
 		Vector current = start.add( delta.scale(rand.nextFloat()) );
 		
-		CommercialVessel cv = new CommercialVessel("ship" + (rand.nextInt(3) + 1), current, 40, (float) delta.getRotation());
+		CommercialVessel cv = new CommercialVessel("ship" + (rand.nextInt(3) + 1), current, 40, (float) delta.getRotation(), this);
 		cv.setDestination(end);
 		
 		//System.out.println("Creating ship at: " + cv.getPosition());
@@ -92,6 +94,11 @@ public class CommercialManager {
 		SubMission.removeLayer("traffic");
 		SubMission.addLayer("traffic");
 		trafficLevel = 0;
+		sunkByPlayer = 0;
+	}
+	
+	public int getSunk() {
+		return sunkByPlayer;
 	}
 	
 	public void setTraffic(int qty) {
@@ -115,6 +122,10 @@ public class CommercialManager {
 			else if (other.getPosition().distance(cv.getPosition()) < 50) return true;
 		}
 		return false;
+	}
+	
+	public void onSink() {
+		sunkByPlayer++;
 	}
 
 	public void update(float dt, Input input, boolean mouse) {

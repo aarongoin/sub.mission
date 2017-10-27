@@ -100,8 +100,8 @@ public class SubMission extends StateBasedGame {
 			SubMission g = new SubMission("sub.mission");
 			app = new AppGameContainer(g);
 			
-			SubMission.ScreenWidth = app.getScreenWidth() - 40;
-			SubMission.ScreenHeight = app.getScreenHeight() - 50;
+			SubMission.ScreenWidth = 1400;
+			SubMission.ScreenHeight = 850;
 			
 			System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
 			
@@ -140,12 +140,8 @@ public class SubMission extends StateBasedGame {
 	public SubMission(String title) {
 		super(title);
 				
-		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
-		//camera = new Camera(new Vector(ScreenWidth / 2, ScreenHeight / 2), ScreenWidth, ScreenHeight);
-		
-		
-		missionFailed = 0;
-		
+		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);		
+				
 		IMG.put("land", "resource/img/map1/land.png");
 		IMG.put("map", "resource/img/map1/map.png");
 		IMG.put("d1", "resource/img/map1/depth_100.png");

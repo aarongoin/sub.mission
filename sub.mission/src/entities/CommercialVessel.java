@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import org.newdawn.slick.Graphics;
 
+import core.CommercialManager;
+import core.SubMission;
+import jig.Entity;
 import jig.Vector;
 
 public class CommercialVessel extends Vessel {
@@ -11,8 +14,9 @@ public class CommercialVessel extends Vessel {
 	String collideWith[] = {"traffic", "patrol"};
 	
 	float shouldUpdate;
+	CommercialManager control;
 	
-	public CommercialVessel(String image, Vector p, float noise, float bearing) {
+	public CommercialVessel(String image, Vector p, float noise, float bearing, CommercialManager control) {
 		super(image, p, noise, bearing, 10, 5, 10);
 		maxSpeed = 10;
 		lookahead = 10;
@@ -21,11 +25,18 @@ public class CommercialVessel extends Vessel {
 		armor = 1;
 		//debug = false;
 		navi = new VesselNavigator(sprite.getWidth(), sprite.getHeight() * 1.5f, sprite.getHeight() / 4);
+		this.control = control;
 	}
 	
 	public void render(Graphics g) {
 		sprite.setAlpha(drawAlpha);
 		super.render(g);
+	}
+	
+	@Override
+	public void sink() {
+		control.onSink();
+		super.sink();
 	}
 	
 	@Override

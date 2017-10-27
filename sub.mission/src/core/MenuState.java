@@ -50,7 +50,7 @@ class MenuState extends BasicGameState {
 		
 		substate = 0;
 		
-		SubMission.missionManager = new SealTeamMission();
+		SubMission.missionManager = new CommercialMission(); // new SealTeamMission();
 	}
 	
 	@Override
@@ -82,17 +82,7 @@ class MenuState extends BasicGameState {
 			quit.render(g);
 			break;
 		case 1:
-			g.setFont(SubMission.text);
-			g.drawString("Captain,", 300, SubMission.ScreenHeight / 5);
-			
-			g.drawString("The enemy is holding a valuable asset captive in their base. You must navigate to the mission", 300, SubMission.ScreenHeight / 5 + 60);
-			g.drawString("coordinates, and deploy your special forces team to retrieve him. Stay in the area until you", 300, SubMission.ScreenHeight / 5 + 90);
-			g.drawString("can rendezvous at their extraction point. After you rendezvous with your team: escape into", 300, SubMission.ScreenHeight / 5 + 120);
-			g.drawString("open waters to successfully complete this mission.", 300, SubMission.ScreenHeight / 5 + 150);
-			
-			g.drawString("Do not engage until your special forces are deployed.", 300, SubMission.ScreenHeight / 5 + 210);
-			
-			g.drawString("Good luck.", 300, SubMission.ScreenHeight / 5 + 270);
+			SubMission.missionManager.renderMission(g);
 			
 			back.render(g);
 			next.render(g);
