@@ -24,7 +24,6 @@ import jig.Entity;
 public class SubMission extends StateBasedGame {
 	
 	static public List<List<Entity>> entities = new ArrayList<List<Entity>>();
-	public static final int GAMEOVERSTATE 	= 3;
 	public static HashMap<String, String> IMG = new HashMap<String, String>();
 	static public int[][] landMasses = {
 			/* x, y, r */
@@ -50,6 +49,8 @@ public class SubMission extends StateBasedGame {
 	public static final int MENUSTATE 		= 1;
 	public static final int PLAYINGSTATE 	= 2;
 	public static final int INSTRUCTIONSTATE = 3;
+	public static final int MISSIONSELECTIONSTATE = 4;
+	public static final int GAMEOVERSTATE = 5;
 	
 	public static int ScreenHeight;
 	public static int ScreenWidth;
@@ -236,6 +237,7 @@ public class SubMission extends StateBasedGame {
 		addState(new GameOverState());
 		addState(new PlayingState());
 		addState(new InstructionState());
+		addState(new MissionSelectionState());
 		
 		try {	 
 			Font font = Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("resource/Verdana.ttf"));

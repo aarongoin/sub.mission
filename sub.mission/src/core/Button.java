@@ -1,5 +1,6 @@
 package core;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -20,6 +21,8 @@ public class Button {
 	
 	int width;
 	
+	Color color;
+	
 	public Button(GameContainer c, TrueTypeFont f, String t, int x, int y, int m) {
 		text = t;
 		
@@ -33,14 +36,20 @@ public class Button {
 		pos[1] = y - (height / 2);
 		
 		bounds = new MouseOverArea(c, null, pos[0] - margin, pos[1] - margin, width, height);
+		color = Color.white;
 	}
 	
 	public boolean clicked(Input input, boolean mouse) {
 		return (bounds.isMouseOver() && mouse);
 	}
 	
+	public void setColor(Color c) {
+		color = c;
+	}
+	
 	public void render(Graphics g) {
 		g.setFont(font);
+		g.setColor(color);
 		g.drawString(text, pos[0], pos[1]);
 		g.drawRect(pos[0] - margin, pos[1] - margin, width, height);
 	}

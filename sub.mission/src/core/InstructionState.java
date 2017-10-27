@@ -1,5 +1,6 @@
 package core;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -49,6 +50,10 @@ public class InstructionState extends BasicGameState {
 		depth.render(g);
 		speed.render(g);
 		platform.render(g);
+		
+		g.setColor(new Color(0, 0, 0, 0.75f));
+		g.fillRect(0, 0, SubMission.ScreenWidth, SubMission.ScreenHeight);
+		g.setColor(Color.white);
 		
 		switch(state) {
 		case 0:
