@@ -17,6 +17,7 @@ class PlayingState extends BasicGameState {
 	DepthMeter depth;
 	SpeedMeter speed;
 	SubPlatform platform;
+	SoundManager soundManager;
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
@@ -25,7 +26,7 @@ class PlayingState extends BasicGameState {
 		depth = new DepthMeter((int) SubMission.player.getDepth(), new Vector(SubMission.ScreenWidth - 24, 12));
 		speed = new SpeedMeter((int) SubMission.player.getSpeed(), new Vector(SubMission.ScreenWidth - 415, SubMission.ScreenHeight - 24));
 		platform = new SubPlatform(SubMission.player);
-		
+		soundManager = new SoundManager();
 		
 		/*System.out.println("theta( x, 0): " + new Vector( 1, 0).getRotation()
 					   + ", theta( 0, y): " + new Vector( 0, 1).getRotation()
@@ -94,6 +95,8 @@ class PlayingState extends BasicGameState {
 		SubMission.player.setDepth( depth.update(input, (int) SubMission.player.getDepth(), mouse) );
 		SubMission.player.setSpeed( speed.update(input, (int) SubMission.player.getSpeed(), mouse) );
 		SubMission.player.setTowState( platform.update(input, dt, mouse) );
+		
+		soundManager.update();
 		
 		if (SubMission.missionManager.update(dt, input, mouse)) 
 			G.enterState(SubMission.GAMEOVERSTATE);

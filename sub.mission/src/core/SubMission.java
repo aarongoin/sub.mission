@@ -205,6 +205,11 @@ public class SubMission extends StateBasedGame {
 		SND.put("torpedo_explosion", "resource/sound/159402__noirenex__overheadexplosion.wav");
 		SND.put("explosion_a", "resource/sound/203331__veiler__explosion-documentary-veiler.wav");
 		SND.put("explosion_b", "resource/sound/94185__nbs-dark__explosion.wav");
+		
+		SND.put("random_0", "resource/sound/370167__shealcudahy__underwater-creature.wav");
+		SND.put("random_1", "resource/sound/343682__mbari-mars__blue-whale-b-call.wav");
+		SND.put("random_2", "resource/sound/210837__abrez__dolphin-song-2.wav");
+		SND.put("random_3", "resource/sound/53266__stomachache__whale.wav");
 	}
 	
 	static public void addLayer(String layer) {
