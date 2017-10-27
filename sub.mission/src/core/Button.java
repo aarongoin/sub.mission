@@ -35,8 +35,8 @@ public class Button {
 		bounds = new MouseOverArea(c, null, pos[0] - margin, pos[1] - margin, width, height);
 	}
 	
-	public boolean clicked(Input input) {
-		return (bounds.isMouseOver() && input.isMousePressed(Input.MOUSE_LEFT_BUTTON));
+	public boolean clicked(Input input, boolean mouse) {
+		return (bounds.isMouseOver() && mouse);
 	}
 	
 	public void render(Graphics g) {

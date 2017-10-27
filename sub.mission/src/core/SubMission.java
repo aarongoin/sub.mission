@@ -49,6 +49,7 @@ public class SubMission extends StateBasedGame {
 	public static final int LOADINGSTATE 	= 0;
 	public static final int MENUSTATE 		= 1;
 	public static final int PLAYINGSTATE 	= 2;
+	public static final int INSTRUCTIONSTATE = 3;
 	
 	public static int ScreenHeight;
 	public static int ScreenWidth;
@@ -234,6 +235,7 @@ public class SubMission extends StateBasedGame {
 		addState(new MenuState());
 		addState(new GameOverState());
 		addState(new PlayingState());
+		addState(new InstructionState());
 		
 		try {	 
 			Font font = Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.getResourceAsStream("resource/Verdana.ttf"));
