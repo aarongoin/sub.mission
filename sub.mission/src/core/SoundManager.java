@@ -25,4 +25,7 @@ public class SoundManager {
 			current.play(1f, 0.75f);
 		}
 	}
+	public void stop() {
+		current.stop();
+	}
 }

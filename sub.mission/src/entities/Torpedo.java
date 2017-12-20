@@ -21,6 +21,7 @@ public class Torpedo extends Vessel {
 	float maxSpeed;
 	Vessel target;
 	VectorZ velocity3d;
+	boolean exploded;
 
 	public Torpedo(int id, String image, Vector p, float depth, float bearing, float speed, float f, Vector dest, Vessel t) {
 		super(image, p, 20, bearing, 10, 30, 30);
@@ -39,15 +40,17 @@ public class Torpedo extends Vessel {
 		velocity3d = new VectorZ(0, 0, 0);
 		velocity3d.pointTo(target.getAsTargetZ(), currentSpeed);
 		targetDepth = target.getDepth();
+		exploded = false;
 		
 		setDestination(dest);
 		
 	}
 
-	void explode() {
+	void explode(boolean damage) {
 		explosion.play();
-		target.takeDamage("torpedo");
+		if (damage) target.takeDamage("torpedo");
 		SubMission.removeEntity(layer, (Entity) this);
+		exploded = true;
 	}
 	
 	@Override
@@ -86,12 +89,15 @@ public class Torpedo extends Vessel {
 		if (detect(target) > 2) {
 			//System.out.println("Detected target at " + target.getAsTarget().distance(getPosition()));
 			if ( target.getAsTargetZ().distance(getAsTargetZ()) < 15 )
-				explode();
+				explode(true);
 			else {
 				setDestination(target.getAsTarget());
 				targetDepth = target.getDepth();
 			}
 		}
+		
+		// check for crush depth
+		if (!exploded && currentDepth > 650) explode(false);
 		
 		// update trail
 		line.add(getVelocity().scale(-dt));

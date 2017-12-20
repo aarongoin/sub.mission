@@ -33,8 +33,9 @@ class MenuState extends BasicGameState {
 		play = new Button(container, SubMission.text, "Play", SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2, 8);
 		help = new Button(container, SubMission.text, "Instructions", SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2 + 60, 8);
 		quit = new Button(container, SubMission.text, "Quit", SubMission.ScreenWidth / 2, SubMission.ScreenHeight / 2 + 120, 8);
-				
 		SubMission.missionManager = new CommercialMission(); // new SealTeamMission();
+		
+		G.depth = SubMission.getImage("land");
 	}
 	
 	@Override

@@ -25,7 +25,7 @@ class PlayingState extends BasicGameState {
 		// generate UI
 		depth = new DepthMeter((int) SubMission.player.getDepth(), new Vector(SubMission.ScreenWidth - 24, 12));
 		speed = new SpeedMeter((int) SubMission.player.getSpeed(), new Vector(SubMission.ScreenWidth - 415, SubMission.ScreenHeight - 24));
-		platform = new SubPlatform(SubMission.player);
+		platform = new SubPlatform();
 		soundManager = new SoundManager();
 		
 		/*System.out.println("theta( x, 0): " + new Vector( 1, 0).getRotation()
@@ -49,6 +49,7 @@ class PlayingState extends BasicGameState {
 	
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) {
+		soundManager.stop();
 	}
 	
 	@Override

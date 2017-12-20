@@ -30,7 +30,7 @@ public class Submarine extends MilitaryVessel {
 	Vessel target;
 		
 	Image targetLock;
-
+	
 	public Submarine(float depth, float dive, float b, Vector position) {
 		super("sub0", position, 1.5f, 6, b, 10, 20, 2);
 		//debug = true;

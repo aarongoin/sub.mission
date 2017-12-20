@@ -20,34 +20,32 @@ public class SubPlatform {
 	
 	Image retractBtn = SubMission.getImage("retract_btn");
 	Image sonarBtn = SubMission.getImage("sonar_btn");
-	Submarine sub;
 	
 	Image torpedoEmpty = SubMission.getImage("torpedo_empty");
 	
 	Image torpedoFull = SubMission.getImage("torpedo_full");
 	int towableState;
 	
-	public SubPlatform(Submarine s) {
-		sub = s;
+	public SubPlatform() {
 		blink = false;
 		setState(0);
 	}
 	
 	public void render(Graphics g) {
 		g.drawImage(background, 10, SubMission.ScreenHeight - 160);
-		if (sub.getArmor() == 1) {
+		if (SubMission.player.getArmor() == 1) {
 			g.drawImage(overlay, 10, SubMission.ScreenHeight - 160);
 		}
 		
 		// render torpedo arsenal
 		int i;
-		int n = sub.getTorpedoes();
+		int n = SubMission.player.getTorpedoes();
 		for (i = 1; i <= 8; i++) {
 			g.drawImage((i > n ? torpedoEmpty : torpedoFull), 35 + (i * 11), SubMission.ScreenHeight - 136);
 		}
 		
 		// render torpedo arsenal
-		n = sub.getDecoys();
+		n = SubMission.player.getDecoys();
 		for (i = 1; i <= 4; i++) {
 			g.drawImage((i > n ? decoyEmpty : decoyFull), 59 + (i * 10), SubMission.ScreenHeight - 54);
 		}
@@ -85,15 +83,15 @@ public class SubPlatform {
 		Vector m = new Vector(input.getMouseX(), input.getMouseY());
 		Vector b;
 		
-		if (!sub.decoyDeployed() && towableState == 2) {
+		if (!SubMission.player.decoyDeployed() && towableState == 2) {
 			towableState = 0;
 		}
-		if (!sub.haveTowedSonar() && towableState == 1) {
+		if (!SubMission.player.haveTowedSonar() && towableState == 1) {
 			towableState = 0;
 		}
 		
 		// blink overlay
-		if (sub.getArmor() == 1) {
+		if (SubMission.player.getArmor() == 1) {
 			float a = overlay.getAlpha();
 			if (blink) {
 				overlay.setAlpha(a * 0.95f);
@@ -107,7 +105,7 @@ public class SubPlatform {
 		// used to reset values for when we've hovered over a button and changed it's opacity
 		setState(towableState);
 		
-		if (sub.haveTowedSonar()) {
+		if (SubMission.player.haveTowedSonar()) {
 			// hovering over sonar button?
 			b = new Vector(45.5f, SubMission.ScreenHeight - 80.5f);
 			if (m.distance(b) < 17) {
@@ -119,7 +117,7 @@ public class SubPlatform {
 			}
 		}
 		
-		if (sub.getDecoys() > 0 || sub.haveTowedSonar()) {
+		if (SubMission.player.getDecoys() > 0 || SubMission.player.haveTowedSonar()) {
 			// hovering over retract button?
 			b = new Vector(85.5f, SubMission.ScreenHeight - 80.5f);
 			if (m.distance(b) < 17) {
@@ -131,7 +129,7 @@ public class SubPlatform {
 			}
 		}
 		
-		if (sub.getDecoys() > 0) {				
+		if (SubMission.player.getDecoys() > 0) {				
 			// hovering over decoy button?
 			b = new Vector(125.5f, SubMission.ScreenHeight - 80.5f);
 			if (m.distance(b) < 17) {

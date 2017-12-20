@@ -15,7 +15,7 @@ public class DepthMeter {
 	int hover;
 	int mark;
 	Vector position;
-	int target;
+	public int target;
 	
 	Image torpedo;
 	Image sub_torpedo;

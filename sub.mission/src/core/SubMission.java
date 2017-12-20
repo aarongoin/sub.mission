@@ -8,6 +8,7 @@ import java.util.List;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.TrueTypeFont;
@@ -100,14 +101,14 @@ public class SubMission extends StateBasedGame {
 		AppGameContainer app;
 		try {
 			SubMission g = new SubMission("sub.mission");
-			app = new AppGameContainer(g);
+			app = new AppGameContainer( new ScalableGame(g, 1400,850) );
 			
 			SubMission.ScreenWidth = 1400;
 			SubMission.ScreenHeight = 850;
 			
-			System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
+			//System.out.println(SubMission.ScreenWidth + " " + SubMission.ScreenHeight);
 			
-			app.setDisplayMode(SubMission.ScreenWidth, SubMission.ScreenHeight, false);
+			app.setDisplayMode(app.getScreenWidth(), app.getScreenHeight() - 50, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {

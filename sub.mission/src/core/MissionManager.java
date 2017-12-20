@@ -60,8 +60,9 @@ public abstract class MissionManager {
 		if (mission != null) mission.render(g);
 		
 		g.setFont(SubMission.text);
-		g.setColor(Color.white);
+		g.setColor(Color.yellow);
 		renderObjective(g);
+		g.setColor(Color.white);
 	}
 	
 	public boolean update(float dt, Input input, boolean mouse) {
